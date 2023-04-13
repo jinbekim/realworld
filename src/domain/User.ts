@@ -16,4 +16,10 @@ export interface NewUser {
   password: string;
 }
 
-export type UpdateUser = RequiredAtLeastOne<User>;
+export type UpdateUser = RequiredAtLeastOne<{
+  email: string;
+  password: string;
+  username: string;
+  bio: string;
+  image: string;
+}>;

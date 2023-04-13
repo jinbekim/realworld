@@ -65,14 +65,8 @@ const router = createRouter({
       props: true,
     },
     {
-      path: "/profile/:username/favorites",
-      name: "profile",
-      component: () => import("../views/Profile.vue"),
-      props: true,
-    },
-    {
       path: "/@:username",
-      name: "userpage",
+      name: "profile",
       component: () => import("../views/Profile.vue"),
     },
     { path: "/:pathMatch(.*)*", name: "NotFound", component: NotFound },
