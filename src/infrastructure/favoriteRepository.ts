@@ -9,7 +9,7 @@ export class FavoriteRepository implements IFavoriteRepository {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          authorization: `Token ${RealWorldStorage.get("jwt")}`,
+          authorization: `Token ${RealWorldStorage.get("user").token}`,
         },
       });
     } catch (error: any) {
@@ -26,7 +26,7 @@ export class FavoriteRepository implements IFavoriteRepository {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          authorization: `Token ${RealWorldStorage.get("jwt")}`,
+          authorization: `Token ${RealWorldStorage.get("user").token}`,
         },
       });
       return response.article;

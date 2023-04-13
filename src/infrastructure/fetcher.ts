@@ -1,4 +1,4 @@
-const baseUrl = import.meta.env.PUBLIC_API_URL;
+const baseUrl = import.meta.env.VITE_PUBLIC_API_URL;
 
 export const fetcher = async (url: string, options: RequestInit = {}) => {
   const response = await fetch(baseUrl + url, options);

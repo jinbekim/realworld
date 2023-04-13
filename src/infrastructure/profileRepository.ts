@@ -10,7 +10,7 @@ export class ProfileRepository implements IProfileRepository {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          authorization: `Token ${RealWorldStorage.get("jwt")}`,
+          authorization: `Token ${RealWorldStorage.get("user").token}`,
         },
       });
       return response.profile;
@@ -28,7 +28,7 @@ export class ProfileRepository implements IProfileRepository {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          authorization: `Token ${RealWorldStorage.get("jwt")}`,
+          authorization: `Token ${RealWorldStorage.get("user").token}`,
         },
       });
       return response.profile;
@@ -46,7 +46,7 @@ export class ProfileRepository implements IProfileRepository {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          authorization: `Token ${RealWorldStorage.get("jwt")}`,
+          authorization: `Token ${RealWorldStorage.get("user").token}`,
         },
       });
       return response.profile;

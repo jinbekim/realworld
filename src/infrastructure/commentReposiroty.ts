@@ -14,7 +14,7 @@ export class CommentRepository implements ICommentRepository {
         body: JSON.stringify({ comment }),
         headers: {
           "Content-Type": "application/json",
-          authorization: `Token ${RealWorldStorage.get("jwt")}`,
+          authorization: `Token ${RealWorldStorage.get("user").token}`,
         },
       });
       return response.article;
@@ -32,7 +32,7 @@ export class CommentRepository implements ICommentRepository {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          authorization: `Token ${RealWorldStorage.get("jwt")}`,
+          authorization: `Token ${RealWorldStorage.get("user").token}`,
         },
       });
       return response.article;
@@ -50,7 +50,7 @@ export class CommentRepository implements ICommentRepository {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          authorization: `Token ${RealWorldStorage.get("jwt")}`,
+          authorization: `Token ${RealWorldStorage.get("user").token}`,
         },
       });
       return response.comments;

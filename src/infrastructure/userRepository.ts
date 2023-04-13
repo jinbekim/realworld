@@ -11,7 +11,10 @@ export class UserRepository implements IUserRepository {
     try {
       const response: { user: User } = await fetcher("users/login", {
         method: "POST",
-        body: JSON.stringify({ user }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user: user }),
       });
       return response.user;
     } catch (error: any) {
@@ -26,6 +29,9 @@ export class UserRepository implements IUserRepository {
     try {
       const response: { user: User } = await fetcher("users", {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ user }),
       });
       return response.user;
@@ -43,7 +49,7 @@ export class UserRepository implements IUserRepository {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Token ${RealWorldStorage.get("jwt")}`,
+          Authorization: `Token ${RealWorldStorage.get("user").token}`,
         },
       });
       return response.user;
@@ -62,7 +68,7 @@ export class UserRepository implements IUserRepository {
         body: JSON.stringify({ user }),
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Token ${RealWorldStorage.get("jwt")}`,
+          Authorization: `Token ${RealWorldStorage.get("user").token}`,
         },
       });
       return response.user;

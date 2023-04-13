@@ -22,7 +22,7 @@ export class ArticleRepository implements IArticleRepository {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          authorization: `Token ${RealWorldStorage.get("jwt")}`,
+          authorization: `Token ${RealWorldStorage.get("user").token}`,
         },
       });
 
@@ -73,7 +73,7 @@ export class ArticleRepository implements IArticleRepository {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          authorization: `Token ${RealWorldStorage.get("jwt")}`,
+          authorization: `Token ${RealWorldStorage.get("user").token}`,
         },
         body: JSON.stringify({ article }),
       });
@@ -110,7 +110,7 @@ export class ArticleRepository implements IArticleRepository {
         body: JSON.stringify({ article }),
         headers: {
           "Content-Type": "application/json",
-          authorization: `Token ${RealWorldStorage.get("jwt")}`,
+          authorization: `Token ${RealWorldStorage.get("user").token}`,
         },
       });
       return response.article;
@@ -128,7 +128,7 @@ export class ArticleRepository implements IArticleRepository {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          authorization: `Token ${RealWorldStorage.get("jwt")}`,
+          authorization: `Token ${RealWorldStorage.get("user").token}`,
         },
       });
     } catch (error: any) {

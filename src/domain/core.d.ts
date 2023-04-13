@@ -4,7 +4,7 @@ type RequiredAtLeastOne<T, Keys extends keyof T = keyof T> = {
 
 interface GenericError {
   errors: {
-    body: string[];
+    [key: string]: string[];
   };
 }
 
