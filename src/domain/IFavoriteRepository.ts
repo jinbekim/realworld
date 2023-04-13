@@ -1,4 +1,4 @@
 export interface IFavoriteRepository {
-  add(slug: string): Promise<void>;
-  remove(slug: string): Promise<void>;
+  add(slug: string): Promise<void | GenericError>;
+  remove(slug: string): Promise<void | GenericError>;
 }

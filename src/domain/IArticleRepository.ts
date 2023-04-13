@@ -1,10 +1,23 @@
-import type { Article, NewArticle, UpdateArticle } from "./Article";
+import type { Article, Articles, NewArticle, UpdateArticle } from "./Article";
 
 export interface IArticleRepository {
-  getFeedArticles(): Promise<Article[]>;
-  getArticles(): Promise<Article[]>;
-  createArticle(article: NewArticle): Promise<Article>;
-  getArticle(slug: string): Promise<Article>;
-  updateArticle(slug: string, article: UpdateArticle): Promise<Article>;
-  deleteArticle(slug: string): Promise<Article>;
+  getFeedArticles(pagination: Pagination): Promise<Articles | GenericError>;
+  getArticles({
+    tag,
+    author,
+    favorited,
+    pagination,
+  }: {
+    tag: string;
+    author: string;
+    favorited: string;
+    pagination: Pagination;
+  }): Promise<Articles | GenericError>;
+  createArticle(article: NewArticle): Promise<Article | GenericError>;
+  getArticle(slug: string): Promise<Article | GenericError>;
+  updateArticle(
+    slug: string,
+    article: UpdateArticle
+  ): Promise<Article | GenericError>;
+  deleteArticle(slug: string): Promise<void | GenericError>;
 }

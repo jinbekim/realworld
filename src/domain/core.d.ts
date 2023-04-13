@@ -7,3 +7,8 @@ interface GenericError {
     body: string[];
   };
 }
+
+interface Pagination {
+  offset: number;
+  limit: number;
+}

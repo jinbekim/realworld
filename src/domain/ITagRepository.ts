@@ -1,3 +1,3 @@
 export interface ITagRepository {
-  getAll(): Promise<string[]>;
+  getAll(): Promise<string[] | GenericError>;
 }

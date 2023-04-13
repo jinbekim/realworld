@@ -20,4 +20,8 @@ export interface NewArticle {
   tagList?: string[];
 }
 
+export interface Articles {
+  articles: Article[];
+  articlesCount: number;
+}
 export type UpdateArticle = RequiredAtLeastOne<Article>;

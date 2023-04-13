@@ -1,3 +1,16 @@
+<script setup lang="ts">
+const popularTags = [
+  "programming",
+  "javascript",
+  "emberjs",
+  "angularjs",
+  "react",
+  "mean",
+  "node",
+  "rails",
+];
+</script>
+
 <template>
   <div class="home-page">
     <div class="banner">
@@ -68,16 +81,16 @@
         <div class="col-md-3">
           <div class="sidebar">
             <p>Popular Tags</p>
-
             <div class="tag-list">
-              <a href="" class="tag-pill tag-default">programming</a>
-              <a href="" class="tag-pill tag-default">javascript</a>
-              <a href="" class="tag-pill tag-default">emberjs</a>
-              <a href="" class="tag-pill tag-default">angularjs</a>
-              <a href="" class="tag-pill tag-default">react</a>
-              <a href="" class="tag-pill tag-default">mean</a>
-              <a href="" class="tag-pill tag-default">node</a>
-              <a href="" class="tag-pill tag-default">rails</a>
+              <a
+                href=""
+                v-for="tag in popularTags"
+                class="tag-pill tag-default"
+              >
+                <li style="list-style: none">
+                  {{ tag }}
+                </li>
+              </a>
             </div>
           </div>
         </div>

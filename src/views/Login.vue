@@ -1,3 +1,14 @@
+<script setup lang="ts">
+import { watchEffect } from "vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
+watchEffect(() => {
+  console.log(router.currentRoute.value.path);
+});
+</script>
+
 <template>
   <div class="auth-page">
     <div class="container page">

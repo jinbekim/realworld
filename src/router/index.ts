@@ -1,66 +1,76 @@
-import { createRouter, createWebHistory } from "vue-router";
+import {
+  createRouter,
+  createWebHistory,
+  createWebHashHistory,
+} from "vue-router";
 import HomeView from "../views/Home.vue";
+import NotFound from "../views/error/NotFound.vue";
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
-    //     Home page (URL: /#/ )
+    //     Home page (URL: / )
     // List of tags
     // List of articles pulled from either Feed, Global, or by Tag
     // Pagination for list of articles
     {
-      path: "/#/",
+      path: "/",
       name: "home",
       component: HomeView,
     },
-    // Sign in/Sign up pages (URL: /#/login, /#/register )
+    // Sign in/Sign up pages (URL: /login, /register )
     // Uses JWT (store the token in localStorage)
     // Authentication can be easily switched to session/cookie based
     {
-      path: "/#/login",
+      path: "/login",
       name: "login",
       component: () => import("../views/Login.vue"),
     },
     {
-      path: "/#/register",
+      path: "/register",
       name: "register",
-      component: () => import("../views/Register.vue"),
+      component: () => import("../views/Login.vue"),
     },
-    // Settings page (URL: /#/settings )
+    // Settings page (URL: /settings )
     {
-      path: "/#/settings",
+      path: "/settings",
       name: "settings",
       component: () => import("../views/Settings.vue"),
     },
-    //Editor page to create/edit articles (URL: /#/editor, /#/editor/article-slug-here )
+    //Editor page to create/edit articles (URL: /editor, /editor/article-slug-here )
     {
-      path: "/#/editor/:slug?",
+      path: "/editor/:slug?",
       name: "editor",
-      component: () => import("../views/EditArticle.vue"),
+      component: () => import("../views/ArticleEdit.vue"),
+      props: true,
     },
-    //     Article page (URL: /#/article/article-slug-here )
+    //     Article page (URL: /article/article-slug-here )
     // Delete article button (only shown to article's author)
     // Render markdown from server client side
     // Comments section at bottom of page
     // Delete comment button (only shown to comment's author)
     {
-      path: "/#/article/:slug",
+      path: "/article/:slug",
       name: "article",
       component: () => import("../views/Article.vue"),
+      props: true,
     },
-    //     Profile page (URL: /#/profile/:username, /#/profile/:username/favorites )
+    //     Profile page (URL: /profile/:username, /profile/:username/favorites )
     // Show basic user info
     // List of articles populated from author's created articles or author's favorited articles
     {
-      path: "/#/profile/:username",
+      path: "/profile/:username",
       name: "profile",
       component: () => import("../views/Profile.vue"),
+      props: true,
     },
     {
-      path: "/#/profile/:username/favorites",
+      path: "/profile/:username/favorites",
       name: "profile",
       component: () => import("../views/Profile.vue"),
+      props: true,
     },
+    { path: "/:pathMatch(.*)*", name: "NotFound", component: NotFound },
   ],
 });
 
