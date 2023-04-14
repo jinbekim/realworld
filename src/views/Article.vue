@@ -17,9 +17,9 @@ const { slug } = defineProps({
 });
 
 const router = useRouter();
-const user = useUser();
 const article = ref<Article>();
 const comments = ref<IComment[]>([]);
+const textComment = ref("");
 
 onMounted(async () => {
   const ret = await getArticle();
@@ -41,6 +41,20 @@ async function getComments() {
   const repo = Get.get("ICommentRepository");
   const comments = await repo.get(slug);
   return comments;
+}
+
+async function onSubmit(event: Event) {
+  event.preventDefault();
+  console.log("hi");
+  if (!textComment.value) return;
+  console.log("hi3");
+  const repo = Get.get("ICommentRepository");
+  const comment = await repo.add(slug, { body: textComment.value });
+  console.log("hi2");
+  if (!isError(comment)) {
+    comments.value.push(comment);
+    textComment.value = "";
+  }
 }
 </script>
 
@@ -117,9 +131,10 @@ async function getComments() {
 
       <div class="row">
         <div class="col-xs-12 col-md-8 offset-md-2">
-          <form class="card comment-form">
+          <form class="card comment-form" @submit="onSubmit">
             <div class="card-block">
               <textarea
+                v-model="textComment"
                 class="form-control"
                 placeholder="Write a comment..."
                 rows="3"

@@ -10,14 +10,14 @@ export class CommentRepository implements ICommentRepository {
   ): Promise<GenericError | IComment> {
     try {
       const response = await fetcher(`articles/${slug}/comments`, {
-        method: "GET",
+        method: "POST",
         body: JSON.stringify({ comment }),
         headers: {
           "Content-Type": "application/json",
           authorization: `Token ${RealWorldStorage.get("user").token}`,
         },
       });
-      return response.article;
+      return response.comment;
     } catch (error: any) {
       return {
         errors: {
@@ -35,7 +35,6 @@ export class CommentRepository implements ICommentRepository {
           authorization: `Token ${RealWorldStorage.get("user").token}`,
         },
       });
-      return response.article;
     } catch (error: any) {
       return {
         errors: {

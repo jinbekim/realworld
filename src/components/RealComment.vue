@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import useUser from "@/hooks/useUser";
-import { IComment } from "@/domain/Comment";
+import type { IComment } from "@/domain/Comment";
 import { toUrlEncode } from "@/libs/encodeURL";
 
 const { comment } = defineProps({
   comment: {
-    type: IComment,
+    type: Object as () => IComment,
     required: true,
   },
 });
@@ -31,7 +31,7 @@ const user = useUser();
       <router-link
         :to="`/profile/${toUrlEncode(comment.author.username)}`"
         class="comment-author"
-        >{{ comment.username }}</router-link
+        >{{ comment.author.username }}</router-link
       >
       <span class="date-posted">{{ comment.createdAt }}</span>
       <span
