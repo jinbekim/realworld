@@ -47,17 +47,16 @@ export class ArticleRepository implements IArticleRepository {
     pagination: Pagination;
   }): Promise<Articles | GenericError> {
     try {
-      let url = `/articles/?`;
-      url += tag && `tag=${tag}&`;
-      url += author && `author=${author}&`;
-      url += favorited && `favorited=${favorited}&`;
-      url += limit && `limit=${limit}&`;
-      url += offset && `offset=${offset}`;
+      let url = `articles?`;
+      url += tag ? `tag=${tag}&` : "";
+      url += author ? `author=${author}&` : "";
+      url += favorited ? `favorited=${favorited}&` : "";
+      url += limit ? `limit=${limit}&` : "";
+      url += offset !== undefined || offset !== null ? `offset=${offset}` : "";
 
       const response = await fetcher(url, {
         method: "GET",
       });
-
       return response;
     } catch (error: any) {
       return {
