@@ -8,10 +8,10 @@ export interface IArticleRepository {
     favorited,
     pagination,
   }: {
-    tag: string;
-    author: string;
-    favorited: string;
-    pagination: Pagination;
+    tag?: string;
+    author?: string;
+    favorited?: string;
+    pagination?: Pagination;
   }): Promise<Articles | GenericError>;
   createArticle(article: NewArticle): Promise<Article | GenericError>;
   getArticle(slug: string): Promise<Article | GenericError>;

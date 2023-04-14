@@ -25,6 +25,7 @@ export class UserRepository implements IUserRepository {
       };
     }
   }
+
   async register(user: NewUser): Promise<User | GenericError> {
     try {
       const response: { user: User } = await fetcher("users", {
@@ -49,7 +50,7 @@ export class UserRepository implements IUserRepository {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Token ${RealWorldStorage.get("user").token}`,
+          Authorization: `Token ${RealWorldStorage.get("user")?.token}`,
         },
       });
       return response.user;
@@ -64,11 +65,11 @@ export class UserRepository implements IUserRepository {
   async updateCurrentUser(user: UpdateUser): Promise<User | GenericError> {
     try {
       const response: { user: User } = await fetcher("user", {
-        method: "POST",
+        method: "PUT",
         body: JSON.stringify({ user }),
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Token ${RealWorldStorage.get("user").token}`,
+          Authorization: `Token ${RealWorldStorage.get("user")?.token}`,
         },
       });
       return response.user;

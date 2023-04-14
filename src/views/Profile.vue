@@ -1,18 +1,98 @@
+<script setup lang="ts">
+import { Get } from "@/dependency";
+import type { Article } from "@/domain/Article";
+import type { Profile } from "@/domain/Profile";
+import useUser from "@/hooks/useUser";
+import { isError } from "@/libs/isError";
+import { onMounted, reactive, ref } from "vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
+const user = ref<Profile>();
+const currentUser = useUser();
+
+const props = defineProps({
+  username: {
+    type: String,
+    required: true,
+  },
+});
+
+const text = ref("");
+const textIcon = ref("");
+const items = ref<Article[]>([]);
+
+onMounted(async () => {
+  const profileRepository = Get.get("IProfileRepository");
+  if (props.username) {
+    const tmp = await profileRepository.getProfile(props.username);
+    if (!isError(tmp)) {
+      user.value = tmp;
+      if (user.value.username === currentUser.value?.username) {
+        text.value = "Edit Profile Settings";
+        textIcon.value = "ion-gear-a";
+      } else if (user.value.following) {
+        text.value = `Unfollow ${user.value.username}`;
+        textIcon.value = "ion-plus-round";
+      } else {
+        text.value = `Follow ${user.value.username}`;
+        textIcon.value = "ion-plus-round";
+      }
+    }
+  }
+  getMyArticles();
+});
+
+async function followUser() {
+  const profileRepository = Get.get("IProfileRepository");
+  if (user.value && user.value.username === currentUser.value?.username) {
+    router.push("/settings");
+  }
+  if (user.value && !user.value.following) {
+    const ret = await profileRepository.followUser(user.value.username);
+    if (!isError(ret)) {
+      user.value.following = true;
+      text.value = "Unfollow";
+    } else router.replace("/login");
+  }
+  if (user.value && user.value.following) {
+    const ret = await profileRepository.unfollowUser(user.value.username);
+    if (!isError(ret)) {
+      user.value.following = false;
+      text.value = "Follow";
+    } else router.replace("/login");
+  }
+}
+
+async function getMyArticles() {
+  const articleRepository = Get.get("IArticleRepository");
+  const ret = await articleRepository.getArticles({
+    author: currentUser.value?.username,
+    pagination: { limit: 10, offset: 0 },
+  });
+}
+
+async function getMyFavorites() {}
+
+async function favoriteArticles() {}
+</script>
+
 <template>
   <div class="profile-page">
     <div class="user-info">
-      <div class="container">
+      <div class="container" v-if="user">
         <div class="row">
           <div class="col-xs-12 col-md-10 offset-md-1">
-            <img src="http://i.imgur.com/Qr71crq.jpg" class="user-img" />
-            <h4>Eric Simons</h4>
+            <img :src="user.image" class="user-img" />
+            <h4>{{ user.username }}</h4>
             <p>
-              Cofounder @GoThinkster, lived in Aol's HQ for a few months, kinda
-              looks like Peeta from the Hunger Games
+              {{ user.bio }}
             </p>
-            <button class="btn btn-sm btn-outline-secondary action-btn">
-              <i class="ion-plus-round"></i>
-              &nbsp; Follow Eric Simons
+            <button
+              class="btn btn-sm btn-outline-secondary action-btn"
+              @click="followUser"
+            >
+              <i :class="textIcon"></i>
+              &nbsp; {{ text }}
             </button>
           </div>
         </div>
@@ -25,55 +105,45 @@
           <div class="articles-toggle">
             <ul class="nav nav-pills outline-active">
               <li class="nav-item">
-                <a class="nav-link active" href="">My Articles</a>
+                <router-link to="./my-articles" class="nav-link"
+                  >My Articles</router-link
+                >
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="">Favorited Articles</a>
+                <router-link to="./favorited" class="nav-link"
+                  >Favorited Articles</router-link
+                >
               </li>
             </ul>
           </div>
 
-          <div class="article-preview">
+          <div
+            v-if="items.length"
+            v-for="item in items"
+            class="article-preview"
+          >
             <div class="article-meta">
-              <a href=""><img src="http://i.imgur.com/Qr71crq.jpg" /></a>
+              <router-link :to="`/@${item.author}`"
+                ><img :src="item.author.image"
+              /></router-link>
               <div class="info">
-                <a href="" class="author">Eric Simons</a>
-                <span class="date">January 20th</span>
+                <router-link :to="`/@${item.author}`" class="author">{{
+                  item.author
+                }}</router-link>
+                <span class="date">{{ item.createdAt }}</span>
               </div>
               <button class="btn btn-outline-primary btn-sm pull-xs-right">
-                <i class="ion-heart"></i> 29
+                <i class="ion-heart"></i> {{ item.favoritesCount }}
               </button>
             </div>
-            <a href="" class="preview-link">
-              <h1>How to build webapps that scale</h1>
-              <p>This is the description for the post.</p>
+            <router-link :to="`/articles/${item.slug}`" class="preview-link">
+              <h1>{{ item.title }}</h1>
+              <p>{{ item.body }}</p>
               <span>Read more...</span>
-            </a>
+            </router-link>
           </div>
-
-          <div class="article-preview">
-            <div class="article-meta">
-              <a href=""><img src="http://i.imgur.com/N4VcUeJ.jpg" /></a>
-              <div class="info">
-                <a href="" class="author">Albert Pai</a>
-                <span class="date">January 20th</span>
-              </div>
-              <button class="btn btn-outline-primary btn-sm pull-xs-right">
-                <i class="ion-heart"></i> 32
-              </button>
-            </div>
-            <a href="" class="preview-link">
-              <h1>
-                The song you won't ever stop singing. No matter how hard you
-                try.
-              </h1>
-              <p>This is the description for the post.</p>
-              <span>Read more...</span>
-              <ul class="tag-list">
-                <li class="tag-default tag-pill tag-outline">Music</li>
-                <li class="tag-default tag-pill tag-outline">Song</li>
-              </ul>
-            </a>
+          <div v-else>
+            <p>No articles are here... yet.</p>
           </div>
         </div>
       </div>

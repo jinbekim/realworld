@@ -42,6 +42,7 @@ const links = [
 
 watchEffect(async () => {
   activePath.value = router.currentRoute.value.path;
+  user.value = useUser().value;
 });
 </script>
 
@@ -63,7 +64,11 @@ watchEffect(async () => {
           </li>
         </template>
         <li class="nav-item">
-          <router-link class="nav-link" :to="`/@${user?.username}`">
+          <router-link
+            class="nav-link"
+            :class="{ active: isActive(`/@${user?.username}`) }"
+            :to="`/@${user?.username}`"
+          >
             <img :ng-src="user?.image" class="user-pic" :src="user?.image" />
             {{ user?.username }}</router-link
           >

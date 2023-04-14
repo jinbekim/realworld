@@ -4,7 +4,7 @@ import type { IUserRepository } from "@/domain/IUserRepository";
 import type { User } from "@/domain/User";
 import { RealWorldStorage } from "@/infrastructure/storage";
 import { isError } from "@/libs/isError";
-import { reactive, watchEffect } from "vue";
+import { reactive, watch, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
@@ -26,7 +26,7 @@ const formModel = reactive({
 
 async function onSubmit(event: Event) {
   event.preventDefault();
-  const repo = Get.get<IUserRepository>("IUserRepository");
+  const repo = Get.get("IUserRepository");
   console.log(formModel.email, formModel.password, formModel.username);
   if (text.h1 === "Sign in") {
     console.log("Sign in");

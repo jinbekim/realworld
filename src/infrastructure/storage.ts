@@ -1,6 +1,10 @@
 export class RealWorldStorage {
   static get(key: string): any | null {
-    return JSON.parse(localStorage.getItem(key) ?? "");
+    const jsonUser = localStorage.getItem(key);
+    if (jsonUser === null) {
+      return null;
+    }
+    return JSON.parse(jsonUser);
   }
 
   static set(key: string, value: any): void {

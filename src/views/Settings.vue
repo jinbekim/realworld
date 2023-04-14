@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { Get } from "@/dependency";
-import type { IUserRepository } from "@/domain/IUserRepository";
-import type { UpdateUser } from "@/domain/User";
 import useUser from "@/hooks/useUser";
 import { RealWorldStorage } from "@/infrastructure/storage";
+import { isError } from "@/libs/isError";
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
@@ -24,10 +23,15 @@ function logout() {
 }
 
 async function updateUser() {
-  const userRepository = Get.get<IUserRepository>("IUserRepository");
-  userRepository.updateCurrentUser({
+  const userRepository = Get.get("IUserRepository");
+  const result = await userRepository.updateCurrentUser({
     ...updateModel,
   });
+  if (isError(result)) return router.replace("/login");
+  else {
+    RealWorldStorage.set("user", result);
+    router.replace(`/@${result.username}`);
+  }
 }
 </script>
 
