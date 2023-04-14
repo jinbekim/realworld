@@ -50,8 +50,8 @@ const router = createRouter({
     // Comments section at bottom of page
     // Delete comment button (only shown to comment's author)
     {
-      path: "/article/:slug",
-      name: "article",
+      path: "/articles/:slug",
+      name: "articles",
       component: () => import("../views/Article.vue"),
       props: true,
     },

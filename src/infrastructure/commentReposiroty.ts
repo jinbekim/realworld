@@ -1,4 +1,4 @@
-import type { Comment, NewComment } from "@/domain/Comment";
+import type { IComment, NewComment } from "@/domain/Comment";
 import type { ICommentRepository } from "@/domain/ICommentRepository";
 import { fetcher } from "./fetcher";
 import { RealWorldStorage } from "./storage";
@@ -7,7 +7,7 @@ export class CommentRepository implements ICommentRepository {
   async add(
     slug: string,
     comment: NewComment
-  ): Promise<GenericError | Comment> {
+  ): Promise<GenericError | IComment> {
     try {
       const response = await fetcher(`articles/${slug}/comments`, {
         method: "GET",
@@ -44,7 +44,7 @@ export class CommentRepository implements ICommentRepository {
       };
     }
   }
-  async get(slug: string): Promise<GenericError | Comment[]> {
+  async get(slug: string): Promise<GenericError | IComment[]> {
     try {
       const response = await fetcher(`articles/${slug}/comments`, {
         method: "GET",
