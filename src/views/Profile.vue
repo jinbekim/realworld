@@ -4,64 +4,32 @@ import type { Article } from "@/domain/Article";
 import type { Profile } from "@/domain/Profile";
 import useUser from "@/hooks/useUser";
 import { isError } from "@/libs/isError";
-import { onMounted, reactive, ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
+import RealFollowButton from "@/components/buttons/RealFollowButton.vue";
 const router = useRouter();
-const user = ref<Profile>();
-const currentUser = useUser();
-
-const props = defineProps({
+const { username } = defineProps({
   username: {
     type: String,
     required: true,
   },
 });
+const user = ref<Profile>();
+const currentUser = useUser();
 
-const text = ref("");
-const textIcon = ref("");
 const items = ref<Article[]>([]);
 
 onMounted(async () => {
   const profileRepository = Get.get("IProfileRepository");
-  if (props.username) {
-    const tmp = await profileRepository.getProfile(props.username);
+  if (username) {
+    const tmp = await profileRepository.getProfile(username);
     if (!isError(tmp)) {
       user.value = tmp;
-      if (user.value.username === currentUser.value?.username) {
-        text.value = "Edit Profile Settings";
-        textIcon.value = "ion-gear-a";
-      } else if (user.value.following) {
-        text.value = `Unfollow ${user.value.username}`;
-        textIcon.value = "ion-plus-round";
-      } else {
-        text.value = `Follow ${user.value.username}`;
-        textIcon.value = "ion-plus-round";
-      }
     }
   }
+
   getMyArticles();
 });
-
-async function followUser() {
-  const profileRepository = Get.get("IProfileRepository");
-  if (user.value && user.value.username === currentUser.value?.username) {
-    router.push("/settings");
-  }
-  if (user.value && !user.value.following) {
-    const ret = await profileRepository.followUser(user.value.username);
-    if (!isError(ret)) {
-      user.value.following = true;
-      text.value = "Unfollow";
-    } else router.replace("/login");
-  }
-  if (user.value && user.value.following) {
-    const ret = await profileRepository.unfollowUser(user.value.username);
-    if (!isError(ret)) {
-      user.value.following = false;
-      text.value = "Follow";
-    } else router.replace("/login");
-  }
-}
 
 const selectedTab = ref("My Articles");
 const isLoading = ref(false);
@@ -116,13 +84,7 @@ async function getMyFavorites(): Promise<Article[]> {
             <p>
               {{ user.bio }}
             </p>
-            <button
-              class="btn btn-sm btn-outline-secondary action-btn"
-              @click="followUser"
-            >
-              <i :class="textIcon"></i>
-              &nbsp; {{ text }}
-            </button>
+            <real-follow-button :user="user"></real-follow-button>
           </div>
         </div>
       </div>
