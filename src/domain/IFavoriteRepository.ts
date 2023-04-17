@@ -1,4 +1,6 @@
+import type { Article } from "./Article";
+
 export interface IFavoriteRepository {
-  add(slug: string): Promise<void | GenericError>;
-  remove(slug: string): Promise<void | GenericError>;
+  add(slug: string): Promise<Article | GenericError>;
+  remove(slug: string): Promise<Article | GenericError>;
 }

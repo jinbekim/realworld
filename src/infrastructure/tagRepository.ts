@@ -5,15 +5,11 @@ export class TagRepository implements ITagRepository {
   async getAll(): Promise<string[] | GenericError> {
     try {
       const response = await fetcher(`tags`, {
-        method: "POST",
+        method: "GET",
       });
       return response.tags;
     } catch (error: any) {
-      return {
-        errors: {
-          body: [error.message],
-        },
-      };
+      return error;
     }
   }
 }

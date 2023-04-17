@@ -14,16 +14,14 @@ export class CommentRepository implements ICommentRepository {
         body: JSON.stringify({ comment }),
         headers: {
           "Content-Type": "application/json",
-          authorization: `Token ${RealWorldStorage.get("user").token}`,
+          authorization: RealWorldStorage.get("user")?.token
+            ? `Token ${RealWorldStorage.get("user").token}`
+            : "",
         },
       });
       return response.comment;
     } catch (error: any) {
-      return {
-        errors: {
-          body: [error.message],
-        },
-      };
+      return error;
     }
   }
   async delete(slug: string, id: number): Promise<void | GenericError> {
@@ -32,15 +30,13 @@ export class CommentRepository implements ICommentRepository {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          authorization: `Token ${RealWorldStorage.get("user").token}`,
+          authorization: RealWorldStorage.get("user")?.token
+            ? `Token ${RealWorldStorage.get("user").token}`
+            : "",
         },
       });
     } catch (error: any) {
-      return {
-        errors: {
-          body: [error.message],
-        },
-      };
+      return error;
     }
   }
   async get(slug: string): Promise<GenericError | IComment[]> {
@@ -49,16 +45,14 @@ export class CommentRepository implements ICommentRepository {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          authorization: `Token ${RealWorldStorage.get("user").token}`,
+          authorization: RealWorldStorage.get("user")?.token
+            ? `Token ${RealWorldStorage.get("user").token}`
+            : "",
         },
       });
       return response.comments;
     } catch (error: any) {
-      return {
-        errors: {
-          body: [error.message],
-        },
-      };
+      return error;
     }
   }
 }

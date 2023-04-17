@@ -1,14 +1,107 @@
 <script setup lang="ts">
-const popularTags = [
-  "programming",
-  "javascript",
-  "emberjs",
-  "angularjs",
-  "react",
-  "mean",
-  "node",
-  "rails",
-];
+import { Get } from "@/dependency";
+import { isError } from "@/libs/isError";
+import { onMounted, reactive, ref, watch } from "vue";
+import { useRoute } from "vue-router";
+import type { Article } from "@/domain/Article";
+import RealPostTile from "@/components/RealPostTile.vue";
+import { isArray } from "@vue/shared";
+import useUser from "@/hooks/useUser";
+
+const route = useRoute();
+const user = useUser();
+const filter = ref(
+  isArray(route.params.tag)
+    ? route.params.tag[0]
+    : route.params.tag || user.value
+    ? "Your Feed"
+    : "Global Feed"
+);
+
+const tags = reactive({
+  tagList: [] as string[],
+  loading: true,
+});
+const feed = reactive({
+  feedList: [] as Article[],
+  loading: true,
+});
+
+onMounted(async () => {
+  Get.get("ITagRepository")
+    .getAll()
+    .then((result) => {
+      if (!isError(result)) {
+        tags.tagList = result;
+        tags.loading = false;
+      }
+    });
+});
+watch(
+  () => route.params.tag,
+  () => {
+    console.log(user.value);
+    filter.value = isArray(route.params.tag)
+      ? route.params.tag[0]
+      : route.params.tag || user
+      ? "Your Feed"
+      : "Global Feed";
+
+    console.log("ww");
+  }
+);
+watch(
+  filter,
+  () => {
+    feed.loading = true;
+    console.log("hi", filter.value);
+    if (filter.value === "Your Feed") {
+      Get.get("IArticleRepository")
+        .getFeedArticles({ limit: 10, offset: 0 })
+        .then((result) => {
+          if (!isError(result)) {
+            feed.feedList = result.articles;
+            feed.loading = false;
+          }
+        });
+    } else if (filter.value === "Global Feed") {
+      Get.get("IArticleRepository")
+        .getArticles({ pagination: { limit: 10, offset: 0 } })
+        .then((result) => {
+          if (!isError(result)) {
+            feed.feedList = result.articles;
+            feed.loading = false;
+          }
+        });
+    } else if (filter.value) {
+      Get.get("IArticleRepository")
+        .getArticles({
+          pagination: { limit: 10, offset: 0 },
+          tag: filter.value,
+        })
+        .then((result) => {
+          if (!isError(result)) {
+            feed.feedList = result.articles;
+            feed.loading = false;
+          }
+        });
+    } else {
+      feed.loading = false;
+    }
+  },
+  {
+    immediate: true,
+  }
+);
+
+function onSelectTab(event: Event) {
+  const tab = (event.target as HTMLButtonElement).innerText;
+  if (tab[0] === "#") {
+    filter.value = tab.slice(1).trim();
+  } else {
+    filter.value = tab;
+  }
+}
 </script>
 
 <template>
@@ -24,73 +117,60 @@ const popularTags = [
       <div class="row">
         <div class="col-md-9">
           <div class="feed-toggle">
-            <ul class="nav nav-pills outline-active">
-              <li class="nav-item">
-                <a class="nav-link disabled" href="">Your Feed</a>
+            <ul class="nav nav-pills outline-active" @click="onSelectTab">
+              <li class="nav-item" v-if="user">
+                <button
+                  type="button"
+                  class="nav-link"
+                  :class="{ active: `Your Feed` === filter }"
+                >
+                  Your Feed
+                </button>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" href="">Global Feed</a>
+                <button
+                  type="button"
+                  class="nav-link"
+                  :class="{ active: `Global Feed` === filter }"
+                >
+                  Global Feed
+                </button>
+              </li>
+              <li class="nav-item" v-if="$route.params.tag">
+                <button
+                  type="button"
+                  class="nav-link"
+                  :class="{ active: $route.params.tag === filter }"
+                >
+                  # {{ $route.params.tag }}
+                </button>
               </li>
             </ul>
           </div>
-
-          <div class="article-preview">
-            <div class="article-meta">
-              <a href="profile.html"
-                ><img src="http://i.imgur.com/Qr71crq.jpg"
-              /></a>
-              <div class="info">
-                <a href="" class="author">Eric Simons</a>
-                <span class="date">January 20th</span>
-              </div>
-              <button class="btn btn-outline-primary btn-sm pull-xs-right">
-                <i class="ion-heart"></i> 29
-              </button>
-            </div>
-            <a href="" class="preview-link">
-              <h1>How to build webapps that scale</h1>
-              <p>This is the description for the post.</p>
-              <span>Read more...</span>
-            </a>
-          </div>
-
-          <div class="article-preview">
-            <div class="article-meta">
-              <a href="profile.html"
-                ><img src="http://i.imgur.com/N4VcUeJ.jpg"
-              /></a>
-              <div class="info">
-                <a href="" class="author">Albert Pai</a>
-                <span class="date">January 20th</span>
-              </div>
-              <button class="btn btn-outline-primary btn-sm pull-xs-right">
-                <i class="ion-heart"></i> 32
-              </button>
-            </div>
-            <a href="" class="preview-link">
-              <h1>
-                The song you won't ever stop singing. No matter how hard you
-                try.
-              </h1>
-              <p>This is the description for the post.</p>
-              <span>Read more...</span>
-            </a>
+          <RealPostTile
+            v-if="feed && !feed.loading"
+            v-for="item in feed.feedList"
+            :item="item"
+          ></RealPostTile>
+          <div v-else>
+            <p>Loading...</p>
           </div>
         </div>
 
         <div class="col-md-3">
           <div class="sidebar">
             <p>Popular Tags</p>
-            <div class="tag-list">
-              <a
-                href=""
-                v-for="tag in popularTags"
+            <span v-if="tags.loading">Loading...</span>
+            <div v-else class="tag-list">
+              <router-link
+                v-for="tag in tags.tagList"
+                :to="'/tags/' + tag"
                 class="tag-pill tag-default"
               >
                 <li style="list-style: none">
                   {{ tag }}
                 </li>
-              </a>
+              </router-link>
             </div>
           </div>
         </div>

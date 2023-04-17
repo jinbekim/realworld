@@ -10,16 +10,14 @@ export class ProfileRepository implements IProfileRepository {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          authorization: `Token ${RealWorldStorage.get("user").token}`,
+          authorization: RealWorldStorage.get("user")?.token
+            ? `Token ${RealWorldStorage.get("user").token}`
+            : "",
         },
       });
       return response.profile;
     } catch (error: any) {
-      return {
-        errors: {
-          body: [error.message],
-        },
-      };
+      return error;
     }
   }
   async followUser(username: string): Promise<Profile | GenericError> {
@@ -28,16 +26,14 @@ export class ProfileRepository implements IProfileRepository {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          authorization: `Token ${RealWorldStorage.get("user").token}`,
+          authorization: RealWorldStorage.get("user")?.token
+            ? `Token ${RealWorldStorage.get("user").token}`
+            : "",
         },
       });
       return response.profile;
     } catch (error: any) {
-      return {
-        errors: {
-          body: [error.message],
-        },
-      };
+      return error;
     }
   }
   async unfollowUser(username: string): Promise<Profile | GenericError> {
@@ -46,16 +42,14 @@ export class ProfileRepository implements IProfileRepository {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          authorization: `Token ${RealWorldStorage.get("user").token}`,
+          authorization: RealWorldStorage.get("user")?.token
+            ? `Token ${RealWorldStorage.get("user").token}`
+            : "",
         },
       });
       return response.profile;
     } catch (error: any) {
-      return {
-        errors: {
-          body: [error.message],
-        },
-      };
+      return error;
     }
   }
 }

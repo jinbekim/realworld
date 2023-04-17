@@ -1,15 +1,13 @@
 <script setup lang="ts">
 import { Get } from "@/dependency";
-import type { IUserRepository } from "@/domain/IUserRepository";
-import type { User } from "@/domain/User";
 import { RealWorldStorage } from "@/infrastructure/storage";
-import { isError } from "@/libs/isError";
-import { reactive, watch, watchEffect } from "vue";
+import { getErrorMessage, isError } from "@/libs/isError";
+import { reactive, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
-const errors = reactive<{ message: string[] }>({
-  message: [],
+const errors = reactive<{ message: string }>({
+  message: "",
 });
 
 const text = reactive({
@@ -37,6 +35,8 @@ async function onSubmit(event: Event) {
     if (!isError(user)) {
       RealWorldStorage.set("user", user);
       router.push("/");
+    } else {
+      errors.message = getErrorMessage(user);
     }
   } else if (text.h1 === "Sign up") {
     console.log("Sign up");
@@ -49,6 +49,7 @@ async function onSubmit(event: Event) {
       RealWorldStorage.set("user", user);
       router.push("/");
     } else {
+      errors.message = getErrorMessage(user);
     }
   }
 }
@@ -57,9 +58,9 @@ function checkValidate(event: Event) {
   const target = event.target as HTMLInputElement;
   console.log(target.value);
   if (target.validity.valid) {
-    errors.message = [];
-  } else if (errors.message.length === 0) {
-    errors.message.push(target.name + target.validationMessage);
+    errors.message = "";
+  } else {
+    errors.message = target.name + target.validationMessage;
   }
 }
 
@@ -86,9 +87,9 @@ watchEffect(() => {
             <router-link :to="text.to">{{ text.p }}</router-link>
           </p>
 
-          <ul v-if="errors.message" class="error-messages">
-            <li v-for="error in errors.message">{{ error }}</li>
-          </ul>
+          <p v-if="errors.message" class="error-messages">
+            {{ errors.message }}
+          </p>
 
           <form @submit="onSubmit">
             <fieldset v-if="text.h1 === 'Sign up'" class="form-group">

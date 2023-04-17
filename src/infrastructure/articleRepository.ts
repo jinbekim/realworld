@@ -22,17 +22,15 @@ export class ArticleRepository implements IArticleRepository {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          authorization: `Token ${RealWorldStorage.get("user").token}`,
+          authorization: RealWorldStorage.get("user")?.token
+            ? `Token ${RealWorldStorage.get("user").token}`
+            : "",
         },
       });
 
       return response;
     } catch (error: any) {
-      return {
-        errors: {
-          body: [error.message],
-        },
-      };
+      return error;
     }
   }
   async getArticles({
@@ -56,14 +54,16 @@ export class ArticleRepository implements IArticleRepository {
 
       const response = await fetcher(url, {
         method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: RealWorldStorage.get("user")?.token
+            ? `Token ${RealWorldStorage.get("user").token}`
+            : "",
+        },
       });
       return response;
     } catch (error: any) {
-      return {
-        errors: {
-          body: [error.message],
-        },
-      };
+      return error;
     }
   }
   async createArticle(article: NewArticle): Promise<GenericError | Article> {
@@ -72,31 +72,31 @@ export class ArticleRepository implements IArticleRepository {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          authorization: `Token ${RealWorldStorage.get("user").token}`,
+          authorization: RealWorldStorage.get("user")?.token
+            ? `Token ${RealWorldStorage.get("user").token}`
+            : "",
         },
         body: JSON.stringify({ article }),
       });
       return response.article;
     } catch (error: any) {
-      return {
-        errors: {
-          body: [error.message],
-        },
-      };
+      return error;
     }
   }
   async getArticle(slug: string): Promise<GenericError | Article> {
     try {
       const response = await fetcher(`articles/${slug}`, {
         method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: RealWorldStorage.get("user")?.token
+            ? `Token ${RealWorldStorage.get("user").token}`
+            : "",
+        },
       });
       return response.article;
     } catch (error: any) {
-      return {
-        errors: {
-          body: [error.message],
-        },
-      };
+      return error;
     }
   }
   async updateArticle(
@@ -109,16 +109,14 @@ export class ArticleRepository implements IArticleRepository {
         body: JSON.stringify({ article }),
         headers: {
           "Content-Type": "application/json",
-          authorization: `Token ${RealWorldStorage.get("user").token}`,
+          authorization: RealWorldStorage.get("user")?.token
+            ? `Token ${RealWorldStorage.get("user").token}`
+            : "",
         },
       });
       return response.article;
     } catch (error: any) {
-      return {
-        errors: {
-          body: [error.message],
-        },
-      };
+      return error;
     }
   }
   async deleteArticle(slug: string): Promise<GenericError | void> {
@@ -127,15 +125,13 @@ export class ArticleRepository implements IArticleRepository {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          authorization: `Token ${RealWorldStorage.get("user").token}`,
+          authorization: RealWorldStorage.get("user")?.token
+            ? `Token ${RealWorldStorage.get("user").token}`
+            : "",
         },
       });
     } catch (error: any) {
-      return {
-        errors: {
-          body: [error.message],
-        },
-      };
+      return error;
     }
   }
 }

@@ -2,24 +2,34 @@
 import { Get } from "@/dependency";
 import type { Article } from "@/domain/Article";
 import { isError } from "@/libs/isError";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref, toRef } from "vue";
 import { useRouter } from "vue-router";
-import { toUrlEncode } from "@/libs/encodeURL";
 import type { IComment } from "@/domain/Comment";
-import useUser from "@/hooks/useUser";
 import RealComment from "@/components/RealComment.vue";
+import RealMiniProfile from "@/components/RealMiniProfile.vue";
+import RealFavoriteButton from "@/components/buttons/RealFavoriteButton.vue";
+import useUser from "@/hooks/useUser";
+import RealEditArticleButton from "@/components/buttons/RealEditArticleButton.vue";
+import RealFollowButton from "@/components/buttons/RealFollowButton.vue";
+import RealDeleteArticleButton from "@/components/buttons/RealDeleteArticleButton.vue";
 
-const { slug } = defineProps({
+const props = defineProps({
   slug: {
     type: String,
     required: true,
   },
 });
+const slug = toRef(props, "slug");
 
 const router = useRouter();
 const article = ref<Article>();
 const comments = ref<IComment[]>([]);
 const textComment = ref("");
+const user = useUser();
+const isPostMine = computed(() => {
+  if (!article.value) return false;
+  return article.value.author.username === user.value?.username;
+});
 
 onMounted(async () => {
   const ret = await getArticle();
@@ -33,24 +43,21 @@ onMounted(async () => {
 
 async function getArticle() {
   const repo = Get.get("IArticleRepository");
-  const article = await repo.getArticle(slug);
+  const article = await repo.getArticle(slug.value);
   return article;
 }
 
 async function getComments() {
   const repo = Get.get("ICommentRepository");
-  const comments = await repo.get(slug);
+  const comments = await repo.get(slug.value);
   return comments;
 }
 
 async function onSubmit(event: Event) {
   event.preventDefault();
-  console.log("hi");
   if (!textComment.value) return;
-  console.log("hi3");
   const repo = Get.get("ICommentRepository");
-  const comment = await repo.add(slug, { body: textComment.value });
-  console.log("hi2");
+  const comment = await repo.add(slug.value, { body: textComment.value });
   if (!isError(comment)) {
     comments.value.push(comment);
     textComment.value = "";
@@ -65,29 +72,17 @@ async function onSubmit(event: Event) {
         <h1>{{ article?.title }}</h1>
 
         <div class="article-meta">
-          <router-link to=""><img :src="article?.author.image" /></router-link>
-          <div class="info">
-            <router-link to="" class="author">{{
-              article?.author.username
-            }}</router-link>
-            <span class="date">{{ article?.createdAt }}</span>
-          </div>
-          <button
-            :class="{ active: article?.author.following }"
-            class="btn btn-sm btn-outline-secondary"
-          >
-            <i class="ion-plus-round"></i>
-            &nbsp; Follow {{ article?.author.username }}
-          </button>
-          &nbsp;&nbsp;
-          <button
-            class="btn btn-sm btn-outline-primary"
-            :class="{ active: article?.favorited }"
-          >
-            <i class="ion-heart"></i>
-            &nbsp; Favorite Post
-            <span class="counter">({{ article?.favoritesCount }})</span>
-          </button>
+          <real-mini-profile :item="article"> </real-mini-profile>
+          <template v-if="isPostMine">
+            <real-edit-article-button :slug="slug" />
+            &nbsp;
+            <real-delete-article-button :slug="slug" />
+          </template>
+          <template v-else>
+            <real-follow-button :user="article.author" />
+            &nbsp;
+            <real-favorite-button :item="article" full />
+          </template>
         </div>
       </div>
     </div>
@@ -107,25 +102,18 @@ async function onSubmit(event: Event) {
 
       <div class="article-actions">
         <div class="article-meta">
-          <router-link :to="`/profile/${toUrlEncode(article?.author.username)}`"
-            ><img :src="article?.author.image"
-          /></router-link>
-          <div class="info">
-            <router-link to="" class="author">{{
-              article?.author.username
-            }}</router-link>
-            <span class="date">{{ article?.createdAt }}</span>
-          </div>
+          <real-mini-profile :item="article"> </real-mini-profile>
 
-          <button class="btn btn-sm btn-outline-secondary">
-            <i class="ion-plus-round"></i>
-            &nbsp; Follow {{ article?.author.username }}
-          </button>
-          &nbsp;
-          <button class="btn btn-sm btn-outline-primary">
-            <i class="ion-heart"></i>
-            &nbsp; Favorite Post <span class="counter">(29)</span>
-          </button>
+          <template v-if="isPostMine">
+            <real-edit-article-button :slug="slug" />
+            &nbsp;
+            <real-delete-article-button :slug="slug" />
+          </template>
+          <template v-else>
+            <real-follow-button :user="article.author" />
+            &nbsp;
+            <real-favorite-button :item="article" full />
+          </template>
         </div>
       </div>
 
@@ -147,7 +135,13 @@ async function onSubmit(event: Event) {
           </form>
 
           <template v-if="comments" v-for="comment in comments">
-            <real-comment :comment="comment"></real-comment>
+            <real-comment
+              :slug="slug"
+              :comment="comment"
+              @delete="
+                () => (comments = comments.filter((c) => c.id !== comment.id))
+              "
+            />
           </template>
         </div>
       </div>

@@ -18,11 +18,7 @@ export class UserRepository implements IUserRepository {
       });
       return response.user;
     } catch (error: any) {
-      return {
-        errors: {
-          body: [error.message],
-        },
-      };
+      return error;
     }
   }
 
@@ -37,11 +33,7 @@ export class UserRepository implements IUserRepository {
       });
       return response.user;
     } catch (error: any) {
-      return {
-        errors: {
-          body: [error.message],
-        },
-      };
+      return error;
     }
   }
   async getCurrentUser(): Promise<User | GenericError> {
@@ -55,11 +47,7 @@ export class UserRepository implements IUserRepository {
       });
       return response.user;
     } catch (error: any) {
-      return {
-        errors: {
-          body: [error.message],
-        },
-      };
+      return error;
     }
   }
   async updateCurrentUser(user: UpdateUser): Promise<User | GenericError> {
@@ -74,11 +62,7 @@ export class UserRepository implements IUserRepository {
       });
       return response.user;
     } catch (error: any) {
-      return {
-        errors: {
-          body: [error.message],
-        },
-      };
+      return error;
     }
   }
 }

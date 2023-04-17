@@ -4,31 +4,42 @@ import type { Article } from "@/domain/Article";
 import type { Profile } from "@/domain/Profile";
 import useUser from "@/hooks/useUser";
 import { isError } from "@/libs/isError";
-import { onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref, toRef, watch } from "vue";
 import { useRouter } from "vue-router";
 import RealFollowButton from "@/components/buttons/RealFollowButton.vue";
+import RealPostTile from "@/components/RealPostTile.vue";
+import RealEditProfileButton from "@/components/buttons/RealEditProfileButton.vue";
 const router = useRouter();
-const { username } = defineProps({
+const props = defineProps({
   username: {
     type: String,
     required: true,
   },
 });
+const username = toRef(props, "username");
 const user = ref<Profile>();
 const currentUser = useUser();
-
 const items = ref<Article[]>([]);
+const isMine = computed(() => {
+  if (!user.value) return false;
+  return user.value.username === currentUser.value?.username;
+});
 
 onMounted(async () => {
-  const profileRepository = Get.get("IProfileRepository");
-  if (username) {
-    const tmp = await profileRepository.getProfile(username);
-    if (!isError(tmp)) {
-      user.value = tmp;
-    }
+  isLoading.value = true;
+  if (username.value) {
+    getUserProfile(username.value).then((res) => {
+      if (!isError(res)) return (user.value = res);
+      router.replace("/login");
+      return {} as Profile;
+    });
   }
-
-  getMyArticles();
+  getArticles(username.value).then((res) => {
+    isLoading.value = false;
+    if (!isError(res)) return (items.value = res);
+    router.replace("/login");
+    return [] as Article[];
+  });
 });
 
 const selectedTab = ref("My Articles");
@@ -38,22 +49,44 @@ function selectTab(event: Event) {
   selectedTab.value = tab;
 }
 
+watch(
+  () => router.currentRoute.value.path,
+  async () => {
+    // console.log("watch user change");
+    user.value = await getUserProfile(
+      router.currentRoute.value.path.split("@")[1]
+    );
+  }
+);
+
 watch(selectedTab, async (val) => {
   console.log("watched ");
   isLoading.value = true;
   if (val === "My Articles") {
-    items.value = await getMyArticles();
+    items.value = await getArticles(username.value);
     console.log(items.value);
   } else if (val === "Favorited Articles") {
-    items.value = await getMyFavorites();
+    items.value = await getFavorites(username.value);
   }
   isLoading.value = false;
 });
 
-async function getMyArticles(): Promise<Article[]> {
+async function getArticles(username: string): Promise<Article[]> {
   const articleRepository = Get.get("IArticleRepository");
   const ret = await articleRepository.getArticles({
-    author: currentUser.value?.username,
+    author: username,
+    pagination: { limit: 5, offset: 0 },
+  });
+
+  if (!isError(ret)) return ret.articles;
+  router.replace("/login");
+  return [];
+}
+
+async function getFavorites(username: string): Promise<Article[]> {
+  const articleRepository = Get.get("IArticleRepository");
+  const ret = await articleRepository.getArticles({
+    favorited: username,
     pagination: { limit: 5, offset: 0 },
   });
   if (!isError(ret)) return ret.articles;
@@ -61,15 +94,12 @@ async function getMyArticles(): Promise<Article[]> {
   return [];
 }
 
-async function getMyFavorites(): Promise<Article[]> {
-  const articleRepository = Get.get("IArticleRepository");
-  const ret = await articleRepository.getArticles({
-    favorited: currentUser.value?.username,
-    pagination: { limit: 5, offset: 0 },
-  });
-  if (!isError(ret)) return ret.articles;
+async function getUserProfile(username: string): Promise<Profile> {
+  const profileRepository = Get.get("IProfileRepository");
+  const ret = await profileRepository.getProfile(username);
+  if (!isError(ret)) return ret;
   router.replace("/login");
-  return [];
+  return {} as Profile;
 }
 </script>
 
@@ -84,7 +114,8 @@ async function getMyFavorites(): Promise<Article[]> {
             <p>
               {{ user.bio }}
             </p>
-            <real-follow-button :user="user"></real-follow-button>
+            <real-edit-profile-button v-if="isMine"></real-edit-profile-button>
+            <real-follow-button v-else :user="user"></real-follow-button>
           </div>
         </div>
       </div>
@@ -120,34 +151,9 @@ async function getMyFavorites(): Promise<Article[]> {
             <h1>Loading...</h1>
             <p>Loading...</p>
           </div>
-          <div
-            v-else-if="items.length"
-            v-for="item in items"
-            class="article-preview"
-          >
-            <div class="article-meta">
-              <router-link :to="`/@${item.author}`"
-                ><img :src="item.author.image"
-              /></router-link>
-              <div class="info">
-                <router-link :to="`/@${item.author}`" class="author">{{
-                  item.author.username
-                }}</router-link>
-                <span class="date">{{ item.createdAt }}</span>
-              </div>
-              <button
-                class="btn btn-outline-primary btn-sm pull-xs-right"
-                :class="{ active: item.favorited }"
-              >
-                <i class="ion-heart"></i> {{ item.favoritesCount }}
-              </button>
-            </div>
-            <router-link :to="`/articles/${item.slug}`" class="preview-link">
-              <h1>{{ item.title }}</h1>
-              <p>{{ item.description }}</p>
-              <span>Read more...</span>
-            </router-link>
-          </div>
+          <template v-else-if="items.length">
+            <real-post-tile v-for="item in items" :item="item" />
+          </template>
           <div v-else>
             <p>No articles are here... yet.</p>
           </div>

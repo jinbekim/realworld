@@ -2,8 +2,15 @@
 import useUser from "@/hooks/useUser";
 import type { IComment } from "@/domain/Comment";
 import { toUrlEncode } from "@/libs/encodeURL";
+import { computed } from "vue";
+import { Get } from "@/dependency";
+import { isError } from "@/libs/isError";
 
-const { comment } = defineProps({
+const props = defineProps({
+  slug: {
+    type: String,
+    required: true,
+  },
   comment: {
     type: Object as () => IComment,
     required: true,
@@ -11,6 +18,20 @@ const { comment } = defineProps({
 });
 
 const user = useUser();
+const isMine = computed(() => {
+  if (!props.comment.author) return false;
+  return props.comment.author.username === user.value?.username;
+});
+
+const emit = defineEmits<{
+  (event: "delete", comment: IComment): void;
+}>();
+
+async function deleteComment() {
+  const commentRepository = Get.get("ICommentRepository");
+  const ret = await commentRepository.delete(props.slug, props.comment.id);
+  if (!isError(ret)) emit("delete", props.comment);
+}
 </script>
 
 <template>
@@ -34,11 +55,7 @@ const user = useUser();
         >{{ comment.author.username }}</router-link
       >
       <span class="date-posted">{{ comment.createdAt }}</span>
-      <span
-        v-if="comment.author.username === user?.username"
-        class="mod-options"
-      >
-        <i class="ion-edit"></i>
+      <span v-if="isMine" class="mod-options" @click="deleteComment">
         <i class="ion-trash-a"></i>
       </span>
     </div>

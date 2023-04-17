@@ -18,6 +18,11 @@ const router = createRouter({
       name: "home",
       component: HomeView,
     },
+    {
+      path: "/tags/:tag",
+      name: "tags",
+      component: () => import("../views/Home.vue"),
+    },
     // Sign in/Sign up pages (URL: /login, /register )
     // Uses JWT (store the token in localStorage)
     // Authentication can be easily switched to session/cookie based
@@ -58,12 +63,6 @@ const router = createRouter({
     //     Profile page (URL: /profile/:username, /profile/:username/favorites )
     // Show basic user info
     // List of articles populated from author's created articles or author's favorited articles
-    {
-      path: "/profile/:username",
-      name: "profile",
-      component: () => import("../views/Profile.vue"),
-      props: true,
-    },
     {
       path: "/@:username",
       name: "profile",

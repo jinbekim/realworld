@@ -1,7 +1,7 @@
 <template>
   <button
     class="btn btn-sm btn-outline-secondary action-btn"
-    @click="followUser"
+    @click="toggleFollow"
   >
     <i :class="textIcon"></i>
     &nbsp; {{ text }}
@@ -9,52 +9,45 @@
 </template>
 <script setup lang="ts">
 import { Get } from "@/dependency";
-import useUser from "@/hooks/useUser";
 import { isError } from "@/libs/isError";
-import { onMounted, ref } from "vue";
+import { computed, toRef } from "vue";
 import { useRouter } from "vue-router";
 import type { Profile } from "@/domain/Profile";
 
 const router = useRouter();
-const text = ref("");
-const textIcon = ref("");
 
-const currentUser = useUser();
-const { user } = defineProps({
-  user: {
-    type: Object as () => Profile,
-    required: true,
-  },
-});
+const props = defineProps<{
+  user: Profile;
+}>();
+const user = toRef(props, "user");
 
-onMounted(async () => {
-  if (user.username === currentUser.value?.username) {
-    text.value = "Edit Profile Settings";
-    textIcon.value = "ion-gear-a";
-  } else if (user.following) {
-    text.value = `Unfollow ${user.username}`;
-    textIcon.value = "ion-plus-round";
+const text = computed(() => {
+  if (!user.value) return;
+  if (user.value.following) {
+    return `Unfollow ${user.value.username}`;
   } else {
-    text.value = `Follow ${user.username}`;
-    textIcon.value = "ion-plus-round";
+    return `Follow ${user.value.username}`;
   }
 });
-async function followUser() {
-  const profileRepository = Get.get("IProfileRepository");
-  if (user && user.username === currentUser.value?.username) {
-    router.push("/settings");
+const textIcon = computed(() => {
+  if (user.value.following) {
+    return "ion-plus-round";
+  } else {
+    return "ion-plus-round";
   }
-  if (user && !user.following) {
-    const ret = await profileRepository.followUser(user.username);
+});
+
+async function toggleFollow() {
+  const profileRepository = Get.get("IProfileRepository");
+  if (user && !user.value.following) {
+    const ret = await profileRepository.followUser(user.value.username);
     if (!isError(ret)) {
-      user.following = true;
-      text.value = `UnFollow ${user.username}`;
+      user.value.following = true;
     } else router.replace("/login");
-  } else if (user && user.following) {
-    const ret = await profileRepository.unfollowUser(user.username);
+  } else if (user && user.value.following) {
+    const ret = await profileRepository.unfollowUser(user.value.username);
     if (!isError(ret)) {
-      user.following = false;
-      text.value = `Follow ${user.username}`;
+      user.value.following = false;
     } else router.replace("/login");
   }
 }

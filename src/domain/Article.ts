@@ -5,11 +5,11 @@ export interface Article {
   title: string;
   description: string;
   body: string;
-  tagList: string;
+  tagList: string[];
   createdAt: string;
   updatedAt: string;
-  favorited: string;
-  favoritesCount: string;
+  favorited: boolean;
+  favoritesCount: number;
   author: Profile;
 }
 
@@ -24,4 +24,8 @@ export interface Articles {
   articles: Article[];
   articlesCount: number;
 }
-export type UpdateArticle = RequiredAtLeastOne<Article>;
+export interface UpdateArticle {
+  title?: string;
+  description?: string;
+  body?: string;
+}
