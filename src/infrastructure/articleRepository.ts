@@ -7,6 +7,7 @@ import type {
 import type { IArticleRepository } from "@/domain/IArticleRepository";
 import { fetcher } from "./fetcher";
 import { RealWorldStorage } from "./storage";
+import { addQueryParam } from "../libs/addQueryParam";
 
 export class ArticleRepository implements IArticleRepository {
   async getFeedArticles({
@@ -14,9 +15,9 @@ export class ArticleRepository implements IArticleRepository {
     offset,
   }: Pagination): Promise<Articles | GenericError> {
     try {
-      let url = `/articles/feed?`;
-      url += limit && `limit=${limit}&`;
-      url += offset && `offset=${offset}`;
+      let url = `articles/feed`;
+      url = addQueryParam(url, "limit", limit.toString());
+      url = addQueryParam(url, "offset", offset.toString());
 
       const response = await fetcher(url, {
         method: "GET",
@@ -45,12 +46,12 @@ export class ArticleRepository implements IArticleRepository {
     pagination: Pagination;
   }): Promise<Articles | GenericError> {
     try {
-      let url = `articles?`;
-      url += tag ? `tag=${tag}&` : "";
-      url += author ? `author=${author}&` : "";
-      url += favorited ? `favorited=${favorited}&` : "";
-      url += limit ? `limit=${limit}&` : "";
-      url += offset !== undefined || offset !== null ? `offset=${offset}` : "";
+      let url = `articles`;
+      url = addQueryParam(url, "tag", tag);
+      url = addQueryParam(url, "author", author);
+      url = addQueryParam(url, "favorited", favorited);
+      url = addQueryParam(url, "limit", limit.toString());
+      url = addQueryParam(url, "offset", offset.toString());
 
       const response = await fetcher(url, {
         method: "GET",
@@ -122,7 +123,7 @@ export class ArticleRepository implements IArticleRepository {
   async deleteArticle(slug: string): Promise<GenericError | void> {
     try {
       const response = await fetcher(`articles/${slug}`, {
-        method: "POST",
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
           authorization: RealWorldStorage.get("user")?.token

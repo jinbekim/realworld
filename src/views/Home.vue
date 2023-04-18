@@ -1,22 +1,26 @@
 <script setup lang="ts">
 import { Get } from "@/dependency";
 import { isError } from "@/libs/isError";
-import { onMounted, reactive, ref, watch } from "vue";
-import { useRoute } from "vue-router";
+import { onMounted, reactive, ref, watch, watchEffect } from "vue";
 import type { Article } from "@/domain/Article";
 import RealPostTile from "@/components/RealPostTile.vue";
-import { isArray } from "@vue/shared";
 import useUser from "@/hooks/useUser";
+import RealPagination from "@/components/RealPagination.vue";
+import RealArticles from "@/components/RealArticles.vue";
 
-const route = useRoute();
 const user = useUser();
-const filter = ref(
-  isArray(route.params.tag)
-    ? route.params.tag[0]
-    : route.params.tag || user.value
-    ? "Your Feed"
-    : "Global Feed"
-);
+const filter = ref<string>(user ? "Your Feed" : "Global Feed");
+
+onMounted(() => {
+  Get.get("ITagRepository")
+    .getAll()
+    .then((result) => {
+      if (!isError(result)) {
+        tags.tagList = result;
+        tags.loading = false;
+      }
+    });
+});
 
 const tags = reactive({
   tagList: [] as string[],
@@ -27,80 +31,56 @@ const feed = reactive({
   loading: true,
 });
 
-onMounted(async () => {
-  Get.get("ITagRepository")
-    .getAll()
-    .then((result) => {
-      if (!isError(result)) {
-        tags.tagList = result;
-        tags.loading = false;
-      }
-    });
+const pagination = reactive({
+  total: 0,
+  limit: 10,
+  offset: 0,
 });
-watch(
-  () => route.params.tag,
-  () => {
-    console.log(user.value);
-    filter.value = isArray(route.params.tag)
-      ? route.params.tag[0]
-      : route.params.tag || user
-      ? "Your Feed"
-      : "Global Feed";
 
-    console.log("ww");
+watchEffect(() => {
+  feed.loading = true;
+
+  if (filter.value === "Your Feed") {
+    Get.get("IArticleRepository")
+      .getFeedArticles({ limit: pagination.limit, offset: pagination.offset })
+      .then((result) => {
+        if (!isError(result)) {
+          feed.feedList = result.articles;
+          feed.loading = false;
+          pagination.total = result.articlesCount;
+        }
+      });
+  } else {
+    Get.get("IArticleRepository")
+      .getArticles({
+        tag: filter.value === "Global Feed" ? undefined : filter.value,
+        pagination: {
+          limit: pagination.limit,
+          offset: pagination.offset,
+        },
+      })
+      .then((result) => {
+        if (!isError(result)) {
+          feed.feedList = result.articles;
+          feed.loading = false;
+          pagination.total = result.articlesCount;
+        }
+      });
   }
-);
-watch(
-  filter,
-  () => {
-    feed.loading = true;
-    console.log("hi", filter.value);
-    if (filter.value === "Your Feed") {
-      Get.get("IArticleRepository")
-        .getFeedArticles({ limit: 10, offset: 0 })
-        .then((result) => {
-          if (!isError(result)) {
-            feed.feedList = result.articles;
-            feed.loading = false;
-          }
-        });
-    } else if (filter.value === "Global Feed") {
-      Get.get("IArticleRepository")
-        .getArticles({ pagination: { limit: 10, offset: 0 } })
-        .then((result) => {
-          if (!isError(result)) {
-            feed.feedList = result.articles;
-            feed.loading = false;
-          }
-        });
-    } else if (filter.value) {
-      Get.get("IArticleRepository")
-        .getArticles({
-          pagination: { limit: 10, offset: 0 },
-          tag: filter.value,
-        })
-        .then((result) => {
-          if (!isError(result)) {
-            feed.feedList = result.articles;
-            feed.loading = false;
-          }
-        });
-    } else {
-      feed.loading = false;
-    }
-  },
-  {
-    immediate: true,
-  }
-);
+});
 
 function onSelectTab(event: Event) {
   const tab = (event.target as HTMLButtonElement).innerText;
   if (tab[0] === "#") {
     filter.value = tab.slice(1).trim();
-  } else {
+  } else if (tab === "Your Feed" || tab === "Global Feed") {
     filter.value = tab;
   }
+  pagination.offset = 0;
+}
+
+function onClickPage(page: number) {
+  pagination.offset = page * pagination.limit;
 }
 </script>
 
@@ -136,25 +116,23 @@ function onSelectTab(event: Event) {
                   Global Feed
                 </button>
               </li>
-              <li class="nav-item" v-if="$route.params.tag">
-                <button
-                  type="button"
-                  class="nav-link"
-                  :class="{ active: $route.params.tag === filter }"
-                >
-                  # {{ $route.params.tag }}
+              <li
+                class="nav-item"
+                v-if="
+                  filter && filter !== 'Your Feed' && filter !== 'Global Feed'
+                "
+              >
+                <button type="button" class="nav-link active">
+                  # {{ filter }}
                 </button>
               </li>
             </ul>
           </div>
-          <RealPostTile
-            v-if="feed && !feed.loading"
-            v-for="item in feed.feedList"
-            :item="item"
-          ></RealPostTile>
-          <div v-else>
-            <p>Loading...</p>
-          </div>
+
+          <RealArticles
+            :isLoading="feed.loading"
+            :items="feed.feedList"
+          ></RealArticles>
         </div>
 
         <div class="col-md-3">
@@ -163,17 +141,28 @@ function onSelectTab(event: Event) {
             <span v-if="tags.loading">Loading...</span>
             <div v-else class="tag-list">
               <router-link
+                to="/"
                 v-for="tag in tags.tagList"
-                :to="'/tags/' + tag"
-                class="tag-pill tag-default"
+                @click="
+                  () => {
+                    filter = tag;
+                  }
+                "
+                class="tag-pill tag-default ng-binding ng-scope"
               >
-                <li style="list-style: none">
-                  {{ tag }}
-                </li>
+                {{ tag }}
               </router-link>
             </div>
           </div>
         </div>
+
+        <RealPagination
+          v-if="!feed.loading"
+          :total="pagination.total"
+          :limit="pagination.limit"
+          :offset="pagination.offset"
+          :onClickPage="onClickPage"
+        ></RealPagination>
       </div>
     </div>
   </div>

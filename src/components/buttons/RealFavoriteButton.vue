@@ -1,5 +1,6 @@
 <template>
   <button
+    :disabled="isLoading"
     class="btn btn-outline-primary btn-sm"
     :class="{ active: item.favorited, 'pull-xs-right': !full }"
     @click="() => toggleFavorite(props.item)"
@@ -13,7 +14,7 @@
 import { Get } from "@/dependency";
 import type { Article } from "@/domain/Article";
 import { isError } from "@/libs/isError";
-import { toRefs } from "vue";
+import { ref, toRefs } from "vue";
 
 const props = defineProps<{
   item: Article;
@@ -22,10 +23,12 @@ const props = defineProps<{
 
 /// FIXME: toref 제대로 쓰기
 const { item, full } = toRefs(props);
+const isLoading = ref(false);
 
 let timer: number = 0;
 async function toggleFavorite(item: Article) {
   console.log("toggle");
+  isLoading.value = true;
   if (timer) clearTimeout(timer);
   timer = setTimeout(async () => {
     const repo = Get.get("IFavoriteRepository");
@@ -43,6 +46,7 @@ async function toggleFavorite(item: Article) {
         item.favoritesCount = result.favoritesCount;
       }
     }
+    isLoading.value = false;
   }, 300);
 }
 </script>

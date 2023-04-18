@@ -8,6 +8,7 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 
 const updateModel = reactive({
+  isLoading: false,
   password: "",
   image: "",
   username: "",
@@ -24,9 +25,11 @@ function logout() {
 
 async function updateUser() {
   const userRepository = Get.get("IUserRepository");
+  updateModel.isLoading = true;
   const result = await userRepository.updateCurrentUser({
     ...updateModel,
   });
+  updateModel.isLoading = false;
   if (isError(result)) return router.replace("/login");
   else {
     RealWorldStorage.set("user", result);
@@ -43,7 +46,7 @@ async function updateUser() {
           <h1 class="text-xs-center">Your Settings</h1>
 
           <form>
-            <fieldset>
+            <fieldset :disabled="updateModel.isLoading">
               <fieldset class="form-group">
                 <input
                   v-model="updateModel.image"

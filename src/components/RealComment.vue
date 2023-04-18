@@ -27,6 +27,7 @@ const emit = defineEmits<{
   (event: "delete", comment: IComment): void;
 }>();
 
+//컴포저블로 상위로 올리는게 낫지 않을까?
 async function deleteComment() {
   const commentRepository = Get.get("ICommentRepository");
   const ret = await commentRepository.delete(props.slug, props.comment.id);

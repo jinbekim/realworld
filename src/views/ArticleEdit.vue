@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Get } from "@/dependency";
 import { getErrorMessage, isError } from "@/libs/isError";
-import { reactive } from "vue";
+import { onMounted, reactive } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
@@ -14,6 +14,26 @@ const formModel = reactive({
   description: "",
   body: "",
   tagList: [] as string[],
+  isLoadiong: false,
+  isError: false,
+});
+
+onMounted(() => {
+  if (props.slug) {
+    formModel.isLoadiong = true;
+    const repo = Get.get("IArticleRepository");
+    repo.getArticle(props.slug).then((article) => {
+      if (isError(article)) {
+        formModel.isError = true;
+        return;
+      }
+      formModel.isLoadiong = false;
+      formModel.title = article.title;
+      formModel.description = article.description;
+      formModel.body = article.body;
+      formModel.tagList = article.tagList;
+    });
+  }
 });
 
 const errors = reactive<{ message: string }>({
@@ -25,8 +45,10 @@ async function onSubmit() {
   errors.message = "";
 
   if (!formModel.title || !formModel.description || !formModel.body) {
+    errors.message = "빈칸을 입력하세요.";
     return;
   }
+  formModel.isLoadiong = true;
   const repo = Get.get("IArticleRepository");
   if (props.slug) {
     const result = await repo.updateArticle(props.slug, {
@@ -34,6 +56,7 @@ async function onSubmit() {
       description: formModel.description,
       body: formModel.body,
     });
+    formModel.isLoadiong = false;
     console.log(result);
   } else {
     const result = await repo.createArticle({
@@ -42,6 +65,7 @@ async function onSubmit() {
       body: formModel.body,
       tagList: formModel.tagList,
     });
+    formModel.isLoadiong = false;
     if (isError(result)) {
       errors.message = getErrorMessage(result);
       return;
@@ -76,7 +100,7 @@ function deleteTag(e: Event) {
             {{ errors.message }}
           </span>
           <form @submit.prevent="onSubmit" @keydown.enter.prevent>
-            <fieldset>
+            <fieldset :disabled="formModel.isLoadiong">
               <fieldset class="form-group">
                 <input
                   type="text"

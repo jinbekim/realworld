@@ -1,7 +1,7 @@
 <template>
   <button
     class="btn btn-sm btn-outline-secondary action-btn"
-    @click="() => $router.push(`/editor/${slug})`)"
+    @click="() => $router.push(`/editor/${slug}`)"
   >
     <i class="ion-gear-a"></i>
     &nbsp; Edit Article
