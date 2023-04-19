@@ -1,61 +1,68 @@
 <script setup lang="ts">
-import useUser from "@/hooks/useUser";
+import useUser from "@/store/useUser";
 import { ref, watchEffect } from "vue";
-import { useRouter } from "vue-router";
-function isActive(path: string) {
-  return activePath.value === path;
-}
+import { useRoute } from "vue-router";
 
-const router = useRouter();
-const activePath = ref(router.currentRoute.value.path);
-const user = useUser();
+const route = useRoute();
+const activePathName = ref(route.name?.toString().split("-")[0] || "/");
+const { user, refetch } = useUser();
 
 const links = [
   {
     path: "/",
-    name: "Home",
+    name: "home",
     common: true,
   },
   {
     path: "/editor",
-    name: "New Article",
+    name: "editor",
     icon: "ion-compose",
     auth: true,
   },
   {
     path: "/settings",
-    name: "Settings",
+    name: "settings",
     icon: "ion-gear-a",
     auth: true,
   },
   {
     path: "/login",
-    name: "Sign in",
+    name: "login",
     auth: false,
   },
   {
     path: "/register",
-    name: "Sign up",
+    name: "register",
     auth: false,
   },
 ];
 
+function isActive(path: string) {
+  if (path === "home")
+    return (
+      activePathName.value === "global" ||
+      activePathName.value === "my" ||
+      activePathName.value === "tag"
+    );
+  return activePathName.value === path;
+}
+
 watchEffect(async () => {
-  activePath.value = router.currentRoute.value.path;
-  user.value = useUser().value;
+  activePathName.value = route.name?.toString().split("-")[0] || "/";
+  await refetch();
 });
 </script>
 
 <template>
   <nav class="navbar navbar-light">
-    <div class="container">
+    <header class="container">
       <router-link class="navbar-brand" to="/">conduit</router-link>
       <ul class="nav navbar-nav pull-xs-right">
         <template v-for="item in links" :key="item.path">
           <li v-if="item.common || !!user === item.auth" class="nav-item">
             <router-link
               class="nav-link"
-              :class="{ active: isActive(item.path) }"
+              :class="{ active: isActive(item.name) }"
               :to="item.path"
             >
               <i v-if="item.icon" :class="item.icon"></i>&nbsp;
@@ -66,7 +73,7 @@ watchEffect(async () => {
         <li class="nav-item">
           <router-link
             class="nav-link"
-            :class="{ active: isActive(`/@${user?.username}`) }"
+            :class="{ active: isActive('profile') }"
             :to="`/@${user?.username}`"
           >
             <img :ng-src="user?.image" class="user-pic" :src="user?.image" />
@@ -74,6 +81,6 @@ watchEffect(async () => {
           >
         </li>
       </ul>
-    </div>
+    </header>
   </nav>
 </template>

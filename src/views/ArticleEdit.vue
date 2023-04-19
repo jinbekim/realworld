@@ -70,8 +70,7 @@ async function onSubmit() {
       errors.message = getErrorMessage(result);
       return;
     } else {
-      // FIXME 안되
-      router.push(`/article/${result.slug}`);
+      router.push(`/articles/${result.slug}`);
     }
     console.log(result);
   }

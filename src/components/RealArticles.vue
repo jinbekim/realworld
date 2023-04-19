@@ -3,7 +3,7 @@
     <h1>Loading...</h1>
     <p>Loading...</p>
   </div>
-  <template v-else-if="items.length">
+  <template v-else-if="items?.length">
     <real-post-tile v-for="item in items" :item="item" />
   </template>
   <div v-else>

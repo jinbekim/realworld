@@ -1,3 +1,5 @@
+import type { Tag } from "@/infrastructure/tag";
+
 export interface ITagRepository {
-  getAll(): Promise<string[] | GenericError>;
+  getAll(): Promise<Tag[] | GenericError>;
 }

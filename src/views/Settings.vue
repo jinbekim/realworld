@@ -1,41 +1,11 @@
 <script setup lang="ts">
-import { Get } from "@/dependency";
-import useUser from "@/hooks/useUser";
-import { RealWorldStorage } from "@/infrastructure/storage";
-import { isError } from "@/libs/isError";
-import { reactive, ref } from "vue";
-import { useRouter } from "vue-router";
-const router = useRouter();
+import { useUpdateUser } from "@/composable/useUpdateUser";
+import useUser from "@/store/useUser";
+import { ref } from "vue";
 
-const updateModel = reactive({
-  isLoading: false,
-  password: "",
-  image: "",
-  username: "",
-  bio: "",
-  email: "",
-  ...useUser().value,
-});
 const password = ref("");
-
-function logout() {
-  RealWorldStorage.set("user", null);
-  router.replace("/");
-}
-
-async function updateUser() {
-  const userRepository = Get.get("IUserRepository");
-  updateModel.isLoading = true;
-  const result = await userRepository.updateCurrentUser({
-    ...updateModel,
-  });
-  updateModel.isLoading = false;
-  if (isError(result)) return router.replace("/login");
-  else {
-    RealWorldStorage.set("user", result);
-    router.replace(`/@${result.username}`);
-  }
-}
+const { user, logout } = useUser();
+const { userModel, updateUser } = useUpdateUser(user.value);
 </script>
 
 <template>
@@ -46,10 +16,10 @@ async function updateUser() {
           <h1 class="text-xs-center">Your Settings</h1>
 
           <form>
-            <fieldset :disabled="updateModel.isLoading">
+            <fieldset :disabled="userModel.isLoading">
               <fieldset class="form-group">
                 <input
-                  v-model="updateModel.image"
+                  v-model="userModel.image"
                   class="form-control"
                   type="text"
                   placeholder="URL of profile picture"
@@ -57,7 +27,7 @@ async function updateUser() {
               </fieldset>
               <fieldset class="form-group">
                 <input
-                  v-model="updateModel.username"
+                  v-model="userModel.username"
                   class="form-control form-control-lg"
                   type="text"
                   placeholder="Your Name"
@@ -65,7 +35,7 @@ async function updateUser() {
               </fieldset>
               <fieldset class="form-group">
                 <textarea
-                  v-model="updateModel.bio"
+                  v-model="userModel.bio"
                   class="form-control form-control-lg"
                   rows="8"
                   placeholder="Short bio about you"
@@ -73,7 +43,7 @@ async function updateUser() {
               </fieldset>
               <fieldset class="form-group">
                 <input
-                  v-model="updateModel.email"
+                  v-model="userModel.email"
                   class="form-control form-control-lg"
                   type="text"
                   placeholder="Email"

@@ -1,6 +1,6 @@
 export const isError = (response: any): response is GenericError => {
   if (!response) return false;
-  return response.errors !== undefined;
+  return response.errors !== undefined || response.status !== undefined;
 };
 
 export const getErrorMessage = (error: GenericError): string => {

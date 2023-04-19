@@ -1,8 +1,4 @@
-import {
-  createRouter,
-  createWebHistory,
-  createWebHashHistory,
-} from "vue-router";
+import { createRouter, createWebHashHistory } from "vue-router";
 import HomeView from "../views/Home.vue";
 import NotFound from "../views/error/NotFound.vue";
 
@@ -17,6 +13,25 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: HomeView,
+      props: true,
+      children: [
+        {
+          path: "",
+          name: "global-feed",
+          component: () => import("../components/RealArticles.vue"),
+        },
+        {
+          path: "my-feed",
+          name: "my-feed",
+          component: () => import("../components/RealArticles.vue"),
+        },
+        {
+          path: ":tag",
+          name: "tag-feed",
+          component: () => import("../components/RealArticles.vue"),
+          props: true,
+        },
+      ],
     },
     // {
     //   path: "/tags/:tag",
@@ -45,10 +60,18 @@ const router = createRouter({
     },
     //Editor page to create/edit articles (URL: /editor, /editor/article-slug-here )
     {
-      path: "/editor/:slug?",
+      path: "/editor/",
       name: "editor",
       component: () => import("../views/ArticleEdit.vue"),
       props: true,
+      children: [
+        {
+          path: ":slug",
+          name: "editor-slug",
+          component: () => import("../views/ArticleEdit.vue"),
+          props: true,
+        },
+      ],
     },
     //     Article page (URL: /article/article-slug-here )
     // Delete article button (only shown to article's author)

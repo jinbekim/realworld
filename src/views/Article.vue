@@ -5,13 +5,14 @@ import { isError } from "@/libs/isError";
 import { computed, onMounted, ref, toRef } from "vue";
 import { useRouter } from "vue-router";
 import type { IComment } from "@/domain/Comment";
-import RealComment from "@/components/RealComment.vue";
 import RealMiniProfile from "@/components/RealMiniProfile.vue";
 import RealFavoriteButton from "@/components/buttons/RealFavoriteButton.vue";
-import useUser from "@/hooks/useUser";
 import RealEditArticleButton from "@/components/buttons/RealEditArticleButton.vue";
 import RealFollowButton from "@/components/buttons/RealFollowButton.vue";
 import RealDeleteArticleButton from "@/components/buttons/RealDeleteArticleButton.vue";
+import useUser from "@/store/useUser";
+import { useComments } from "@/composable/useComments";
+import RealComment from "@/components/RealComment.vue";
 
 const props = defineProps({
   slug: {
@@ -23,9 +24,8 @@ const slug = toRef(props, "slug");
 
 const router = useRouter();
 const article = ref<Article>();
-const comments = ref<IComment[]>([]);
-const textComment = ref("");
-const user = useUser();
+const { comments } = useComments(slug.value);
+const { user } = useUser();
 const isPostMine = computed(() => {
   if (!article.value) return false;
   return article.value.author.username === user.value?.username;
@@ -51,17 +51,6 @@ async function getComments() {
   const repo = Get.get("ICommentRepository");
   const comments = await repo.get(slug.value);
   return comments;
-}
-
-async function onSubmit(event: Event) {
-  event.preventDefault();
-  if (!textComment.value) return;
-  const repo = Get.get("ICommentRepository");
-  const comment = await repo.add(slug.value, { body: textComment.value });
-  if (!isError(comment)) {
-    comments.value.push(comment);
-    textComment.value = "";
-  }
 }
 </script>
 
@@ -119,30 +108,7 @@ async function onSubmit(event: Event) {
 
       <div class="row">
         <div class="col-xs-12 col-md-8 offset-md-2">
-          <form class="card comment-form" @submit="onSubmit">
-            <div class="card-block">
-              <textarea
-                v-model="textComment"
-                class="form-control"
-                placeholder="Write a comment..."
-                rows="3"
-              ></textarea>
-            </div>
-            <div class="card-footer">
-              <img :src="article.author.image" class="comment-author-img" />
-              <button class="btn btn-sm btn-primary">Post Comment</button>
-            </div>
-          </form>
-
-          <template v-if="comments" v-for="comment in comments">
-            <real-comment
-              :slug="slug"
-              :comment="comment"
-              @delete="
-                () => (comments = comments.filter((c) => c.id !== comment.id))
-              "
-            />
-          </template>
+          <real-comment :slug="slug"></real-comment>
         </div>
       </div>
     </div>

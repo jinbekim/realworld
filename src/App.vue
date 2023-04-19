@@ -1,20 +1,21 @@
 <script setup lang="ts">
 import { RouterView, useRouter } from "vue-router";
-import Header from "./components/layouts/Header.vue";
-import Footer from "./components/layouts/Footer.vue";
+import TheHeader from "./components/layouts/TheHeader.vue";
+import TheFooter from "./components/layouts/TheFooter.vue";
 import { onErrorCaptured } from "vue";
 
 const router = useRouter();
 
 onErrorCaptured((err) => {
   console.log(err);
-  router.replace("/login");
+  console.log("error captured");
+  // router.replace("/login");
   return false;
 });
 </script>
 
 <template>
-  <Header></Header>
+  <TheHeader></TheHeader>
   <RouterView />
-  <Footer></Footer>
+  <TheFooter></TheFooter>
 </template>

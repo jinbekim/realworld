@@ -1,46 +1,38 @@
 <script setup lang="ts">
 import { Get } from "@/dependency";
 import { isError } from "@/libs/isError";
-import { onMounted, reactive, ref, watch, watchEffect } from "vue";
+import { reactive, ref, watchEffect } from "vue";
 import type { Article } from "@/domain/Article";
-import RealPostTile from "@/components/RealPostTile.vue";
-import useUser from "@/hooks/useUser";
 import RealPagination from "@/components/RealPagination.vue";
-import RealArticles from "@/components/RealArticles.vue";
+import useUser from "@/store/useUser";
 
-const user = useUser();
-const filter = ref<string>(user ? "Your Feed" : "Global Feed");
+import { usePagination } from "@/composable/usePagination";
+import TheAside from "@/components/layouts/TheAside.vue";
+import { useRoute } from "vue-router";
+import { isArray } from "@vue/shared";
+import RealNavTab from "@/components/RealNavTab.vue";
 
-onMounted(() => {
-  Get.get("ITagRepository")
-    .getAll()
-    .then((result) => {
-      if (!isError(result)) {
-        tags.tagList = result;
-        tags.loading = false;
-      }
-    });
+const route = useRoute();
+const { user } = useUser();
+const filter = ref<string>();
+watchEffect(() => {
+  filter.value = isArray(route.params.tag)
+    ? route.params.tag[0]
+    : route.params.tag;
 });
 
-const tags = reactive({
-  tagList: [] as string[],
-  loading: true,
-});
 const feed = reactive({
   feedList: [] as Article[],
   loading: true,
 });
 
-const pagination = reactive({
-  total: 0,
-  limit: 10,
-  offset: 0,
-});
+const { pagination, onClickPage } = usePagination();
 
 watchEffect(() => {
   feed.loading = true;
 
-  if (filter.value === "Your Feed") {
+  if (route.name === "my-feed") {
+    if (!user.value) throw new Error("User is not logged in");
     Get.get("IArticleRepository")
       .getFeedArticles({ limit: pagination.limit, offset: pagination.offset })
       .then((result) => {
@@ -50,10 +42,25 @@ watchEffect(() => {
           pagination.total = result.articlesCount;
         }
       });
-  } else {
+  } else if (route.name === "global-feed") {
     Get.get("IArticleRepository")
       .getArticles({
-        tag: filter.value === "Global Feed" ? undefined : filter.value,
+        pagination: {
+          limit: pagination.limit,
+          offset: pagination.offset,
+        },
+      })
+      .then((result) => {
+        if (!isError(result)) {
+          feed.feedList = result.articles;
+          feed.loading = false;
+          pagination.total = result.articlesCount;
+        }
+      });
+  } else if (route.name === "tag-feed") {
+    Get.get("IArticleRepository")
+      .getArticles({
+        tag: isArray(route.params.tag) ? route.params.tag[0] : route.params.tag,
         pagination: {
           limit: pagination.limit,
           offset: pagination.offset,
@@ -68,20 +75,6 @@ watchEffect(() => {
       });
   }
 });
-
-function onSelectTab(event: Event) {
-  const tab = (event.target as HTMLButtonElement).innerText;
-  if (tab[0] === "#") {
-    filter.value = tab.slice(1).trim();
-  } else if (tab === "Your Feed" || tab === "Global Feed") {
-    filter.value = tab;
-  }
-  pagination.offset = 0;
-}
-
-function onClickPage(page: number) {
-  pagination.offset = page * pagination.limit;
-}
 </script>
 
 <template>
@@ -97,64 +90,31 @@ function onClickPage(page: number) {
       <div class="row">
         <div class="col-md-9">
           <div class="feed-toggle">
-            <ul class="nav nav-pills outline-active" @click="onSelectTab">
-              <li class="nav-item" v-if="user">
-                <button
-                  type="button"
-                  class="nav-link"
-                  :class="{ active: `Your Feed` === filter }"
-                >
-                  Your Feed
-                </button>
-              </li>
-              <li class="nav-item">
-                <button
-                  type="button"
-                  class="nav-link"
-                  :class="{ active: `Global Feed` === filter }"
-                >
-                  Global Feed
-                </button>
-              </li>
-              <li
-                class="nav-item"
-                v-if="
-                  filter && filter !== 'Your Feed' && filter !== 'Global Feed'
-                "
+            <ul class="nav nav-pills outline-active">
+              <RealNavTab
+                v-if="user"
+                to="/my-feed"
+                :active="$route.name === 'my-feed'"
               >
-                <button type="button" class="nav-link active">
-                  # {{ filter }}
-                </button>
-              </li>
+                Your Feed
+              </RealNavTab>
+              <RealNavTab to="/" :active="$route.name === 'global-feed'">
+                Global Feed
+              </RealNavTab>
+              <RealNavTab
+                v-if="$route.name === 'tag-feed'"
+                :to="`/tags/${filter}`"
+                :active="$route.name === 'tag-feed'"
+              >
+                # {{ filter }}
+              </RealNavTab>
             </ul>
           </div>
 
-          <RealArticles
-            :isLoading="feed.loading"
-            :items="feed.feedList"
-          ></RealArticles>
+          <router-view :isLoading="feed.loading" :items="feed.feedList" />
         </div>
 
-        <div class="col-md-3">
-          <div class="sidebar">
-            <p>Popular Tags</p>
-            <span v-if="tags.loading">Loading...</span>
-            <div v-else class="tag-list">
-              <router-link
-                to="/"
-                v-for="tag in tags.tagList"
-                @click="
-                  () => {
-                    filter = tag;
-                  }
-                "
-                class="tag-pill tag-default ng-binding ng-scope"
-              >
-                {{ tag }}
-              </router-link>
-            </div>
-          </div>
-        </div>
+        <TheAside />
 
         <RealPagination
           v-if="!feed.loading"
