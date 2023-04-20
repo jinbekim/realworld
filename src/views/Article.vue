@@ -4,7 +4,6 @@ import type { Article } from "@/domain/Article";
 import { isError } from "@/libs/isError";
 import { computed, onMounted, ref, toRef } from "vue";
 import { useRouter } from "vue-router";
-import type { IComment } from "@/domain/Comment";
 import RealMiniProfile from "@/components/RealMiniProfile.vue";
 import RealFavoriteButton from "@/components/buttons/RealFavoriteButton.vue";
 import RealEditArticleButton from "@/components/buttons/RealEditArticleButton.vue";
@@ -13,6 +12,7 @@ import RealDeleteArticleButton from "@/components/buttons/RealDeleteArticleButto
 import useUser from "@/store/useUser";
 import { useComments } from "@/composable/useComments";
 import RealComment from "@/components/RealComment.vue";
+import { converter } from "@/libs/mdToHtmlConvertor";
 
 const props = defineProps({
   slug: {
@@ -33,8 +33,12 @@ const isPostMine = computed(() => {
 
 onMounted(async () => {
   const ret = await getArticle();
-  if (!isError(ret)) article.value = ret;
-  else router.replace("/login");
+  if (!isError(ret)) {
+    article.value = {
+      ...ret,
+      body: converter.makeHtml(ret.body),
+    };
+  } else router.replace("/login");
 
   const ret2 = await getComments();
   if (!isError(ret2)) comments.value = ret2;
@@ -76,6 +80,7 @@ async function getComments() {
       </div>
     </div>
 
+    <!-- //REVIEW - v-html directive -->
     <div class="container page">
       <div class="row article-content">
         <div class="col-md-12">
@@ -83,7 +88,7 @@ async function getComments() {
             {{ article?.description }}
           </p>
           <h2 id="introducing-ionic">{{ article?.title }}</h2>
-          <p>{{ article?.body }}</p>
+          <p v-html="article.body"></p>
         </div>
       </div>
 

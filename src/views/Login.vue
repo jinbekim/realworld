@@ -55,6 +55,7 @@ async function onSubmit(event: Event) {
 }
 
 function checkValidate(event: Event) {
+  event.preventDefault();
   const target = event.target as HTMLInputElement;
   console.log(target.value);
   if (target.validity.valid) {
@@ -95,6 +96,7 @@ watchEffect(() => {
             <fieldset v-if="text.h1 === 'Sign up'" class="form-group">
               <input
                 @blur="checkValidate"
+                @invalid="(e) => e.preventDefault()"
                 :required="text.h1 === 'Sign up'"
                 v-model="formModel.username"
                 name="username"
@@ -106,6 +108,7 @@ watchEffect(() => {
             <fieldset class="form-group">
               <input
                 @blur="checkValidate"
+                @invalid="(e) => e.preventDefault()"
                 required
                 v-model="formModel.email"
                 name="email"
@@ -117,6 +120,7 @@ watchEffect(() => {
             <fieldset class="form-group">
               <input
                 @blur="checkValidate"
+                @invalid="(e) => e.preventDefault()"
                 required
                 v-model="formModel.password"
                 name="password"

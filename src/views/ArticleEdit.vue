@@ -98,7 +98,7 @@ function deleteTag(e: Event) {
           <span v-if="errors.message" class="error-messages">
             {{ errors.message }}
           </span>
-          <form @submit.prevent="onSubmit" @keydown.enter.prevent>
+          <form @submit.prevent="onSubmit">
             <fieldset :disabled="formModel.isLoadiong">
               <fieldset class="form-group">
                 <input
