@@ -11,26 +11,29 @@ import TheAside from "@/components/layouts/TheAside.vue";
 import { useRoute } from "vue-router";
 import { isArray } from "@vue/shared";
 import RealNavTab from "@/components/RealNavTab.vue";
+import RealArticles from "@/components/RealArticles.vue";
+import testButtonVue from "@/components/buttons/testButton.vue";
+import MiddleComponent from "@/components/buttons/MiddleComponent.vue";
 
 const route = useRoute();
 const { user } = useUser();
+const { pagination, onClickPage } = usePagination();
 const filter = ref<string>();
+const feed = reactive({
+  feedList: [] as Article[],
+  loading: true,
+});
+
 watchEffect(() => {
   filter.value = isArray(route.params.tag)
     ? route.params.tag[0]
     : route.params.tag;
 });
 
-const feed = reactive({
-  feedList: [] as Article[],
-  loading: true,
-});
-
-const { pagination, onClickPage } = usePagination();
-
 watchEffect(() => {
   feed.loading = true;
 
+  //REVIEW -  router-view로 나눴어도 될듯.
   if (route.name === "my-feed") {
     if (!user.value) throw new Error("User is not logged in");
     Get.get("IArticleRepository")
@@ -44,12 +47,7 @@ watchEffect(() => {
       });
   } else if (route.name === "global-feed") {
     Get.get("IArticleRepository")
-      .getArticles({
-        pagination: {
-          limit: pagination.limit,
-          offset: pagination.offset,
-        },
-      })
+      .getArticles({ pagination })
       .then((result) => {
         if (!isError(result)) {
           feed.feedList = result.articles;
@@ -61,10 +59,7 @@ watchEffect(() => {
     Get.get("IArticleRepository")
       .getArticles({
         tag: isArray(route.params.tag) ? route.params.tag[0] : route.params.tag,
-        pagination: {
-          limit: pagination.limit,
-          offset: pagination.offset,
-        },
+        pagination,
       })
       .then((result) => {
         if (!isError(result)) {
@@ -75,6 +70,10 @@ watchEffect(() => {
       });
   }
 });
+
+function onClick() {
+  console.log("button click from parent");
+}
 </script>
 
 <template>
@@ -91,6 +90,7 @@ watchEffect(() => {
         <div class="col-md-9">
           <div class="feed-toggle">
             <ul class="nav nav-pills outline-active">
+              <MiddleComponent @click="onClick"></MiddleComponent>
               <RealNavTab
                 v-if="user"
                 to="/my-feed"
@@ -111,7 +111,12 @@ watchEffect(() => {
             </ul>
           </div>
 
-          <router-view :isLoading="feed.loading" :items="feed.feedList" />
+          <!-- REVIEW - type checking?  -->
+          <RealArticles
+            :isLoading="feed.loading"
+            :items="feed.feedList"
+          ></RealArticles>
+          <!-- <router-view :isLoading="feed.loading" :items="feed.feedList" /> -->
         </div>
 
         <TheAside />
