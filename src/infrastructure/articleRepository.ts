@@ -106,7 +106,7 @@ export class ArticleRepository implements IArticleRepository {
   ): Promise<GenericError | Article> {
     try {
       const response = await fetcher(`articles/${slug}`, {
-        method: "POST",
+        method: "PUT",
         body: JSON.stringify({ article }),
         headers: {
           "Content-Type": "application/json",

@@ -5,9 +5,11 @@ import { isError } from "@/libs/isError";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
+// REVIEW - store
+const user = ref<User | null>(RealWorldStorage.get("user"));
+
 const useUser = () => {
   const router = useRouter();
-  const user = ref<User | null>(RealWorldStorage.get("user"));
 
   const logout = () => {
     RealWorldStorage.set("user", null);

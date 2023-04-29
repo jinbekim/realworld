@@ -1,19 +1,21 @@
 <script setup lang="ts">
 import { Get } from "@/dependency";
 import { isError } from "@/libs/isError";
-import { reactive, ref, watchEffect } from "vue";
+import { defineAsyncComponent, reactive, ref, watchEffect } from "vue";
 import type { Article } from "@/domain/Article";
 import RealPagination from "@/components/RealPagination.vue";
 import useUser from "@/store/useUser";
 
 import { usePagination } from "@/composable/usePagination";
-import TheAside from "@/components/layouts/TheAside.vue";
 import { useRoute } from "vue-router";
 import { isArray } from "@vue/shared";
 import RealNavTab from "@/components/RealNavTab.vue";
-import RealArticles from "@/components/RealArticles.vue";
-import testButtonVue from "@/components/buttons/testButton.vue";
 import MiddleComponent from "@/components/buttons/MiddleComponent.vue";
+import Wrapper from "@/components/layouts/Wrapper.vue";
+
+const TheAside = defineAsyncComponent({
+  loader: () => import("@/components/layouts/Wrapper.vue"),
+});
 
 const route = useRoute();
 const { user } = useUser();
@@ -119,7 +121,7 @@ function onClick() {
           <!-- <router-view :isLoading="feed.loading" :items="feed.feedList" /> -->
         </div>
 
-        <TheAside />
+        <TheAside></TheAside>
 
         <RealPagination
           v-if="!feed.loading"

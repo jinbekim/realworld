@@ -13,22 +13,24 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: HomeView,
+      //REVIEW -  아마 부모 자식 둘다 true로 해야 props가 전달되는 것 같다.
       props: true,
       children: [
         {
           path: "",
           name: "global-feed",
-          component: () => import("../components/RealArticles.vue"),
+          component: HomeView,
         },
         {
           path: "my-feed",
           name: "my-feed",
-          component: () => import("../components/RealArticles.vue"),
+          component: HomeView,
         },
         {
           path: ":tag",
           name: "tag-feed",
-          component: () => import("../components/RealArticles.vue"),
+          component: HomeView,
+          // REVIEW - props -> true로 해야 props가 전달된다. children에서는 router
           props: true,
         },
       ],

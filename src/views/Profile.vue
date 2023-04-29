@@ -13,6 +13,7 @@ import useUser from "@/store/useUser";
 import RealNavTab from "@/components/RealNavTab.vue";
 const router = useRouter();
 const route = useRoute();
+
 const props = defineProps({
   username: {
     type: String,
@@ -24,7 +25,7 @@ const { user } = useUser();
 const { profile } = useProfile(props.username);
 
 const items = ref<Article[]>([]);
-const isMine = (username: string) => {
+const isMine = (username?: string) => {
   return profile.value?.username === username;
 };
 const isLoading = ref(false);
@@ -75,16 +76,16 @@ async function getFavorites(username: string): Promise<Article[]> {
 <template>
   <div class="profile-page">
     <div class="user-info">
-      <div class="container" v-if="user">
+      <div class="container" v-if="profile">
         <div class="row">
           <div class="col-xs-12 col-md-10 offset-md-1">
-            <img :src="user.image" class="user-img" />
-            <h4>{{ user.username }}</h4>
+            <img :src="profile.image" class="user-img" />
+            <h4>{{ profile.username }}</h4>
             <p>
-              {{ user.bio }}
+              {{ profile.bio }}
             </p>
             <real-edit-profile-button
-              v-if="isMine(user.username)"
+              v-if="isMine(user?.username)"
             ></real-edit-profile-button>
             <real-follow-button v-else :user="profile!"></real-follow-button>
           </div>

@@ -14,13 +14,14 @@ import { useComments } from "@/composable/useComments";
 import RealComment from "@/components/RealComment.vue";
 import { converter } from "@/libs/mdToHtmlConvertor";
 
-const props = defineProps({
-  slug: {
-    type: String,
-    required: true,
-  },
-});
-const slug = toRef(props, "slug");
+// const props = defineProps({
+//   slug: {
+//     type: String,
+//     required: true,
+//   },
+// });
+// const slug = toRef(props, "slug");
+const slug = ref<string>("sdijf");
 
 const router = useRouter();
 const article = ref<Article>();

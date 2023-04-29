@@ -57,6 +57,12 @@ async function onSubmit() {
       body: formModel.body,
     });
     formModel.isLoadiong = false;
+    if (isError(result)) {
+      errors.message = getErrorMessage(result);
+      return;
+    } else {
+      router.push(`/articles/${result.slug}`);
+    }
     console.log(result);
   } else {
     const result = await repo.createArticle({

@@ -19,6 +19,6 @@ const props = defineProps<{
   isLoading: boolean;
   items: Article[];
 }>();
-
+console.log(props.items);
 const { isLoading, items } = toRefs(props);
 </script>

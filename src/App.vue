@@ -1,19 +1,18 @@
 <script setup lang="ts">
-import { RouterView, useRouter } from "vue-router";
+import { RouterView } from "vue-router";
 import TheHeader from "./components/layouts/TheHeader.vue";
 import TheFooter from "./components/layouts/TheFooter.vue";
 import { onErrorCaptured } from "vue";
 
-const router = useRouter();
-
+// REVIEW - error boundary
 onErrorCaptured((err) => {
   console.log(err);
   console.log("error captured");
-  // router.replace("/login");
   return false;
 });
 </script>
 
+<!-- REVIEW - The 템플릿에 하나  -->
 <template>
   <TheHeader></TheHeader>
   <RouterView />

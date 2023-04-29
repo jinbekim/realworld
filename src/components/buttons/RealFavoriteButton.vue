@@ -10,43 +10,46 @@
     {{ item.favoritesCount }}
   </button>
 </template>
+
 <script setup lang="ts">
 import { Get } from "@/dependency";
 import type { Article } from "@/domain/Article";
 import { isError } from "@/libs/isError";
+import useUser from "@/store/useUser";
 import { ref, toRefs } from "vue";
+import { useRouter } from "vue-router";
+import { debounce } from "lodash";
 
 const props = defineProps<{
   item: Article;
   full?: boolean;
 }>();
 
-/// FIXME: toref 제대로 쓰기
 const { item, full } = toRefs(props);
 const isLoading = ref(false);
+const router = useRouter();
+const user = useUser();
 
-let timer: number = 0;
-async function toggleFavorite(item: Article) {
-  console.log("toggle");
-  isLoading.value = true;
-  if (timer) clearTimeout(timer);
-  timer = setTimeout(async () => {
-    const repo = Get.get("IFavoriteRepository");
-    console.log("set timeout");
-    if (item.favorited) {
-      const result = await repo.remove(item.slug);
-      if (!isError(result)) {
-        item.favorited = result.favorited;
-        item.favoritesCount = result.favoritesCount;
-      }
+const toggleFavorite = debounce(async (item: Article) => {
+  const repo = Get.get("IFavoriteRepository");
+  console.log("set timeout");
+  if (item.favorited) {
+    const result = await repo.remove(item.slug);
+    if (!isError(result)) {
+      item.favorited = result.favorited;
+      item.favoritesCount = result.favoritesCount;
     } else {
-      const result = await repo.add(item.slug);
-      if (!isError(result)) {
-        item.favorited = result.favorited;
-        item.favoritesCount = result.favoritesCount;
-      }
+      router.push("/login");
     }
-    isLoading.value = false;
-  }, 300);
-}
+  } else {
+    const result = await repo.add(item.slug);
+    if (!isError(result)) {
+      item.favorited = result.favorited;
+      item.favoritesCount = result.favoritesCount;
+    } else {
+      router.push("/login");
+    }
+  }
+  isLoading.value = false;
+}, 300);
 </script>

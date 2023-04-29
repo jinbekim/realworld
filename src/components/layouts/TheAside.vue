@@ -2,8 +2,7 @@
   <div class="col-md-3">
     <aside class="sidebar">
       <p>Popular Tags</p>
-      <span v-if="isLoading">Loading...</span>
-      <div v-else class="tag-list">
+      <div class="tag-list">
         <router-link
           v-for="tag in tags"
           :to="`/${tag}`"
@@ -17,7 +16,8 @@
 </template>
 
 <script setup lang="ts">
-import { useTags } from "@/composable/useTags";
-
-const { tags, isLoading } = useTags();
+interface Props {
+  tags: string[];
+}
+defineProps<Props>();
 </script>
