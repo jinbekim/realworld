@@ -1,8 +1,8 @@
 <template>
   <!-- <Child>{{ testProxy.test }}</Child> -->
-  <!-- <Child :msg="testProxy">{{ testProxy }}</Child> -->
-  <div>{{ test }}</div>
-  <div>{{ testProxy }}</div>
+  <Child :msg="testProxy"></Child>
+  <!-- <div>{{ test }}</div>
+  <div>{{ testProxy }}</div> -->
   <button @click="onClick">click</button>
 </template>
 
@@ -13,7 +13,15 @@ import Child from "./Child.vue";
 const testProxy = reactive({
   test: "test",
   test3: "test3",
+
   test4: "test4",
+
+  test5: {
+    test6: "test6",
+    test7: {
+      test8: ["test8"],
+    },
+  },
 });
 
 // 이렇게 해도 getter가 알텐데?
@@ -43,11 +51,12 @@ onUpdated(() => {
  * 그래서 update가 된다.
  */
 function onClick() {
+  testProxy.test5.test7.test8.push("test changed");
   // disconnect 되네..
-  test += "c";
-  // testProxy.test += "t";
-  if (testProxy.test4 !== "t") testProxy.test4 = "t";
-  else testProxy.test4 = "test4 changed";
+  // test += "c";
+  // // testProxy.test += "t";
+  // if (testProxy.test4 !== "t") testProxy.test4 = "t";
+  // else testProxy.test4 = "test4 changed";
 }
 </script>
 
