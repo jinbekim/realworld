@@ -4,11 +4,14 @@
   <!-- <div>{{ test }}</div>
   <div>{{ testProxy }}</div> -->
   <button @click="onClick">click</button>
+
+  <FromParent></FromParent>
 </template>
 
 <script setup lang="ts">
 import { reactive, onMounted, onUpdated, toRef, toRefs } from "vue";
 import Child from "./Child.vue";
+import FromParent from "./FromParent.vue";
 
 const testProxy = reactive({
   test: "test",
