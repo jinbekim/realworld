@@ -1,5 +1,5 @@
 <template>
-  <VButton :size="'large'" :height="'small'">hi</VButton>
+  <VButton :size="'large'" :height="'high'">hi</VButton>
 </template>
 
 <script setup lang="ts">

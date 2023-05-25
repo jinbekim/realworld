@@ -1,5 +1,5 @@
 <template>
-  <button :class="$style['red']" :class="[ss[props.size], hh[props.height]]">
+  <button :class="[size, height]">
     <slot> </slot>
   </button>
 </template>
@@ -7,17 +7,11 @@
 <script setup lang="ts">
 const props = defineProps<{
   size: "large" | "small";
-  height: "large" | "small";
+  height: "high" | "low";
 }>();
 </script>
 
-<style module>
-.red {
-  color: red;
-}
-</style>
-
-<style module="ss">
+<style scoped>
 .large {
   padding: 10px 20px;
   font-size: 1.2rem;
@@ -27,13 +21,10 @@ const props = defineProps<{
   padding: 5px 10px;
   font-size: 0.8rem;
 }
-</style>
-
-<style module="hh">
-.large {
-  height: 100px;
+.high {
+  background-color: #f00;
 }
-.small {
-  height: 50px;
+.low {
+  background-color: #0f0;
 }
 </style>
