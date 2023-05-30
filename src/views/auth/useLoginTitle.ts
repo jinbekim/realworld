@@ -1,4 +1,5 @@
-import { inject, computed, InjectionKey, Ref } from "vue";
+import { inject, computed, InjectionKey, Ref, watch, watchEffect } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
 // all is view logic
 
@@ -32,13 +33,32 @@ export const useLoginTitle = () => {
 
   // TODO - 공통 title 컴토넌트 만들기
   // TODO - setter 어디에 둘지 고민
+  const route = useRoute();
+  watchEffect(() => {
+    context.value = route.path === "/login" ? "login" : "register";
+  });
 
   return computed(() => TextContent[context.value ?? "default"]);
 };
 
 export const useLoginRouter = () => {
-  const router = inject(loginRouterKey);
-  return router;
+  const path = inject(loginRouterKey);
+  const router = useRouter();
+
+  const togglePath = computed(() => {
+    return path.value === "./login" ? "./register" : "./login";
+  });
+
+  watch(
+    () => router.currentRoute.value.path,
+    () => {
+      path.value =
+        router.currentRoute.value.path === "/login" ? "./login" : "./register";
+    },
+    { immediate: true }
+  );
+
+  return { path, togglePath };
 };
 
 export type loginTitleType = "login" | "register" | "default";

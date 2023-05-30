@@ -5,10 +5,18 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{
-  size: "large" | "small";
-  height: "high" | "low";
-}>();
+type Props =
+  | {
+      icon: number;
+      size: "small";
+      height: "low";
+    }
+  | {
+      size: "large" | "small";
+      height: "high" | "low";
+    };
+
+const props = defineProps<Props>();
 </script>
 
 <style scoped>

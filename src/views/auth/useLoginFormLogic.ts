@@ -1,5 +1,21 @@
 import { InjectionKey } from "vue";
-export const useLoginFormLogic = () => {};
+import { Get } from '@/dependency';
+export const useLoginFormLogic = () => {
+  const repo = Get.get("IUserRepository");
+
+  const tryToLogin = async ({email, password}) => {
+
+    const user = await repo.login({
+      email: email,
+      password: password,
+    });
+  }
+
+  const tryeToSignup = async ({email, password, username}) => {
+
+
+
+};
 
 export const loginFormLogicKey = Symbol() as InjectionKey<() => void>;
 

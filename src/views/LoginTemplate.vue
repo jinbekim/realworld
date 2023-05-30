@@ -2,21 +2,20 @@
 import { Get } from "@/dependency";
 import { RealWorldStorage } from "@/infrastructure/storage";
 import { getErrorMessage, isError } from "@/libs/isError";
-import { provide, reactive, watchEffect, ref, InjectionKey } from "vue";
+import { reactive, watchEffect, ref, InjectionKey, watch } from "vue";
 import { useRouter } from "vue-router";
 import LoginTitle from "./auth/LoginTitle.vue";
-import { loginTitleKey, loginRouterKey } from "./auth/useLoginTitle";
+import { useLoginTitle } from "./auth/useLoginTitle";
+import AuthInput from "./auth/AuthInput.vue";
+import { useLoginRouter } from "./auth/useLoginTitle";
 
 const router = useRouter();
 const errors = reactive<{ message: string }>({
   message: "",
 });
 
-const text = reactive({
-  h1: "",
-  p: "",
-  to: "",
-});
+const loginText = useLoginTitle();
+const { path } = useLoginRouter();
 
 const formModel = reactive({
   username: "",
@@ -25,11 +24,10 @@ const formModel = reactive({
 });
 
 async function onSubmit(event: Event) {
+  // move to useAuthLogic
   event.preventDefault();
   const repo = Get.get("IUserRepository");
-  console.log(formModel.email, formModel.password, formModel.username);
-  if (text.h1 === "Sign in") {
-    console.log("Sign in");
+  if (path.value === "./login") {
     const user = await repo.login({
       email: formModel.email,
       password: formModel.password,
@@ -40,8 +38,7 @@ async function onSubmit(event: Event) {
     } else {
       errors.message = getErrorMessage(user);
     }
-  } else if (text.h1 === "Sign up") {
-    console.log("Sign up");
+  } else if (path.value === "./register") {
     const user = await repo.register({
       email: formModel.email,
       password: formModel.password,
@@ -55,34 +52,6 @@ async function onSubmit(event: Event) {
     }
   }
 }
-
-function checkValidate(event: Event) {
-  event.preventDefault();
-  const target = event.target as HTMLInputElement;
-  console.log(target.value);
-  if (target.validity.valid) {
-    errors.message = "";
-  } else {
-    errors.message = target.name + target.validationMessage;
-  }
-}
-
-const loginTitle = ref<"login" | "register">("login");
-const loginRouter = ref<"./login" | "./register">("./login");
-
-provide(loginTitleKey, loginTitle);
-provide(loginRouterKey, loginRouter);
-
-watchEffect(() => {
-  if (router.currentRoute.value.path === "/login") {
-    // NOTE - 상위에 provide context를 두고 inject만 해도 됨.
-    loginTitle.value = "register";
-    loginRouter.value = "./register";
-  } else if (router.currentRoute.value.path === "/register") {
-    loginTitle.value = "login";
-    loginRouter.value = "./login";
-  }
-});
 </script>
 
 <template>
@@ -97,44 +66,35 @@ watchEffect(() => {
           </p>
 
           <form @submit="onSubmit">
-            <fieldset v-if="text.h1 === 'Sign up'" class="form-group">
-              <input
-                @blur="checkValidate"
-                @invalid="(e) => e.preventDefault()"
-                :required="text.h1 === 'Sign up'"
-                v-model="formModel.username"
-                name="username"
-                class="form-control form-control-lg"
-                type="text"
-                placeholder="Your Name"
-              />
-            </fieldset>
-            <fieldset class="form-group">
-              <input
-                @blur="checkValidate"
-                @invalid="(e) => e.preventDefault()"
-                required
-                v-model="formModel.email"
-                name="email"
-                class="form-control form-control-lg"
-                type="Email"
-                placeholder="Email"
-              />
-            </fieldset>
-            <fieldset class="form-group">
-              <input
-                @blur="checkValidate"
-                @invalid="(e) => e.preventDefault()"
-                required
-                v-model="formModel.password"
-                name="password"
-                class="form-control form-control-lg"
-                type="password"
-                placeholder="Password"
-              />
-            </fieldset>
+            <auth-input
+              v-if="path === './register'"
+              name="username"
+              v-model="formModel.username"
+              placeholder="Your Name"
+              type="text"
+              :required="path === './register'"
+            />
+
+            <auth-input
+              name="email"
+              v-model="formModel.email"
+              placeholder="Email"
+              type="Email"
+              required
+              @error="errors.message = $event"
+            />
+
+            <auth-input
+              name="password"
+              v-model="formModel.password"
+              placeholder="Password"
+              type="password"
+              required
+              @error="errors.message = $event"
+            />
+
             <button class="btn btn-lg btn-primary pull-xs-right">
-              {{ text.h1 }}
+              {{ loginText.h1 }}
             </button>
           </form>
         </div>
