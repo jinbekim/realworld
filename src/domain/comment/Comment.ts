@@ -1,4 +1,4 @@
-import type { Profile } from "./Profile";
+import { Profile } from "../profile/Profile";
 
 export interface IComment {
   id: number;
