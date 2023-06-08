@@ -33,9 +33,8 @@ export const useLoginTitle = () => {
 
   // TODO - 공통 title 컴토넌트 만들기
   // TODO - setter 어디에 둘지 고민
-  const route = useRoute();
   watchEffect(() => {
-    context.value = route.path === "/login" ? "login" : "register";
+    context.value = useRoute().path === "/login" ? "login" : "register";
   });
 
   return computed(() => TextContent[context.value ?? "default"]);
@@ -49,6 +48,8 @@ export const useLoginRouter = () => {
     return path.value === "./login" ? "./register" : "./login";
   });
 
+  const isRegisterPage = computed(() => path.value === "./register");
+
   watch(
     () => router.currentRoute.value.path,
     () => {
@@ -58,7 +59,7 @@ export const useLoginRouter = () => {
     { immediate: true }
   );
 
-  return { path, togglePath };
+  return { path, togglePath, isRegisterPage };
 };
 
 export type loginTitleType = "login" | "register" | "default";

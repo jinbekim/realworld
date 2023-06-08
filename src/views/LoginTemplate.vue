@@ -15,14 +15,20 @@ const errors = reactive<{ message: string }>({
 });
 
 const loginText = useLoginTitle();
-const { path } = useLoginRouter();
+const { path, isRegisterPage } = useLoginRouter();
 
+/**
+ * 각 data를 input으로 delegate 가능
+ */
 const formModel = reactive({
   username: "",
   email: "",
   password: "",
 });
 
+/**
+ * 그럼 여기서 event delegation 해야함.
+ */
 async function onSubmit(event: Event) {
   // move to useAuthLogic
   event.preventDefault();
@@ -67,12 +73,12 @@ async function onSubmit(event: Event) {
 
           <form @submit="onSubmit">
             <auth-input
-              v-if="path === './register'"
+              v-if="isRegisterPage"
               name="username"
               v-model="formModel.username"
               placeholder="Your Name"
               type="text"
-              :required="path === './register'"
+              :required="isRegisterPage"
             />
 
             <auth-input
