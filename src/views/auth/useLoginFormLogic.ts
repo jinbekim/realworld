@@ -1,22 +1,17 @@
 import { InjectionKey } from "vue";
-import { Get } from '@/dependency';
+import { Get } from "@/dependency";
 export const useLoginFormLogic = () => {
   const repo = Get.get("IUserRepository");
 
-  const tryToLogin = async ({email, password}) => {
-
+  const tryToLogin = async ({ email, password }) => {
     const user = await repo.login({
       email: email,
       password: password,
     });
-  }
+  };
 
-  const tryeToSignup = async ({email, password, username}) => {
-
-
-
+  const tryeToSignup = async ({ email, password, username }) => {};
 };
-
 export const loginFormLogicKey = Symbol() as InjectionKey<() => void>;
 
 // error boundary 넣을려면

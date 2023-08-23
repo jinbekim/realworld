@@ -12,3 +12,7 @@ interface Pagination {
   offset: number;
   limit: number;
 }
+
+type Email = string;
+type Password = string;
+type Tag = string;

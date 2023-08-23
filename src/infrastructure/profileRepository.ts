@@ -1,19 +1,13 @@
-import type { IProfileRepository } from "@/domain/IProfileRepository";
-import type { Profile } from "@/domain/Profile";
-import { fetcher } from "./fetcher";
-import { RealWorldStorage } from "./storage";
+import type { IProfileRepository } from '@/domain/IProfileRepository';
+import type { Profile } from '@/domain/Profile';
+import { fetcher } from './fetcher';
+import { RealWorldStorage } from './storage';
 
 export class ProfileRepository implements IProfileRepository {
   async getProfile(username: string): Promise<Profile | GenericError> {
     try {
       const response = await fetcher(`profiles/${username}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: RealWorldStorage.get("user")?.token
-            ? `Token ${RealWorldStorage.get("user").token}`
-            : "",
-        },
+        method: 'GET',
       });
       return response.profile;
     } catch (error: any) {
@@ -23,13 +17,7 @@ export class ProfileRepository implements IProfileRepository {
   async followUser(username: string): Promise<Profile | GenericError> {
     try {
       const response = await fetcher(`profiles/${username}/follow`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: RealWorldStorage.get("user")?.token
-            ? `Token ${RealWorldStorage.get("user").token}`
-            : "",
-        },
+        method: 'POST',
       });
       return response.profile;
     } catch (error: any) {
@@ -39,13 +27,7 @@ export class ProfileRepository implements IProfileRepository {
   async unfollowUser(username: string): Promise<Profile | GenericError> {
     try {
       const response = await fetcher(`profiles/${username}/follow`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: RealWorldStorage.get("user")?.token
-            ? `Token ${RealWorldStorage.get("user").token}`
-            : "",
-        },
+        method: 'DELETE',
       });
       return response.profile;
     } catch (error: any) {
