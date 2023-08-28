@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { useUpdateUser } from "@/composable/useUpdateUser";
-import useUser from "@/store/useUser";
-import { ref } from "vue";
+import { useUpdateUser } from '@/composable/useUpdateUser';
+import useUser from '@/store/useUser';
+import { ref } from 'vue';
+import { LogoutButton } from '@/features/auth/logout';
 
-const password = ref("");
-const { user, logout } = useUser();
+const password = ref('');
+const { user } = useUser();
 const { userModel, updateUser } = useUpdateUser(user.value);
 </script>
 
@@ -66,9 +67,7 @@ const { userModel, updateUser } = useUpdateUser(user.value);
             </fieldset>
           </form>
           <hr />
-          <button class="btn btn-outline-danger" @click="logout">
-            Or click here to logout.
-          </button>
+          <LogoutButton />
         </div>
       </div>
     </div>
