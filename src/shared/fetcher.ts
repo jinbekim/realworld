@@ -1,10 +1,11 @@
-import { RealWorldStorage } from './storage';
-const baseUrl = import.meta.env.VITE_PUBLIC_API_URL;
+import { RealWorldStorage } from '@/infrastructure/storage';
+
+const BaseUrl = import.meta.env.VITE_PUBLIC_API_URL;
 
 const TokenKey = 'user';
 
-export const fetcher = async (url: string, options: RequestInit = {}) => {
-  const response = await fetch(baseUrl + url, {
+export const fetcher = async (path: string, options: RequestInit = {}) => {
+  const response = await fetch(BaseUrl + path, {
     ...options,
     headers: {
       ...options.headers,
