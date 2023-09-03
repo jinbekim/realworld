@@ -10,6 +10,7 @@
     "type-check": "vue-tsc --noEmit"
   },
   "dependencies": {
+    "@tanstack/vue-query": "^4.34.4",
     "@vue/shared": "^3.3.4",
     "lodash": "^4.17.21",
     "pinia": "^2.1.6",
