@@ -1,16 +1,13 @@
 <script setup lang="ts">
-import { Get } from "@/dependency";
-import type { Article } from "@/domain/Article";
-import { isError } from "@/libs/isError";
-import { ref, toRef, watch, watchEffect } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import RealFollowButton from "@/components/buttons/RealFollowButton.vue";
-import RealEditProfileButton from "@/components/buttons/RealEditProfileButton.vue";
-import RealPagination from "@/components/RealPagination.vue";
-import { usePagination } from "@/composable/usePagination";
-import { useProfile } from "@/composable/useProfile";
-import useUser from "@/store/useUser";
-import RealNavTab from "@/components/RealNavTab.vue";
+import { Get } from '@/dependency';
+import { ref, toRef, watch, watchEffect } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import RealFollowButton from '@/components/buttons/RealFollowButton.vue';
+import RealEditProfileButton from '@/components/buttons/RealEditProfileButton.vue';
+import RealPagination from '@/components/RealPagination.vue';
+import { usePagination } from '@/composable/usePagination';
+import { useProfile } from '@/composable/useProfile';
+import RealNavTab from '@/components/RealNavTab.vue';
 const router = useRouter();
 const route = useRoute();
 
@@ -21,60 +18,60 @@ const props = defineProps({
   },
 });
 
-const { user } = useUser();
-const { profile } = useProfile(props.username);
+// const { user } = useUser();
+// const { profile } = useProfile(props.username);
 
-const items = ref<Article[]>([]);
-const isMine = (username?: string) => {
-  return profile.value?.username === username;
-};
-const isLoading = ref(false);
-const { pagination, onClickPage } = usePagination();
+// const items = ref<Article[]>([]);
+// const isMine = (username?: string) => {
+//   return profile.value?.username === username;
+// };
+// const isLoading = ref(false);
+// const { pagination, onClickPage } = usePagination();
 
-watchEffect(async () => {
-  console.log("watched ");
-  isLoading.value = true;
-  if (route.name === "profile-articles") {
-    items.value = await getArticles(props.username);
-    console.log(items.value);
-  } else if (route.name === "profile-favorites") {
-    items.value = await getFavorites(props.username);
-  }
-  isLoading.value = false;
-});
+// watchEffect(async () => {
+//   console.log("watched ");
+//   isLoading.value = true;
+//   if (route.name === "profile-articles") {
+//     items.value = await getArticles(props.username);
+//     console.log(items.value);
+//   } else if (route.name === "profile-favorites") {
+//     items.value = await getFavorites(props.username);
+//   }
+//   isLoading.value = false;
+// });
 
-async function getArticles(username: string): Promise<Article[]> {
-  const articleRepository = Get.get("IArticleRepository");
-  const ret = await articleRepository.getArticles({
-    author: username,
-    pagination: { limit: pagination.limit, offset: pagination.offset },
-  });
+// async function getArticles(username: string): Promise<Article[]> {
+//   const articleRepository = Get.get("IArticleRepository");
+//   const ret = await articleRepository.getArticles({
+//     author: username,
+//     pagination: { limit: pagination.limit, offset: pagination.offset },
+//   });
 
-  if (!isError(ret)) {
-    pagination.total = ret.articlesCount;
-    return ret.articles;
-  }
-  router.replace("/login");
-  return [];
-}
+//   if (!isError(ret)) {
+//     pagination.total = ret.articlesCount;
+//     return ret.articles;
+//   }
+//   router.replace("/login");
+//   return [];
+// }
 
-async function getFavorites(username: string): Promise<Article[]> {
-  const articleRepository = Get.get("IArticleRepository");
-  const ret = await articleRepository.getArticles({
-    favorited: username,
-    pagination: { limit: pagination.limit, offset: pagination.offset },
-  });
-  if (!isError(ret)) {
-    pagination.total = ret.articlesCount;
-    return ret.articles;
-  }
-  router.replace("/login");
-  return [];
-}
+// async function getFavorites(username: string): Promise<Article[]> {
+//   const articleRepository = Get.get("IArticleRepository");
+//   const ret = await articleRepository.getArticles({
+//     favorited: username,
+//     pagination: { limit: pagination.limit, offset: pagination.offset },
+//   });
+//   if (!isError(ret)) {
+//     pagination.total = ret.articlesCount;
+//     return ret.articles;
+//   }
+//   router.replace("/login");
+//   return [];
+// }
 </script>
 
 <template>
-  <div class="profile-page">
+  <!-- <div class="profile-page">
     <div class="user-info">
       <div class="container" v-if="profile">
         <div class="row">
@@ -124,5 +121,5 @@ async function getFavorites(username: string): Promise<Article[]> {
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 </template>

@@ -5,9 +5,8 @@
   </button>
 </template>
 <script setup lang="ts">
-import { Get } from "@/dependency";
-import { isError } from "@/libs/isError";
-import { useRouter } from "vue-router";
+import { Get } from '@/dependency';
+import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
@@ -16,8 +15,8 @@ const props = defineProps<{
 }>();
 
 async function deleteArticle() {
-  const repo = Get.get("IArticleRepository");
+  const repo = Get.get('IArticleRepository');
   const result = await repo.deleteArticle(props.slug);
-  if (!isError(result)) router.back();
+  if (result) router.back();
 }
 </script>

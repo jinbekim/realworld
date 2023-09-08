@@ -1,16 +1,14 @@
 <script setup lang="ts">
 import { useUpdateUser } from '@/composable/useUpdateUser';
-import useUser from '@/store/useUser';
 import { ref } from 'vue';
 import { LogoutButton } from '@/features/auth/logout';
 
 const password = ref('');
-const { user } = useUser();
-const { userModel, updateUser } = useUpdateUser(user.value);
+// const { userModel, updateUser } = useUpdateUser(user.value);
 </script>
 
 <template>
-  <div class="settings-page">
+  <!-- <div class="settings-page">
     <div class="container page">
       <div class="row">
         <div class="col-md-6 offset-md-3 col-xs-12">
@@ -71,5 +69,5 @@ const { userModel, updateUser } = useUpdateUser(user.value);
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 </template>

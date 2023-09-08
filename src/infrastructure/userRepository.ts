@@ -1,13 +1,13 @@
-import type { IUserRepository } from '@/domain/IUserRepository';
-import type { LoginUser, User, NewUser, UpdateUser } from '@/domain/User';
-import { fetcher } from './fetcher';
+import type { IUserRepository } from '@/entities/session/IUserRepository';
+import type { User } from '@/entities/session/model/sessionModel';
 import { RealWorldStorage } from './storage';
+import { fetcher } from '@/shared/api/fetcher';
 
 /**
  * TypeScript for constraining the static side of a class.
  */
 export class UserRepository implements IUserRepository {
-  async login(user: LoginUser): Promise<User | GenericError> {
+  async login(user: any): Promise<User | GenericError> {
     try {
       const response: { user: User } = await fetcher('users/login', {
         method: 'POST',
@@ -22,7 +22,7 @@ export class UserRepository implements IUserRepository {
     }
   }
 
-  async register(user: NewUser): Promise<User | GenericError> {
+  async register(user: any): Promise<User | GenericError> {
     try {
       const response: { user: User } = await fetcher('users', {
         method: 'POST',
@@ -46,7 +46,7 @@ export class UserRepository implements IUserRepository {
       return error;
     }
   }
-  async updateCurrentUser(user: UpdateUser): Promise<User | GenericError> {
+  async updateCurrentUser(user: any): Promise<User | GenericError> {
     try {
       const response: { user: User } = await fetcher('user', {
         method: 'PUT',

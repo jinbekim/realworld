@@ -1,15 +1,15 @@
-import type { IArticleRepository } from "./domain/IArticleRepository";
-import type { ICommentRepository } from "./domain/ICommentRepository";
-import type { IFavoriteRepository } from "./domain/IFavoriteRepository";
-import type { IProfileRepository } from "./domain/IProfileRepository";
-import type { ITagRepository } from "./domain/ITagRepository";
-import type { IUserRepository } from "./domain/IUserRepository";
-import { ArticleRepository } from "./infrastructure/articleRepository";
-import { CommentRepository } from "./infrastructure/commentReposiroty";
-import { FavoriteRepository } from "./infrastructure/favoriteRepository";
-import { ProfileRepository } from "./infrastructure/profileRepository";
-import { TagRepository } from "./infrastructure/tagRepository";
-import { UserRepository } from "./infrastructure/userRepository";
+import type { IArticleRepository } from './entities/article/IArticleRepository';
+import type { IFavoriteRepository } from './entities/article/IFavoriteRepository';
+import type { ITagRepository } from './entities/article/ITagRepository';
+import type { ICommentRepository } from './entities/comment/ICommentRepository';
+import type { IProfileRepository } from './entities/profile/IProfileRepository';
+import type { IUserRepository } from './entities/user/IUserRepository';
+import { ArticleRepository } from './infrastructure/articleRepository';
+import { CommentRepository } from './infrastructure/commentReposiroty';
+import { FavoriteRepository } from './infrastructure/favoriteRepository';
+import { ProfileRepository } from './infrastructure/profileRepository';
+import { TagRepository } from './infrastructure/tagRepository';
+import { UserRepository } from './infrastructure/userRepository';
 
 type RepoValues = {
   IUserRepository: IUserRepository;
@@ -24,12 +24,12 @@ type RepoKey = keyof RepoValues;
 
 export class Get {
   static map = new Map<RepoKey, RepoValues[RepoKey]>([
-    ["IUserRepository", new UserRepository()],
-    ["ITagRepository", new TagRepository()],
-    ["IProfileRepository", new ProfileRepository()],
-    ["IFavoriteRepository", new FavoriteRepository()],
-    ["ICommentRepository", new CommentRepository()],
-    ["IArticleRepository", new ArticleRepository()],
+    ['IUserRepository', new UserRepository()],
+    ['ITagRepository', new TagRepository()],
+    ['IProfileRepository', new ProfileRepository()],
+    ['IFavoriteRepository', new FavoriteRepository()],
+    ['ICommentRepository', new CommentRepository()],
+    ['IArticleRepository', new ArticleRepository()],
   ]);
 
   static get<T extends RepoKey>(key: T): RepoValues[T] {

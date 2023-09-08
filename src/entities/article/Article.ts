@@ -1,5 +1,3 @@
-import { Profile } from "../profile/Profile";
-
 export interface Article {
   slug: string;
   title: string;
@@ -13,19 +11,19 @@ export interface Article {
   author: Profile;
 }
 
-export interface NewArticle {
-  title: string;
-  description: string;
-  body: string;
-  tagList?: string[];
-}
+// export interface NewArticle {
+//   title: string;
+//   description: string;
+//   body: string;
+//   tagList?: string[];
+// }
 
-export interface Articles {
-  articles: Article[];
-  articlesCount: number;
-}
-export interface UpdateArticle {
-  title?: string;
-  description?: string;
-  body?: string;
-}
+// export interface Articles {
+//   articles: Article[];
+//   articlesCount: number;
+// }
+// export interface UpdateArticle {
+//   title?: string;
+//   description?: string;
+//   body?: string;
+// }

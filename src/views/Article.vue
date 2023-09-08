@@ -1,18 +1,14 @@
 <script setup lang="ts">
-import { Get } from "@/dependency";
-import type { Article } from "@/domain/Article";
-import { isError } from "@/libs/isError";
-import { computed, onMounted, ref, toRef } from "vue";
-import { useRouter } from "vue-router";
-import RealMiniProfile from "@/components/RealMiniProfile.vue";
-import RealFavoriteButton from "@/components/buttons/RealFavoriteButton.vue";
-import RealEditArticleButton from "@/components/buttons/RealEditArticleButton.vue";
-import RealFollowButton from "@/components/buttons/RealFollowButton.vue";
-import RealDeleteArticleButton from "@/components/buttons/RealDeleteArticleButton.vue";
-import useUser from "@/store/useUser";
-import { useComments } from "@/composable/useComments";
-import RealComment from "@/components/RealComment.vue";
-import { converter } from "@/libs/mdToHtmlConvertor";
+import { Get } from '@/dependency';
+import { computed, onMounted, ref, toRef } from 'vue';
+import { useRouter } from 'vue-router';
+import RealMiniProfile from '@/components/RealMiniProfile.vue';
+import RealFavoriteButton from '@/components/buttons/RealFavoriteButton.vue';
+import RealEditArticleButton from '@/components/buttons/RealEditArticleButton.vue';
+import RealFollowButton from '@/components/buttons/RealFollowButton.vue';
+import RealDeleteArticleButton from '@/components/buttons/RealDeleteArticleButton.vue';
+import { useComments } from '@/composable/useComments';
+import RealComment from '@/components/RealComment.vue';
 
 // const props = defineProps({
 //   slug: {
@@ -20,47 +16,46 @@ import { converter } from "@/libs/mdToHtmlConvertor";
 //     required: true,
 //   },
 // });
-// const slug = toRef(props, "slug");
-const slug = ref<string>("sdijf");
+// // const slug = toRef(props, "slug");
+// const slug = ref<string>("sdijf");
 
-const router = useRouter();
-const article = ref<Article>();
-const { comments } = useComments(slug.value);
-const { user } = useUser();
-const isPostMine = computed(() => {
-  if (!article.value) return false;
-  return article.value.author.username === user.value?.username;
-});
+// const router = useRouter();
+// const article = ref<Article>();
+// const { comments } = useComments(slug.value);
+// const isPostMine = computed(() => {
+//   if (!article.value) return false;
+//   return article.value.author.username === user.value?.username;
+// });
 
-onMounted(async () => {
-  const ret = await getArticle();
-  if (!isError(ret)) {
-    article.value = {
-      ...ret,
-      body: converter.makeHtml(ret.body),
-    };
-  } else router.replace("/login");
+// onMounted(async () => {
+//   const ret = await getArticle();
+//   if (!isError(ret)) {
+//     article.value = {
+//       ...ret,
+//       body: converter.makeHtml(ret.body),
+//     };
+//   } else router.replace("/login");
 
-  const ret2 = await getComments();
-  if (!isError(ret2)) comments.value = ret2;
-  else router.replace("/login");
-});
+//   const ret2 = await getComments();
+//   if (!isError(ret2)) comments.value = ret2;
+//   else router.replace("/login");
+// });
 
-async function getArticle() {
-  const repo = Get.get("IArticleRepository");
-  const article = await repo.getArticle(slug.value);
-  return article;
-}
+// async function getArticle() {
+//   const repo = Get.get("IArticleRepository");
+//   const article = await repo.getArticle(slug.value);
+//   return article;
+// }
 
-async function getComments() {
-  const repo = Get.get("ICommentRepository");
-  const comments = await repo.get(slug.value);
-  return comments;
-}
+// async function getComments() {
+//   const repo = Get.get("ICommentRepository");
+//   const comments = await repo.get(slug.value);
+//   return comments;
+// }
 </script>
 
 <template>
-  <div class="article-page" v-if="article">
+  <!-- <div class="article-page" v-if="article">
     <div class="banner">
       <div class="container">
         <h1>{{ article?.title }}</h1>
@@ -81,7 +76,6 @@ async function getComments() {
       </div>
     </div>
 
-    <!-- //REVIEW - v-html directive -->
     <div class="container page">
       <div class="row article-content">
         <div class="col-md-12">
@@ -118,5 +112,5 @@ async function getComments() {
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 </template>

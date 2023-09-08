@@ -1,7 +1,7 @@
-import type { IComment, NewComment } from '@/domain/Comment';
-import type { ICommentRepository } from '@/domain/ICommentRepository';
-import { fetcher } from './fetcher';
+import type { ICommentRepository } from '@/entities/comment/ICommentRepository';
 import { RealWorldStorage } from './storage';
+import type { NewComment, IComment } from '@/entities/comment/Comment';
+import { fetcher } from '@/shared/api/fetcher';
 
 export class CommentRepository implements ICommentRepository {
   async add(

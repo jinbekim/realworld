@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { Get } from "@/dependency";
-import { getErrorMessage, isError } from "@/libs/isError";
-import { onMounted, reactive } from "vue";
-import { useRouter } from "vue-router";
+import { Get } from '@/dependency';
+import { getErrorMessage } from '@/shared/api/isError';
+import { onMounted, reactive } from 'vue';
+import { useRouter } from 'vue-router';
 
 const router = useRouter();
 const props = defineProps<{
@@ -10,9 +10,9 @@ const props = defineProps<{
 }>();
 
 const formModel = reactive({
-  title: "",
-  description: "",
-  body: "",
+  title: '',
+  description: '',
+  body: '',
   tagList: [] as string[],
   isLoadiong: false,
   isError: false,
@@ -21,35 +21,35 @@ const formModel = reactive({
 onMounted(() => {
   if (props.slug) {
     formModel.isLoadiong = true;
-    const repo = Get.get("IArticleRepository");
+    const repo = Get.get('IArticleRepository');
     repo.getArticle(props.slug).then((article) => {
-      if (isError(article)) {
+      if (article) {
         formModel.isError = true;
         return;
       }
       formModel.isLoadiong = false;
-      formModel.title = article.title;
-      formModel.description = article.description;
-      formModel.body = article.body;
-      formModel.tagList = article.tagList;
+      // formModel.title = article.title;
+      // formModel.description = article.description;
+      // formModel.body = article.body;
+      // formModel.tagList = article.tagList;
     });
   }
 });
 
 const errors = reactive<{ message: string }>({
-  message: "",
+  message: '',
 });
 
 async function onSubmit() {
   console.log(formModel);
-  errors.message = "";
+  errors.message = '';
 
   if (!formModel.title || !formModel.description || !formModel.body) {
-    errors.message = "빈칸을 입력하세요.";
+    errors.message = '빈칸을 입력하세요.';
     return;
   }
   formModel.isLoadiong = true;
-  const repo = Get.get("IArticleRepository");
+  const repo = Get.get('IArticleRepository');
   if (props.slug) {
     const result = await repo.updateArticle(props.slug, {
       title: formModel.title,
@@ -57,13 +57,13 @@ async function onSubmit() {
       body: formModel.body,
     });
     formModel.isLoadiong = false;
-    if (isError(result)) {
-      errors.message = getErrorMessage(result);
-      return;
-    } else {
-      router.push(`/articles/${result.slug}`);
-    }
-    console.log(result);
+    // if (result) {
+    //   errors.message = getErrorMessage(result);
+    //   return;
+    // } else {
+    //   router.push(`/articles/${result.slug}`);
+    // }
+    // console.log(result);
   } else {
     const result = await repo.createArticle({
       title: formModel.title,
@@ -72,13 +72,13 @@ async function onSubmit() {
       tagList: formModel.tagList,
     });
     formModel.isLoadiong = false;
-    if (isError(result)) {
-      errors.message = getErrorMessage(result);
-      return;
-    } else {
-      router.push(`/articles/${result.slug}`);
-    }
-    console.log(result);
+    // if (result) {
+    //   errors.message = getErrorMessage(result);
+    //   return;
+    // } else {
+    //   router.push(`/articles/${result.slug}`);
+    // }
+    // console.log(result);
   }
 }
 
@@ -86,7 +86,7 @@ function addTag(e: Event) {
   e.preventDefault();
   const target = e.target as HTMLInputElement;
   formModel.tagList.push(target.value);
-  target.value = "";
+  target.value = '';
 }
 
 function deleteTag(e: Event) {

@@ -1,7 +1,7 @@
-import type { IFavoriteRepository } from '@/domain/IFavoriteRepository';
-import { fetcher } from './fetcher';
+import type { Article } from '@/entities/article/Article';
+import type { IFavoriteRepository } from '@/entities/article/IFavoriteRepository';
+import { fetcher } from '@/shared/api/fetcher';
 import { RealWorldStorage } from './storage';
-import type { Article } from '@/domain/Article';
 
 export class FavoriteRepository implements IFavoriteRepository {
   async add(slug: string): Promise<Article | GenericError> {

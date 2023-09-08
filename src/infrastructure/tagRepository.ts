@@ -1,5 +1,5 @@
-import type { ITagRepository } from '@/domain/ITagRepository';
-import { fetcher } from './fetcher';
+import type { ITagRepository } from '@/entities/article/ITagRepository';
+import { fetcher } from '@/shared/api/fetcher';
 
 export class TagRepository implements ITagRepository {
   async getAll(): Promise<Tag[] | GenericError> {

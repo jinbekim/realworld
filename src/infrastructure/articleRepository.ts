@@ -1,19 +1,14 @@
-import type {
-  Article,
-  Articles,
-  NewArticle,
-  UpdateArticle,
-} from '@/domain/Article';
-import type { IArticleRepository } from '@/domain/IArticleRepository';
-import { fetcher } from './fetcher';
+import type { Article } from '@/entities/article/Article';
+import type { IArticleRepository } from '@/entities/article/IArticleRepository';
+import { addQueryParam } from '@/shared/api/addQueryParam';
+import { fetcher } from '@/shared/api/fetcher';
 import { RealWorldStorage } from './storage';
-import { addQueryParam } from '../libs/addQueryParam';
 
 export class ArticleRepository implements IArticleRepository {
   async getFeedArticles({
     limit,
     offset,
-  }: Pagination): Promise<Articles | GenericError> {
+  }: Pagination): Promise<Article[] | GenericError> {
     try {
       let url = `articles/feed`;
       url = addQueryParam(url, 'limit', limit.toString());
@@ -38,7 +33,7 @@ export class ArticleRepository implements IArticleRepository {
     author: string;
     favorited: string;
     pagination: Pagination;
-  }): Promise<Articles | GenericError> {
+  }): Promise<Article[] | GenericError> {
     try {
       let url = `articles`;
       url = addQueryParam(url, 'tag', tag);
@@ -55,7 +50,7 @@ export class ArticleRepository implements IArticleRepository {
       return error;
     }
   }
-  async createArticle(article: NewArticle): Promise<GenericError | Article> {
+  async createArticle(article: any): Promise<GenericError | Article> {
     try {
       const response = await fetcher('articles', {
         method: 'POST',
@@ -79,7 +74,7 @@ export class ArticleRepository implements IArticleRepository {
   }
   async updateArticle(
     slug: string,
-    article: UpdateArticle
+    article: any
   ): Promise<GenericError | Article> {
     try {
       const response = await fetcher(`articles/${slug}`, {

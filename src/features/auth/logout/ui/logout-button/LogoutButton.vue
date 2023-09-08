@@ -1,13 +1,13 @@
 <template>
-  <button class="btn btn-outline-danger" @click="logout">
+  <button class="btn btn-outline-danger" @click="deleteUser">
     Or click here to logout.
   </button>
 </template>
 
 <script setup lang="ts">
-import useUser from '@/store/useUser';
+import { useSessionStore } from '@/entities/session/model/sessionModel';
 
-const { user, logout } = useUser();
+const { deleteUser } = useSessionStore();
 </script>
 
 <style scoped></style>

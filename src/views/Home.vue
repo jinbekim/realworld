@@ -1,24 +1,27 @@
 <script setup lang="ts">
-import { Get } from "@/dependency";
-import { isError } from "@/libs/isError";
-import { defineAsyncComponent, reactive, ref, watchEffect } from "vue";
-import type { Article } from "@/domain/Article";
-import RealPagination from "@/components/RealPagination.vue";
-import useUser from "@/store/useUser";
+import { Get } from '@/dependency';
+import { defineAsyncComponent, reactive, ref, watchEffect } from 'vue';
+import RealPagination from '@/components/RealPagination.vue';
 
-import { usePagination } from "@/composable/usePagination";
-import { useRoute } from "vue-router";
-import { isArray } from "@vue/shared";
-import RealNavTab from "@/components/RealNavTab.vue";
-import MiddleComponent from "@/components/buttons/MiddleComponent.vue";
-import Wrapper from "@/components/layouts/Wrapper.vue";
+import { usePagination } from '@/composable/usePagination';
+import { useRoute } from 'vue-router';
+import { isArray } from '@vue/shared';
+import RealNavTab from '@/components/RealNavTab.vue';
+import MiddleComponent from '@/components/buttons/MiddleComponent.vue';
+import Wrapper from '@/components/layouts/Wrapper.vue';
+import type { Article } from '@/entities/article/Article';
+import { isError } from 'lodash';
+import {
+  useCurrentUser,
+  useSessionStore,
+} from '@/entities/session/model/sessionModel';
 
 const TheAside = defineAsyncComponent({
-  loader: () => import("@/components/layouts/Wrapper.vue"),
+  loader: () => import('@/components/layouts/Wrapper.vue'),
 });
 
 const route = useRoute();
-const { user } = useUser();
+const currentUser = useCurrentUser();
 const { pagination, onClickPage } = usePagination();
 const filter = ref<string>();
 const feed = reactive({
@@ -36,9 +39,9 @@ watchEffect(() => {
   feed.loading = true;
 
   //REVIEW -  router-view로 나눴어도 될듯.
-  if (route.name === "my-feed") {
-    if (!user.value) throw new Error("User is not logged in");
-    Get.get("IArticleRepository")
+  if (route.name === 'my-feed') {
+    if (currentUser) throw new Error('User is not logged in');
+    Get.get('IArticleRepository')
       .getFeedArticles({ limit: pagination.limit, offset: pagination.offset })
       .then((result) => {
         if (!isError(result)) {
@@ -47,8 +50,8 @@ watchEffect(() => {
           pagination.total = result.articlesCount;
         }
       });
-  } else if (route.name === "global-feed") {
-    Get.get("IArticleRepository")
+  } else if (route.name === 'global-feed') {
+    Get.get('IArticleRepository')
       .getArticles({ pagination })
       .then((result) => {
         if (!isError(result)) {
@@ -57,8 +60,8 @@ watchEffect(() => {
           pagination.total = result.articlesCount;
         }
       });
-  } else if (route.name === "tag-feed") {
-    Get.get("IArticleRepository")
+  } else if (route.name === 'tag-feed') {
+    Get.get('IArticleRepository')
       .getArticles({
         tag: isArray(route.params.tag) ? route.params.tag[0] : route.params.tag,
         pagination,
@@ -74,7 +77,7 @@ watchEffect(() => {
 });
 
 function onClick() {
-  console.log("button click from parent");
+  console.log('button click from parent');
 }
 </script>
 
@@ -94,7 +97,7 @@ function onClick() {
             <ul class="nav nav-pills outline-active">
               <MiddleComponent @click="onClick"></MiddleComponent>
               <RealNavTab
-                v-if="user"
+                v-if="currentUser"
                 to="/my-feed"
                 :active="$route.name === 'my-feed'"
               >

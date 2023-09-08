@@ -1,60 +1,58 @@
 <script setup lang="ts">
-import useUser from "@/store/useUser";
-import { ref, watchEffect } from "vue";
-import { useRoute } from "vue-router";
+import { ref, watchEffect } from 'vue';
+import { useRoute } from 'vue-router';
 
 const route = useRoute();
-const activePathName = ref(route.name?.toString().split("-")[0] || "/");
-const { user, refetch } = useUser();
+const activePathName = ref(route.name?.toString().split('-')[0] || '/');
 
 const links = [
   {
-    path: "/",
-    name: "home",
+    path: '/',
+    name: 'home',
     common: true,
   },
   {
-    path: "/editor",
-    name: "editor",
-    icon: "ion-compose",
+    path: '/editor',
+    name: 'editor',
+    icon: 'ion-compose',
     auth: true,
   },
   {
-    path: "/settings",
-    name: "settings",
-    icon: "ion-gear-a",
+    path: '/settings',
+    name: 'settings',
+    icon: 'ion-gear-a',
     auth: true,
   },
   {
-    path: "/login",
-    name: "login",
+    path: '/login',
+    name: 'login',
     auth: false,
   },
   {
-    path: "/register",
-    name: "register",
+    path: '/register',
+    name: 'register',
     auth: false,
   },
 ];
 
 function isActive(path: string) {
-  if (path === "home")
+  if (path === 'home')
     return (
-      activePathName.value === "global" ||
-      activePathName.value === "my" ||
-      activePathName.value === "tag"
+      activePathName.value === 'global' ||
+      activePathName.value === 'my' ||
+      activePathName.value === 'tag'
     );
   return activePathName.value === path;
 }
 
-watchEffect(async () => {
-  activePathName.value = route.name?.toString().split("-")[0] || "/";
-  await refetch();
-});
+// watchEffect(async () => {
+//   activePathName.value = route.name?.toString().split('-')[0] || '/';
+//   await refetch();
+// });
 </script>
 
 <template>
-  <nav class="navbar navbar-light">
+  <!-- <nav class="navbar navbar-light">
     <header class="container">
       <router-link class="navbar-brand" to="/">conduit</router-link>
       <ul class="nav navbar-nav pull-xs-right">
@@ -82,5 +80,5 @@ watchEffect(async () => {
         </li>
       </ul>
     </header>
-  </nav>
+  </nav> -->
 </template>

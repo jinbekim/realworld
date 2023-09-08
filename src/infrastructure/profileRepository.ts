@@ -1,6 +1,6 @@
-import type { IProfileRepository } from '@/domain/IProfileRepository';
-import type { Profile } from '@/domain/Profile';
-import { fetcher } from './fetcher';
+import type { IProfileRepository } from '@/entities/profile/IProfileRepository';
+import type { Profile } from '@/entities/profile/Profile';
+import { fetcher } from '@/shared/api/fetcher';
 import { RealWorldStorage } from './storage';
 
 export class ProfileRepository implements IProfileRepository {

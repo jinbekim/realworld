@@ -1,30 +1,38 @@
 <script setup lang="ts">
-import { Get } from "@/dependency";
-import { RealWorldStorage } from "@/infrastructure/storage";
-import { getErrorMessage, isError } from "@/libs/isError";
-import { reactive, watchEffect, ref, InjectionKey, watch } from "vue";
-import { useRouter } from "vue-router";
-import LoginTitle from "./auth/LoginTitle.vue";
-import { useLoginTitle } from "./auth/useLoginTitle";
-import AuthInput from "./auth/AuthInput.vue";
-import { useLoginRouter } from "./auth/useLoginTitle";
+import { Get } from '@/dependency';
+import { RealWorldStorage } from '@/infrastructure/storage';
+import { computed, reactive } from 'vue';
+import { useRouter } from 'vue-router';
+import LoginTitle from './auth/LoginTitle.vue';
+import AuthInput from './auth/AuthInput.vue';
+import { getErrorMessage } from '@/shared/api/isError';
+
+const errors = reactive<{ message: string }>({
+  message: '',
+});
 
 const router = useRouter();
-const errors = reactive<{ message: string }>({
-  message: "",
-});
 
-const loginText = useLoginTitle();
-const { path, isRegisterPage } = useLoginRouter();
+const Text = {
+  login: {
+    h1: 'Sign in',
+    p: 'Need an account?',
+  },
+  register: {
+    h1: 'Sign up',
+    p: 'Have an account?',
+  },
+};
 
-/**
- * 각 data를 input으로 delegate 가능
- */
 const formModel = reactive({
-  username: "",
-  email: "",
-  password: "",
+  username: '',
+  email: '',
+  password: '',
 });
+
+const isRegisterPage = computed(
+  () => router.currentRoute.value.path === '/register'
+);
 
 /**
  * 그럼 여기서 event delegation 해야함.
@@ -32,27 +40,27 @@ const formModel = reactive({
 async function onSubmit(event: Event) {
   // move to useAuthLogic
   event.preventDefault();
-  const repo = Get.get("IUserRepository");
-  if (path.value === "./login") {
+  const repo = Get.get('IUserRepository');
+  if (router.currentRoute.value.path === '/login') {
     const user = await repo.login({
       email: formModel.email,
       password: formModel.password,
     });
-    if (!isError(user)) {
-      RealWorldStorage.set("user", user);
-      router.push("/");
+    if (user) {
+      RealWorldStorage.set('user', user);
+      router.push('/');
     } else {
       errors.message = getErrorMessage(user);
     }
-  } else if (path.value === "./register") {
+  } else if (router.currentRoute.value.path === '/register') {
     const user = await repo.register({
       email: formModel.email,
       password: formModel.password,
       username: formModel.username,
     });
-    if (!isError(user)) {
-      RealWorldStorage.set("user", user);
-      router.push("/");
+    if (user) {
+      RealWorldStorage.set('user', user);
+      router.push('/');
     } else {
       errors.message = getErrorMessage(user);
     }
@@ -100,7 +108,7 @@ async function onSubmit(event: Event) {
             />
 
             <button class="btn btn-lg btn-primary pull-xs-right">
-              {{ loginText.h1 }}
+              {{ Text.login.h1 }}
             </button>
           </form>
         </div>

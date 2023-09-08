@@ -1,22 +1,19 @@
 <script setup lang="ts">
-import { toUrlEncode } from "@/libs/encodeURL";
-import { computed, ref } from "vue";
-import useUser from "@/store/useUser";
-import { useComments } from "@/composable/useComments";
-import { Get } from "@/dependency";
-import { isError } from "@/libs/isError";
+import { computed, ref } from 'vue';
+import { useComments } from '@/composable/useComments';
+import { Get } from '@/dependency';
 
-const { user } = useUser();
+// const { user } = useUser();
 const props = defineProps<{ slug: string }>();
 const { text, onSubmit, comments, deleteComment } = useComments(props.slug);
 
-const isMine = (username: string) => {
-  return user.value?.username === username;
-};
+// const isMine = (username: string) => {
+//   return user.value?.username === username;
+// };
 </script>
 
 <template>
-  <p v-if="!user">
+  <!-- <p v-if="!user">
     <router-link to="/login"> Sign in </router-link> &nbsp;or&nbsp;
     <router-link to="/register">sign up</router-link> to add comments on this
     article.
@@ -69,5 +66,5 @@ const isMine = (username: string) => {
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 </template>
