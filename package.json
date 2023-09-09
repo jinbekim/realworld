@@ -3,10 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "vite --port 3000",
-    "build": "run-p type-check build-only",
-    "preview": "vite preview",
-    "build-only": "vite build",
+    "dev": "bunx --bun vite --port 3000",
+    "build": "bunx --bun vite build",
+    "preview": "bunx --bun vite preview",
     "type-check": "vue-tsc --noEmit"
   },
   "dependencies": {
