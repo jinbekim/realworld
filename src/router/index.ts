@@ -5,11 +5,6 @@ import NotFound from '../views/error/NotFound.vue';
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
-    {
-      path: '/test',
-      name: 'test',
-      component: () => import('../views/Test.vue'),
-    },
     //     Home page (URL: / )
     // List of tags
     // List of articles pulled from either Feed, Global, or by Tag

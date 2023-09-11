@@ -11,8 +11,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import type { Article } from "@/domain/Article";
 import RealPostTile from "@/components/RealPostTile.vue";
+import type { Article } from "@/entities/article/Article";
 import { toRefs } from "vue";
 
 const props = defineProps<{

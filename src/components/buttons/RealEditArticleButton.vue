@@ -8,7 +8,7 @@
   </button>
 </template>
 <script setup lang="ts">
-import { toUrlEncode } from "@/libs/encodeURL";
+import { toUrlEncode } from "@/shared/api/encodeURL";
 import { computed } from "vue";
 
 const props = defineProps<{

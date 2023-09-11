@@ -20,19 +20,19 @@ const formModel = reactive({
 
 onMounted(() => {
   if (props.slug) {
-    formModel.isLoadiong = true;
-    const repo = Get.get('IArticleRepository');
-    repo.getArticle(props.slug).then((article) => {
-      if (article) {
-        formModel.isError = true;
-        return;
-      }
-      formModel.isLoadiong = false;
-      // formModel.title = article.title;
-      // formModel.description = article.description;
-      // formModel.body = article.body;
-      // formModel.tagList = article.tagList;
-    });
+    // formModel.isLoadiong = true;
+    // const repo = Get.get('IArticleRepository');
+    // repo.getArticle(props.slug).then((article) => {
+    //   if (article) {
+    //     formModel.isError = true;
+    //     return;
+    //   }
+    //   formModel.isLoadiong = false;
+    //   // formModel.title = article.title;
+    //   // formModel.description = article.description;
+    //   // formModel.body = article.body;
+    //   // formModel.tagList = article.tagList;
+    // });
   }
 });
 
@@ -49,13 +49,12 @@ async function onSubmit() {
     return;
   }
   formModel.isLoadiong = true;
-  const repo = Get.get('IArticleRepository');
   if (props.slug) {
-    const result = await repo.updateArticle(props.slug, {
-      title: formModel.title,
-      description: formModel.description,
-      body: formModel.body,
-    });
+    // const result = await repo.updateArticle(props.slug, {
+    //   title: formModel.title,
+    //   description: formModel.description,
+    //   body: formModel.body,
+    // });
     formModel.isLoadiong = false;
     // if (result) {
     //   errors.message = getErrorMessage(result);
@@ -65,12 +64,12 @@ async function onSubmit() {
     // }
     // console.log(result);
   } else {
-    const result = await repo.createArticle({
-      title: formModel.title,
-      description: formModel.description,
-      body: formModel.body,
-      tagList: formModel.tagList,
-    });
+    // const result = await repo.createArticle({
+    //   title: formModel.title,
+    //   description: formModel.description,
+    //   body: formModel.body,
+    //   tagList: formModel.tagList,
+    // });
     formModel.isLoadiong = false;
     // if (result) {
     //   errors.message = getErrorMessage(result);

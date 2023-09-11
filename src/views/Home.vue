@@ -7,12 +7,10 @@ import { usePagination } from '@/composable/usePagination';
 import { useRoute } from 'vue-router';
 import { isArray } from '@vue/shared';
 import RealNavTab from '@/components/RealNavTab.vue';
-import MiddleComponent from '@/components/buttons/MiddleComponent.vue';
 import Wrapper from '@/components/layouts/Wrapper.vue';
 import type { Article } from '@/entities/article/Article';
 import { isError } from 'lodash';
 import {
-  useCurrentUser,
   useSessionStore,
 } from '@/entities/session/model/sessionModel';
 
@@ -21,7 +19,7 @@ const TheAside = defineAsyncComponent({
 });
 
 const route = useRoute();
-const currentUser = useCurrentUser();
+const currentUser = useSessionStore();
 const { pagination, onClickPage } = usePagination();
 const filter = ref<string>();
 const feed = reactive({
@@ -39,41 +37,41 @@ watchEffect(() => {
   feed.loading = true;
 
   //REVIEW -  router-view로 나눴어도 될듯.
-  if (route.name === 'my-feed') {
-    if (currentUser) throw new Error('User is not logged in');
-    Get.get('IArticleRepository')
-      .getFeedArticles({ limit: pagination.limit, offset: pagination.offset })
-      .then((result) => {
-        if (!isError(result)) {
-          feed.feedList = result.articles;
-          feed.loading = false;
-          pagination.total = result.articlesCount;
-        }
-      });
-  } else if (route.name === 'global-feed') {
-    Get.get('IArticleRepository')
-      .getArticles({ pagination })
-      .then((result) => {
-        if (!isError(result)) {
-          feed.feedList = result.articles;
-          feed.loading = false;
-          pagination.total = result.articlesCount;
-        }
-      });
-  } else if (route.name === 'tag-feed') {
-    Get.get('IArticleRepository')
-      .getArticles({
-        tag: isArray(route.params.tag) ? route.params.tag[0] : route.params.tag,
-        pagination,
-      })
-      .then((result) => {
-        if (!isError(result)) {
-          feed.feedList = result.articles;
-          feed.loading = false;
-          pagination.total = result.articlesCount;
-        }
-      });
-  }
+  // if (route.name === 'my-feed') {
+  //   if (currentUser) throw new Error('User is not logged in');
+  //   Get.get('IArticleRepository')
+  //     .getFeedArticles({ limit: pagination.limit, offset: pagination.offset })
+  //     .then((result) => {
+  //       if (!isError(result)) {
+  //         feed.feedList = result.articles;
+  //         feed.loading = false;
+  //         pagination.total = result.articlesCount;
+  //       }
+  //     });
+  // } else if (route.name === 'global-feed') {
+  //   Get.get('IArticleRepository')
+  //     .getArticles({ pagination })
+  //     .then((result) => {
+  //       if (!isError(result)) {
+  //         feed.feedList = result.articles;
+  //         feed.loading = false;
+  //         pagination.total = result.articlesCount;
+  //       }
+  //     });
+  // } else if (route.name === 'tag-feed') {
+  //   Get.get('IArticleRepository')
+  //     .getArticles({
+  //       tag: isArray(route.params.tag) ? route.params.tag[0] : route.params.tag,
+  //       pagination,
+  //     })
+  //     .then((result) => {
+  //       if (!isError(result)) {
+  //         feed.feedList = result.articles;
+  //         feed.loading = false;
+  //         pagination.total = result.articlesCount;
+  //       }
+  //     });
+  // }
 });
 
 function onClick() {
@@ -95,7 +93,6 @@ function onClick() {
         <div class="col-md-9">
           <div class="feed-toggle">
             <ul class="nav nav-pills outline-active">
-              <MiddleComponent @click="onClick"></MiddleComponent>
               <RealNavTab
                 v-if="currentUser"
                 to="/my-feed"

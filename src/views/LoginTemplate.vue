@@ -40,31 +40,31 @@ const isRegisterPage = computed(
 async function onSubmit(event: Event) {
   // move to useAuthLogic
   event.preventDefault();
-  const repo = Get.get('IUserRepository');
-  if (router.currentRoute.value.path === '/login') {
-    const user = await repo.login({
-      email: formModel.email,
-      password: formModel.password,
-    });
-    if (user) {
-      RealWorldStorage.set('user', user);
-      router.push('/');
-    } else {
-      errors.message = getErrorMessage(user);
-    }
-  } else if (router.currentRoute.value.path === '/register') {
-    const user = await repo.register({
-      email: formModel.email,
-      password: formModel.password,
-      username: formModel.username,
-    });
-    if (user) {
-      RealWorldStorage.set('user', user);
-      router.push('/');
-    } else {
-      errors.message = getErrorMessage(user);
-    }
-  }
+  // const repo = Get.get('IUserRepository');
+  // if (router.currentRoute.value.path === '/login') {
+  //   const user = await repo.login({
+  //     email: formModel.email,
+  //     password: formModel.password,
+  //   });
+  //   if (user) {
+  //     RealWorldStorage.set('user', user);
+  //     router.push('/');
+  //   } else {
+  //     errors.message = getErrorMessage(user);
+  //   }
+  // } else if (router.currentRoute.value.path === '/register') {
+  //   const user = await repo.register({
+  //     email: formModel.email,
+  //     password: formModel.password,
+  //     username: formModel.username,
+  //   });
+  //   if (user) {
+  //     RealWorldStorage.set('user', user);
+  //     router.push('/');
+  //   } else {
+  //     errors.message = getErrorMessage(user);
+  //   }
+  // }
 }
 </script>
 

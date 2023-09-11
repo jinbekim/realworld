@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue';
+import { useSessionStore } from '@/entities/session/model/sessionModel';
+import { computed, ref, toValue, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
-const activePathName = ref(route.name?.toString().split('-')[0] || '/');
+const activePathName = computed(() => route.name?.toString().split('-')[0] || '/');
+const {currentUser} = useSessionStore();
+const user = computed(() => toValue(currentUser));
 
 const links = [
   {
@@ -44,15 +47,10 @@ function isActive(path: string) {
     );
   return activePathName.value === path;
 }
-
-// watchEffect(async () => {
-//   activePathName.value = route.name?.toString().split('-')[0] || '/';
-//   await refetch();
-// });
 </script>
 
 <template>
-  <!-- <nav class="navbar navbar-light">
+  <nav class="navbar navbar-light">
     <header class="container">
       <router-link class="navbar-brand" to="/">conduit</router-link>
       <ul class="nav navbar-nav pull-xs-right">
@@ -80,5 +78,5 @@ function isActive(path: string) {
         </li>
       </ul>
     </header>
-  </nav> -->
+  </nav>
 </template>

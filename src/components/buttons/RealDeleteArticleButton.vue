@@ -15,8 +15,7 @@ const props = defineProps<{
 }>();
 
 async function deleteArticle() {
-  const repo = Get.get('IArticleRepository');
-  const result = await repo.deleteArticle(props.slug);
-  if (result) router.back();
+  // const result = await repo.deleteArticle(props.slug);
+  // if (result) router.back();
 }
 </script>

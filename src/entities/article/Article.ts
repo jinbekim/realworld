@@ -1,3 +1,5 @@
+import type { Profile } from "../profile/Profile";
+
 export interface Article {
   slug: string;
   title: string;
