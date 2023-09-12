@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { defineAsyncComponent } from 'vue';
-import Loading from '@/views/Loading.vue';
+import Loading from '@/pages/Loading.vue';
 import { useTags } from '../../composable/useTags';
 
 const { tags } = useTags();

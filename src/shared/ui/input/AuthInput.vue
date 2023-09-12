@@ -6,39 +6,44 @@
       @invalid="(e) => e.preventDefault()"
       v-model="modelValue"
       class="form-control form-control-lg"
+      :type="type"
     />
   </fieldset>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed } from 'vue';
 
-const props = defineProps<{
-  modelValue: string;
-}>();
+interface Props {
+  modelValue?: string;
+  type?: string;
+}
+const props = withDefaults(defineProps<Props>(), {
+  modelValue: () => '',
+});
 
 const modelValue = computed({
   get() {
     return props.modelValue;
   },
   set(value) {
-    emit("update:modelValue", value);
+    emit('update:modelValue', value);
   },
 });
 
-const emit = defineEmits<{
-  (e: "error", message: string): void;
-  (e: "update:modelValue", value: string): void;
-}>();
+interface Emits {
+  (e: 'error', message: string): void;
+  (e: 'update:modelValue', value: string): void;
+}
+const emit = defineEmits<Emits>();
 
 function checkValidate(event: Event) {
   event.preventDefault();
   const target = event.target as HTMLInputElement;
-  console.log(target.value);
   if (target.validity.valid) {
-    emit("error", "");
+    emit('error', '');
   } else {
-    emit("error", target.name + target.validationMessage);
+    emit('error', target.name + target.validationMessage);
   }
 }
 </script>
