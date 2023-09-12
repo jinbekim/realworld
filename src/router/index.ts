@@ -1,6 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import HomeView from '../views/Home.vue';
-import NotFound from '../views/error/NotFound.vue';
+import HomeView from '../pages/Home.vue';
+import NotFound from '../pages/error/NotFound.vue';
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -38,7 +38,7 @@ const router = createRouter({
     // {
     //   path: "/tags/:tag",
     //   name: "tags",
-    //   component: () => import("../views/Home.vue"),
+    //   component: () => import("../pages/Home.vue"),
     //   props: true,
     // },
     // Sign in/Sign up pages (URL: /login, /register )
@@ -47,30 +47,30 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: () => import('../views/login.vue'),
+      component: () => import('../pages/login.vue'),
     },
     {
       path: '/register',
       name: 'register',
-      component: () => import('../views/login.vue'),
+      component: () => import('../pages/register.vue'),
     },
     // Settings page (URL: /settings )
     {
       path: '/settings',
       name: 'settings',
-      component: () => import('../views/Settings.vue'),
+      component: () => import('../pages/Settings.vue'),
     },
     //Editor page to create/edit articles (URL: /editor, /editor/article-slug-here )
     {
       path: '/editor/',
       name: 'editor',
-      component: () => import('../views/ArticleEdit.vue'),
+      component: () => import('../pages/ArticleEdit.vue'),
       props: true,
       children: [
         {
           path: ':slug',
           name: 'editor-slug',
-          component: () => import('../views/ArticleEdit.vue'),
+          component: () => import('../pages/ArticleEdit.vue'),
           props: true,
         },
       ],
@@ -83,7 +83,7 @@ const router = createRouter({
     {
       path: '/articles/:slug',
       name: 'articles',
-      component: () => import('../views/Article.vue'),
+      component: () => import('../pages/Article.vue'),
       props: true,
     },
     //     Profile page (URL: /profile/:username, /profile/:username/favorites )
@@ -92,7 +92,7 @@ const router = createRouter({
     {
       path: '/@:username',
       name: 'profile',
-      component: () => import('../views/Profile.vue'),
+      component: () => import('../pages/Profile.vue'),
       props: true,
       children: [
         {
