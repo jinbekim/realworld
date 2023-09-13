@@ -10,9 +10,7 @@ import RealNavTab from '@/components/RealNavTab.vue';
 import Wrapper from '@/components/layouts/Wrapper.vue';
 import type { Article } from '@/entities/article/Article';
 import { isError } from 'lodash';
-import {
-  useSessionStore,
-} from '@/entities/session/model/sessionModel';
+import { useSessionStore } from '@/entities/session/model/sessionModel';
 
 const TheAside = defineAsyncComponent({
   loader: () => import('@/components/layouts/Wrapper.vue'),
@@ -78,6 +76,12 @@ function onClick() {
   console.log('button click from parent');
 }
 </script>
+
+<route lang="json">
+{
+  "name": "home"
+}
+</route>
 
 <template>
   <div class="home-page">

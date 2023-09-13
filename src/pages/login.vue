@@ -3,6 +3,7 @@ import { reactive } from 'vue';
 import AuthInput from '@/shared/ui/input/AuthInput.vue';
 import { useLoginUser } from '@/features/auth/login';
 import { sessionModel } from '@/entities/session';
+import { getErrorMessage } from '@/shared/api/isError';
 
 const error = reactive({
   message: '',
@@ -24,10 +25,18 @@ const onSubmit = async (event: Event) => {
     });
     addUser(result);
   } catch (e) {
-    error.message = e.errors.toString();
+    error.message = getErrorMessage(e);
   }
 };
 </script>
+
+<route lang="json">
+{
+  "meta": {
+    "requiresAuth": false
+  }
+}
+</route>
 
 <template>
   <div class="auth-page">
