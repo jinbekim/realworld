@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { sessionModel } from '@/entities/session';
 import { useCreateUser } from '@/features/auth/register';
+import { getErrorMessage } from '@/shared/api/isError';
 import AuthInput from '@/shared/ui/input/AuthInput.vue';
 import { reactive } from 'vue';
 
@@ -26,10 +27,18 @@ const onSubmit = async (event: Event) => {
     });
     addUser(result);
   } catch (e) {
-    error.message = e.errors.toString();
+    error.message = getErrorMessage(e);
   }
 };
 </script>
+
+<route lang="json">
+{
+  "meta": {
+    "requiresAuth": false
+  }
+}
+</route>
 
 <template>
   <div class="auth-page">

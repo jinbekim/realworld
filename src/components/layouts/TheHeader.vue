@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { useSessionStore } from '@/entities/session/model/sessionModel';
-import { computed, ref, toValue, watchEffect } from 'vue';
-import { useRoute } from 'vue-router';
+import { computed, toValue } from 'vue';
+import { useRoute, type RouteNamedMap } from 'vue-router/auto';
 
 const route = useRoute();
-const activePathName = computed(() => route.name?.toString().split('-')[0] || '/');
-const {currentUser} = useSessionStore();
+const activePathName = computed(
+  () => route.name?.toString().split('-')[0] || '/'
+);
+const { currentUser } = useSessionStore();
 const user = computed(() => toValue(currentUser));
 
 const links = [
@@ -37,8 +39,9 @@ const links = [
     auth: false,
   },
 ];
+export type RouteName = keyof RouteNamedMap;
 
-function isActive(path: string) {
+function isActive(path: RouteName) {
   if (path === 'home')
     return (
       activePathName.value === 'global' ||
