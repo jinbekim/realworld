@@ -1,39 +1,27 @@
+<route lang="json">
+{
+  "name": "home"
+}
+</route>
 <script setup lang="ts">
-import { Get } from '@/dependency';
 import { defineAsyncComponent, reactive, ref, watchEffect } from 'vue';
 import RealPagination from '@/components/RealPagination.vue';
-
 import { usePagination } from '@/composable/usePagination';
-import { useRoute } from 'vue-router';
-import { isArray } from '@vue/shared';
-import RealNavTab from '@/components/RealNavTab.vue';
-import Wrapper from '@/components/layouts/Wrapper.vue';
-import type { Article } from '@/entities/article/Article';
-import { isError } from 'lodash';
+import NavTab from '@/components/NavTab.vue';
 import { useSessionStore } from '@/entities/session/model/sessionModel';
 
 const TheAside = defineAsyncComponent({
   loader: () => import('@/components/layouts/Wrapper.vue'),
 });
 
-const route = useRoute();
-const currentUser = useSessionStore();
+const { isAuth } = useSessionStore();
 const { pagination, onClickPage } = usePagination();
 const filter = ref<string>();
-const feed = reactive({
-  feedList: [] as Article[],
-  loading: true,
-});
+const activeTab = ref<{ [key: string]: boolean }>(
+  isAuth ? { userFeed: true } : { globalFeed: true }
+);
 
 watchEffect(() => {
-  filter.value = isArray(route.params.tag)
-    ? route.params.tag[0]
-    : route.params.tag;
-});
-
-watchEffect(() => {
-  feed.loading = true;
-
   //REVIEW -  router-view로 나눴어도 될듯.
   // if (route.name === 'my-feed') {
   //   if (currentUser) throw new Error('User is not logged in');
@@ -77,12 +65,6 @@ function onClick() {
 }
 </script>
 
-<route lang="json">
-{
-  "name": "home"
-}
-</route>
-
 <template>
   <div class="home-page">
     <div class="banner">
@@ -97,38 +79,49 @@ function onClick() {
         <div class="col-md-9">
           <div class="feed-toggle">
             <ul class="nav nav-pills outline-active">
-              <RealNavTab
-                v-if="currentUser"
-                to="/my-feed"
-                :active="$route.name === 'my-feed'"
+              <li
+                class="nav-item"
+                v-if="isAuth"
+                @click="activeTab = { userFeed: true }"
               >
-                Your Feed
-              </RealNavTab>
-              <RealNavTab to="/" :active="$route.name === 'global-feed'">
-                Global Feed
-              </RealNavTab>
-              <RealNavTab
-                v-if="$route.name === 'tag-feed'"
-                :to="`/tags/${filter}`"
-                :active="$route.name === 'tag-feed'"
+                <RouterLink
+                  to="/my-feed"
+                  class="nav-link"
+                  :class="{ active: activeTab.userFeed }"
+                >
+                  Your Feed
+                </RouterLink>
+              </li>
+              <li class="nav-item" @click="activeTab = { globalFeed: true }">
+                <RouterLink
+                  to="/"
+                  class="nav-link"
+                  :class="{ active: activeTab.globalFeed }"
+                >
+                  Global Feed
+                </RouterLink>
+              </li>
+              <li
+                v-if="activeTab.tagFeed"
+                @click="activeTab = { tagFeed: true }"
               >
-                # {{ filter }}
-              </RealNavTab>
+                <RouterLink
+                  disabled
+                  :to="`/tags/${filter}`"
+                  class="nav-link active"
+                >
+                  # {{ filter }}
+                </RouterLink>
+              </li>
             </ul>
           </div>
 
-          <!-- REVIEW - type checking?  -->
-          <RealArticles
-            :isLoading="feed.loading"
-            :items="feed.feedList"
-          ></RealArticles>
-          <!-- <router-view :isLoading="feed.loading" :items="feed.feedList" /> -->
+          <RealArticles></RealArticles>
         </div>
 
         <TheAside></TheAside>
 
         <RealPagination
-          v-if="!feed.loading"
           :total="pagination.total"
           :limit="pagination.limit"
           :offset="pagination.offset"

@@ -3,12 +3,13 @@ import App from './App.vue';
 import router from './router';
 import { createPinia } from 'pinia';
 import { VueQueryPlugin } from '@tanstack/vue-query';
+import { useSessionStore } from './entities/session/model/sessionModel';
 
 const pinia = createPinia();
 const app = createApp(App);
 
 router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth === false) next({ name: '/' });
+  if (to.meta.requiresAuth === true && useSessionStore().isAuth === false) return false;
   else next();
 });
 app.use(router);

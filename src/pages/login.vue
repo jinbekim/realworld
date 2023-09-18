@@ -1,3 +1,11 @@
+<route lang="json">
+  {
+    "meta": {
+      "requiresAuth": false
+    }
+  }
+  </route>
+
 <script setup lang="ts">
 import { reactive } from 'vue';
 import AuthInput from '@/shared/ui/input/AuthInput.vue';
@@ -30,13 +38,6 @@ const onSubmit = async (event: Event) => {
 };
 </script>
 
-<route lang="json">
-{
-  "meta": {
-    "requiresAuth": false
-  }
-}
-</route>
 
 <template>
   <div class="auth-page">

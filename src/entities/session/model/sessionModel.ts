@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
+import { ref, toRef } from 'vue';
 
 export interface User {
   email: Email;
@@ -12,15 +12,14 @@ export interface User {
 const StoreId = 'Session';
 export const useSessionStore = defineStore(StoreId, () => {
   const user = ref<User | null>(null);
+  const isAuth = toRef(() => !!user.value?.token);
 
-  const currentUser = () => user.value;
   const addUser = (loginUser: User) => (user.value = loginUser);
   const deleteUser = () => (user.value = null);
-  const useAuth = () => user.value?.token;
 
   return {
-    useAuth,
-    currentUser,
+    isAuth,
+    currentUser: user,
     addUser,
     deleteUser,
   };

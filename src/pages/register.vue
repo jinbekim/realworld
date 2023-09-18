@@ -1,3 +1,11 @@
+<route lang="json">
+  {
+    "meta": {
+      "requiresAuth": false
+    }
+  }
+  </route>
+
 <script setup lang="ts">
 import { sessionModel } from '@/entities/session';
 import { useCreateUser } from '@/features/auth/register';
@@ -32,13 +40,7 @@ const onSubmit = async (event: Event) => {
 };
 </script>
 
-<route lang="json">
-{
-  "meta": {
-    "requiresAuth": false
-  }
-}
-</route>
+
 
 <template>
   <div class="auth-page">
