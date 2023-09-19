@@ -10,3 +10,11 @@
 - 조회랑 명령의 결과는 다르다
 - 사이드 이펙트의 유무가 있을것이다.
 - model / api, model은 상태, api는 api
+
+## TODO
+
+- [ ] 권한에 따라 라우트 처리하기
+- [ ] entities 레이어 완성하기
+- [ ] feature
+- [ ] widget
+- [ ] page,
