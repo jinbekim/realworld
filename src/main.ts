@@ -9,7 +9,9 @@ const pinia = createPinia();
 const app = createApp(App);
 
 router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth === true && useSessionStore().isAuth === false) return false;
+  const store = useSessionStore();
+
+  if (to.meta.requiresAuth === true && store.isAuth === false) return false;
   else next();
 });
 app.use(router);

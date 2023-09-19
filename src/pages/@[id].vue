@@ -1,22 +1,14 @@
 <script setup lang="ts">
 import { Get } from '@/dependency';
 import { ref, toRef, watch, watchEffect } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import RealFollowButton from '@/components/buttons/RealFollowButton.vue';
+import { useRoute, useRouter } from 'vue-router/auto';
 import RealEditProfileButton from '@/components/buttons/RealEditProfileButton.vue';
 import RealPagination from '@/components/RealPagination.vue';
 import { usePagination } from '@/composable/usePagination';
 import { useProfile } from '@/composable/useProfile';
-import RealNavTab from '@/components/RealNavTab.vue';
-const router = useRouter();
-const route = useRoute();
+// import RealNavTab from '@/components/RealNavTab.vue';
+// import FollowButton from '@/features/profile/follow/follow-profile';
 
-const props = defineProps({
-  username: {
-    type: String,
-    required: true,
-  },
-});
 
 // const { user } = useUser();
 // const { profile } = useProfile(props.username);
@@ -71,8 +63,8 @@ const props = defineProps({
 </script>
 
 <template>
-  <!-- <div class="profile-page">
-    <div class="user-info">
+  <div class="profile-page">
+    <!-- <div class="user-info">
       <div class="container" v-if="profile">
         <div class="row">
           <div class="col-xs-12 col-md-10 offset-md-1">
@@ -81,16 +73,16 @@ const props = defineProps({
             <p>
               {{ profile.bio }}
             </p>
-            <real-edit-profile-button
+            <FollowButton
               v-if="isMine(user?.username)"
-            ></real-edit-profile-button>
+            ></FollowButton>
             <real-follow-button v-else :user="profile!"></real-follow-button>
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
-    <div class="container">
+    <!-- <div class="container">
       <div class="row">
         <div class="col-xs-12 col-md-10 offset-md-1">
           <div class="articles-toggle">
@@ -120,6 +112,6 @@ const props = defineProps({
           ></RealPagination>
         </div>
       </div>
-    </div>
-  </div> -->
+    </div> -->
+  </div>
 </template>

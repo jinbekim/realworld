@@ -85,7 +85,7 @@ function onClick() {
                 @click="activeTab = { userFeed: true }"
               >
                 <RouterLink
-                  to="/my-feed"
+                  to="/"
                   class="nav-link"
                   :class="{ active: activeTab.userFeed }"
                 >
