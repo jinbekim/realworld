@@ -12,29 +12,34 @@ import AuthInput from '@/shared/ui/input/AuthInput.vue';
 import { useLoginUser } from '@/features/auth/login';
 import { sessionModel } from '@/entities/session';
 import { getErrorMessage } from '@/shared/api/isError';
+import { useRouter } from 'vue-router/auto';
 
 const error = reactive({
   message: '',
 });
 
 const { addUser } = sessionModel.useSessionStore();
-const { mutateAsync } = useLoginUser();
+const { mutate, isLoading } = useLoginUser();
+const router = useRouter();
 
-const onSubmit = async (event: Event) => {
-  try {
+const onSubmit = (event: Event) => {
     event.preventDefault();
     const formData = new FormData(event.target as HTMLFormElement);
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
 
-    const result = await mutateAsync({
+    mutate({
       email,
       password,
+    },{
+      onSuccess(user) {
+        addUser(user);
+        router.push('/');
+      },
+      onError(e) {
+        error.message = getErrorMessage(e)
+      },
     });
-    addUser(result);
-  } catch (e) {
-    error.message = getErrorMessage(e);
-  }
 };
 </script>
 
@@ -70,7 +75,7 @@ const onSubmit = async (event: Event) => {
               @error="error.message = $event"
             />
 
-            <button class="btn btn-lg btn-primary pull-xs-right" type="submit">
+            <button class="btn btn-lg btn-primary pull-xs-right" type="submit" :disabled="isLoading">
               {{ 'Sign in' }}
             </button>
           </form>

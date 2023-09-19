@@ -14,9 +14,6 @@ export const useLoginUser = () => {
     mutationFn: async (user: LoginUserDto) => {
       const response: { user: User } = await fetcher('users/login', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify({ user: user }),
       });
       return response.user;
