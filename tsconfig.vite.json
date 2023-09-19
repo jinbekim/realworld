@@ -8,6 +8,8 @@
   "compilerOptions": {
     "ignoreDeprecations": "5.0",
     "composite": true,
-    "types": ["node"]
+    "types": ["bun-types"],
+    "module": "esnext",
+    "moduleResolution": "Bundler"
   }
 }
