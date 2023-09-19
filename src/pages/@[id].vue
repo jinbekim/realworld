@@ -1,3 +1,8 @@
+<route>
+  {
+    props: true
+  }
+</route>
 <script setup lang="ts">
 import { Get } from '@/dependency';
 import { ref, toRef, watch, watchEffect } from 'vue';
@@ -6,6 +11,12 @@ import RealEditProfileButton from '@/components/buttons/RealEditProfileButton.vu
 import RealPagination from '@/components/RealPagination.vue';
 import { usePagination } from '@/composable/usePagination';
 import { useProfile } from '@/composable/useProfile';
+
+interface Props {
+  id: string;
+}
+const props = defineProps<Props>();
+console.log(props.id);
 // import RealNavTab from '@/components/RealNavTab.vue';
 // import FollowButton from '@/features/profile/follow/follow-profile';
 

@@ -1,3 +1,9 @@
+<route>
+  {
+    path: '/editor'
+  }
+</route>
+
 <script setup lang="ts">
 import { Get } from '@/dependency';
 import { getErrorMessage } from '@/shared/api/isError';

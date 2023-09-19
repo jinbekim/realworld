@@ -7,7 +7,6 @@
 import { defineAsyncComponent, reactive, ref, watchEffect } from 'vue';
 import RealPagination from '@/components/RealPagination.vue';
 import { usePagination } from '@/composable/usePagination';
-import NavTab from '@/components/NavTab.vue';
 import { useSessionStore } from '@/entities/session/model/sessionModel';
 
 const TheAside = defineAsyncComponent({
@@ -17,9 +16,8 @@ const TheAside = defineAsyncComponent({
 const { isAuth } = useSessionStore();
 const { pagination, onClickPage } = usePagination();
 const filter = ref<string>();
-const activeTab = ref<{ [key: string]: boolean }>(
-  isAuth ? { userFeed: true } : { globalFeed: true }
-);
+
+const activeTag = ref<string>('');
 
 watchEffect(() => {
   //REVIEW -  router-view로 나눴어도 될듯.
@@ -60,9 +58,6 @@ watchEffect(() => {
   // }
 });
 
-function onClick() {
-  console.log('button click from parent');
-}
 </script>
 
 <template>
@@ -82,28 +77,26 @@ function onClick() {
               <li
                 class="nav-item"
                 v-if="isAuth"
-                @click="activeTab = { userFeed: true }"
               >
                 <RouterLink
-                  to="/"
+                  to="/my-feed"
                   class="nav-link"
-                  :class="{ active: activeTab.userFeed }"
+                  exactActiveClass="active"
                 >
                   Your Feed
                 </RouterLink>
               </li>
-              <li class="nav-item" @click="activeTab = { globalFeed: true }">
+              <li class="nav-item">
                 <RouterLink
                   to="/"
                   class="nav-link"
-                  :class="{ active: activeTab.globalFeed }"
+                  exactActiveClass="active"
                 >
                   Global Feed
                 </RouterLink>
               </li>
               <li
-                v-if="activeTab.tagFeed"
-                @click="activeTab = { tagFeed: true }"
+                v-if="activeTag"
               >
                 <RouterLink
                   disabled
@@ -116,7 +109,7 @@ function onClick() {
             </ul>
           </div>
 
-          <RealArticles></RealArticles>
+          <RouterView></RouterView>
         </div>
 
         <TheAside></TheAside>
