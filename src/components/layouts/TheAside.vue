@@ -3,13 +3,13 @@
     <aside class="sidebar">
       <p>Popular Tags</p>
       <div class="tag-list">
-        <router-link
+        <RouterLink
           v-for="tag in tags"
           :to="`/${tag}`"
           class="tag-pill tag-default ng-binding ng-scope"
         >
           {{ tag }}
-        </router-link>
+        </RouterLink>
       </div>
     </aside>
   </div>

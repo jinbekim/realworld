@@ -4,7 +4,7 @@
       <real-mini-profile :item="props.item"></real-mini-profile>
       <real-favorite-button :item="props.item"></real-favorite-button>
     </div>
-    <router-link :to="`/articles/${props.item.slug}`" class="preview-link">
+    <RouterLink :to="`/articles/${props.item.slug}`" class="preview-link">
       <h1>{{ props.item.title }}</h1>
       <p>{{ props.item.description }}</p>
       <span>Read more...</span>
@@ -16,7 +16,7 @@
           {{ tag }}
         </li>
       </ul>
-    </router-link>
+    </RouterLink>
   </div>
 </template>
 

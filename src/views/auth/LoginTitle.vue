@@ -1,7 +1,7 @@
 <template>
   <h1 class="text-xs-center">{{ title.h1 }}</h1>
   <p class="text-xs-center">
-    <router-link to="">{{ title.p }}</router-link>
+    <RouterLink to="">{{ title.p }}</RouterLink>
   </p>
 </template>
 

@@ -14,8 +14,8 @@ const { text, onSubmit, comments, deleteComment } = useComments(props.slug);
 
 <template>
   <!-- <p v-if="!user">
-    <router-link to="/login"> Sign in </router-link> &nbsp;or&nbsp;
-    <router-link to="/register">sign up</router-link> to add comments on this
+    <RouterLink to="/login"> Sign in </RouterLink> &nbsp;or&nbsp;
+    <RouterLink to="/register">sign up</RouterLink> to add comments on this
     article.
   </p>
 
@@ -43,14 +43,14 @@ const { text, onSubmit, comments, deleteComment } = useComments(props.slug);
           </p>
         </div>
         <div class="card-footer">
-          <router-link
+          <RouterLink
             :to="`/profile/${toUrlEncode(comment.author.username)}`"
             class="comment-author"
           >
             <img :src="comment.author.image" class="comment-author-img" />
-          </router-link>
+          </RouterLink>
           &nbsp;
-          <router-link
+          <RouterLink
             :to="`/profile/${toUrlEncode(comment.author.username)}`"
             class="comment-author"
             >{{ comment.author.username }}</router-link

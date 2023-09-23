@@ -1,12 +1,12 @@
 <template>
-  <!-- <router-link :to="`/@${toUrlEncode(props.item.author.username)}`"
+  <!-- <RouterLink :to="`/@${toUrlEncode(props.item.author.username)}`"
     ><img :src="props.item.author.image"
-  /></router-link> -->
+  /></RouterLink> -->
 
   <div class="info">
-    <router-link :to="`/@${props.item.author.username}`" class="author">{{
+    <RouterLink :to="`/@${props.item.author.username}`" class="author">{{
       props.item.author.username
-    }}</router-link>
+    }}</RouterLink>
     <span class="date">{{ date }}</span>
   </div>
 </template>
