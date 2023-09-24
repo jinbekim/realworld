@@ -5,8 +5,6 @@
 </route>
 
 <script setup lang="ts">
-import { Get } from '@/dependency';
-import { getErrorMessage } from '@/shared/api/isError';
 import { onMounted, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 

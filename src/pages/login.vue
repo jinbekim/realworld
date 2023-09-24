@@ -11,8 +11,8 @@ import { reactive } from 'vue';
 import AuthInput from '@/shared/ui/input/AuthInput.vue';
 import { useLoginUser } from '@/features/auth/login';
 import { sessionModel } from '@/entities/session';
-import { getErrorMessage } from '@/shared/api/isError';
 import { useRouter } from 'vue-router/auto';
+import { getErrorMessage } from '@/shared/api/utils';
 
 const error = reactive({
   message: '',

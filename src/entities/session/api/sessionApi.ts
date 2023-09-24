@@ -1,6 +1,6 @@
-import { fetcher } from '@/shared/api/fetcher';
 import { useQuery } from '@tanstack/vue-query';
 import { useSessionStore, type User } from '../model/sessionModel';
+import { userApi } from '@/shared/api';
 
 export const sessionKeys = {
   session: {
@@ -10,7 +10,7 @@ export const sessionKeys = {
 
   mutation: {
     login: () => [...sessionKeys.session.root, 'login'],
-    create: () => [...sessionKeys.session.root, 'create'],
+    register: () => [...sessionKeys.session.root, 'register'],
   },
 } as const;
 
@@ -28,14 +28,10 @@ export const useCurrentUser = () =>
   useQuery({
     queryKey: sessionKeys.session.currentUser(),
     queryFn: async () => {
-      const response = await fetcher('user', {
-        method: 'GET',
-      });
-
-      const user = toDomain(response.user);
-
+      const response = userApi.currentUser();
       const { addUser } = useSessionStore();
 
+      const user = toDomain(response);
       addUser(user);
 
       return user;

@@ -8,8 +8,8 @@
 
 <script setup lang="ts">
 import { sessionModel } from '@/entities/session';
-import { useCreateUser } from '@/features/auth/register';
-import { getErrorMessage } from '@/shared/api/isError';
+import { useRegisterUser } from '@/features/auth/register';
+import { getErrorMessage } from '@/shared/api/utils';
 import AuthInput from '@/shared/ui/input/AuthInput.vue';
 import { reactive } from 'vue';
 
@@ -18,7 +18,7 @@ const error = reactive({
 });
 
 const { addUser } = sessionModel.useSessionStore();
-const { mutateAsync } = useCreateUser();
+const { mutateAsync } = useRegisterUser();
 
 const onSubmit = async (event: Event) => {
   try {

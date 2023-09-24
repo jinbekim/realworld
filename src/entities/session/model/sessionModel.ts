@@ -25,10 +25,3 @@ export const useSessionStore = defineStore(StoreId, () => {
   };
 });
 
-// export type UpdateUser = RequiredAtLeastOne<{
-//   email: string;
-//   password: string;
-//   username: string;
-//   bio: string;
-//   image: string;
-// }>;

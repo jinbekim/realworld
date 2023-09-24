@@ -1,1 +1,1 @@
-export { useCreateUser } from './api/createUser';
+export { useRegisterUser } from './api/createUser';
