@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { useComments } from '@/composable/useComments';
-import { Get } from '@/dependency';
+
 
 // const { user } = useUser();
 const props = defineProps<{ slug: string }>();

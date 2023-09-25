@@ -8,7 +8,7 @@
   </button>
 </template>
 <script setup lang="ts">
-import { Get } from '@/dependency';
+
 import type { Profile } from '@/entities/profile/Profile';
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';

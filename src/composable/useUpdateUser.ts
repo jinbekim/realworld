@@ -1,4 +1,3 @@
-import { Get } from "@/dependency";
 import type { User } from "@/entities/session/model/sessionModel";
 import { RealWorldStorage } from "@/infrastructure/storage";
 import router from "@/router";

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Get } from '@/dependency';
 import { computed, onMounted, ref, toRef } from 'vue';
 import { useRouter } from 'vue-router';
 import RealMiniProfile from '@/components/RealMiniProfile.vue';

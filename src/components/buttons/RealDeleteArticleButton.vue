@@ -5,7 +5,7 @@
   </button>
 </template>
 <script setup lang="ts">
-import { Get } from '@/dependency';
+
 import { useRouter } from 'vue-router';
 
 const router = useRouter();

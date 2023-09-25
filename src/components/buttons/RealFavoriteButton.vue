@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import { Get } from '@/dependency';
+
 import { ref, toRefs } from 'vue';
 import { useRouter } from 'vue-router';
 import { debounce } from 'lodash';

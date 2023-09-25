@@ -1,11 +1,11 @@
-import { Get } from '@/dependency';
-import type { IComment } from '@/entities/comment/Comment';
+
+import type { Comment } from '@/entities/comment/Comment';
 import { isError } from 'lodash';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 export const useComments = (slug: string) => {
-  const comments = ref<IComment[]>([]);
+  const comments = ref<Comment[]>([]);
   const text = ref('');
   const router = useRouter();
 
@@ -16,13 +16,13 @@ export const useComments = (slug: string) => {
   // });
 
   async function getComments() {
-    const repo = Get.get('ICommentRepository');
+    const repo = Get.get('CommentRepository');
     const comments = await repo.get(slug);
     return comments;
   }
 
   async function deleteComment(id: number) {
-    const commentRepository = Get.get('ICommentRepository');
+    const commentRepository = Get.get('CommentRepository');
     const ret = await commentRepository.delete(slug, id);
     if (!isError(ret)) {
       comments.value = comments.value.filter((c) => c.id !== id);
@@ -32,7 +32,7 @@ export const useComments = (slug: string) => {
   async function onSubmit(event: Event) {
     event.preventDefault();
     if (!text.value) return;
-    const repo = Get.get('ICommentRepository');
+    const repo = Get.get('CommentRepository');
     const comment = await repo.add(slug, { body: text.value });
     if (!isError(comment)) {
       // comments.value.push(comment);

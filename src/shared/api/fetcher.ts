@@ -22,6 +22,6 @@ export const fetcher = async (path: string, options: RequestInit = {}) => {
     if (response.status === 401) {
       RealWorldStorage.set(TokenKey, null);
     }
-    return Promise.reject<GenericError>(data);
+    return Promise.reject(new Error('fetch error'));
   }
 };

@@ -1,4 +1,4 @@
-import { Get } from '@/dependency';
+
 import { onBeforeMount, onMounted, ref } from 'vue';
 
 export const useTags = () => {

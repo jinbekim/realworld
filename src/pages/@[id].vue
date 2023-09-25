@@ -4,7 +4,7 @@
   }
 </route>
 <script setup lang="ts">
-import { Get } from '@/dependency';
+
 import { ref, toRef, watch, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router/auto';
 import RealEditProfileButton from '@/components/buttons/RealEditProfileButton.vue';
@@ -43,7 +43,7 @@ console.log(props.id);
 //   isLoading.value = false;
 // });
 
-// async function getArticles(username: string): Promise<Article[]> {
+// async function getArticles(username: string, options: RequestInit = {}): Promise<Article[]> {
 //   const articleRepository = Get.get("IArticleRepository");
 //   const ret = await articleRepository.getArticles({
 //     author: username,
@@ -58,7 +58,7 @@ console.log(props.id);
 //   return [];
 // }
 
-// async function getFavorites(username: string): Promise<Article[]> {
+// async function getFavorites(username: string, options: RequestInit = {}): Promise<Article[]> {
 //   const articleRepository = Get.get("IArticleRepository");
 //   const ret = await articleRepository.getArticles({
 //     favorited: username,

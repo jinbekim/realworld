@@ -1,4 +1,4 @@
-import { Get } from '@/dependency';
+
 import type { Profile } from '@/entities/profile/Profile';
 import { ref, watchEffect } from 'vue';
 
