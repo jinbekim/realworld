@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/vue-query';
 import { useSessionStore, type User } from '../model/sessionModel';
 import { userApi } from '@/shared/api';
+import type { UserDto } from '@/shared/api/user';
 
 export const sessionKeys = {
   session: {
@@ -14,13 +15,13 @@ export const sessionKeys = {
   },
 } as const;
 
-const toDomain = (dto: any): User => {
+const toDomain = (dto: UserDto): User => {
   return {
-    email: dto?.email,
-    token: dto?.token,
-    username: dto?.username,
-    bio: dto?.bio,
-    image: dto?.image,
+    email: dto.email,
+    token: dto.token,
+    username: dto.username,
+    bio: dto.bio,
+    image: dto.image,
   };
 };
 
@@ -28,7 +29,7 @@ export const useCurrentUser = () =>
   useQuery({
     queryKey: sessionKeys.session.currentUser(),
     queryFn: async () => {
-      const response = userApi.currentUser();
+      const response = await userApi.currentUser();
       const { addUser } = useSessionStore();
 
       const user = toDomain(response);

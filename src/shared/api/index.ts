@@ -1,2 +1,6 @@
-
 export * as userApi from './user'
+export * as articleApi from './article'
+export * as commentApi from './comment'
+export * as tagApi from './tag'
+export * as favoriteApi from './favorite'
+export * as profileApi from './profile'

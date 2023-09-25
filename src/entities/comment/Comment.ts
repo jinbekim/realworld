@@ -1,13 +1,9 @@
 import type { Profile } from "../profile/Profile";
 
-export interface IComment {
+export interface Content {
   id: number;
   createdAt: string;
   updatedAt: string;
   body: string;
   author: Profile;
-}
-
-export interface NewComment {
-  body: string;
 }

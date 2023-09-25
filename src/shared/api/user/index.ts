@@ -1,6 +1,6 @@
 import { fetcher } from "../fetcher";
 
-export interface User {
+export interface UserDto {
   email: Email;
   token: Token;
   username: Name;
@@ -27,16 +27,16 @@ export interface LoginUserDto {
   password: string;
 }
 
-export const login = async (user:LoginUserDto)  => {
-  const response: { user: User } = await fetcher('users/login', {
+export const login = async (user:LoginUserDto): Promise<UserDto>  => {
+  const response = await fetcher('users/login', {
     method: 'POST',
     body: JSON.stringify({ user: user }),
   });
   return response.user;
 }
 
-export const register = async (user: NewUserDto) => {
-  const response: { user: User } = await fetcher('users', {
+export const register = async (user: NewUserDto): Promise<UserDto> => {
+  const response = await fetcher('users', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -46,15 +46,15 @@ export const register = async (user: NewUserDto) => {
   return response.user;
 }
 
-export const currentUser = async () => {
-  const response: { user: User } = await fetcher('user', {
+export const currentUser = async (): Promise<UserDto> => {
+  const response = await fetcher('user', {
     method: 'GET',
   });
   return response.user;
 }
 
-export const updateCurrentUser = async (user: UpdateUser) => {
-  const response: { user: User } = await fetcher('user', {
+export const updateCurrentUser = async (user: UpdateUser):Promise<UserDto> => {
+  const response = await fetcher('user', {
     method: 'PUT',
     body: JSON.stringify({ user }),
   });

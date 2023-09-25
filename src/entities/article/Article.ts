@@ -1,31 +1,14 @@
 import type { Profile } from "../profile/Profile";
 
 export interface Article {
-  slug: string;
+  slug: Name;
   title: string;
   description: string;
   body: string;
-  tagList: string[];
+  tagList: Tag[];
   createdAt: string;
   updatedAt: string;
   favorited: boolean;
   favoritesCount: number;
   author: Profile;
 }
-
-// export interface NewArticle {
-//   title: string;
-//   description: string;
-//   body: string;
-//   tagList?: string[];
-// }
-
-// export interface Articles {
-//   articles: Article[];
-//   articlesCount: number;
-// }
-// export interface UpdateArticle {
-//   title?: string;
-//   description?: string;
-//   body?: string;
-// }
