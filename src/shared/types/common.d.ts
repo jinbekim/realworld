@@ -3,7 +3,6 @@ type Name = string;
 type UniqueId = string;
 type Url = string;
 type Password = string;
-type Tag = string;
 type Token = string;
 type Text = string;
 

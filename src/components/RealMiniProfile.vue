@@ -11,7 +11,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import type { Article } from "@/entities/article/Article";
+import type { Article } from "@/entities/article";
 import { computed } from "vue";
 const props = defineProps<{
   item: Article;

@@ -1,62 +1,24 @@
 <route lang="json">
 {
-  "name": "home"
+  "name": "home",
+  "props": true
 }
 </route>
 <script setup lang="ts">
-import { defineAsyncComponent, reactive, ref, watchEffect } from 'vue';
 import RealPagination from '@/components/RealPagination.vue';
 import { usePagination } from '@/composable/usePagination';
 import { useSessionStore } from '@/entities/session/model/sessionModel';
+import TheAside from '@/components/layouts/TheAside.vue'
+import { useTags, type Tag } from '@/entities/tag';
 
-const TheAside = defineAsyncComponent({
-  loader: () => import('@/components/layouts/Wrapper.vue'),
-});
+interface Props {
+  tag: Tag
+}
+defineProps<Props>();
 
 const { isAuth } = useSessionStore();
 const { pagination, onClickPage } = usePagination();
-const filter = ref<string>();
-
-const activeTag = ref<string>('');
-
-watchEffect(() => {
-  //REVIEW -  router-view로 나눴어도 될듯.
-  // if (route.name === 'my-feed') {
-  //   if (currentUser) throw new Error('User is not logged in');
-  //   Get.get('IArticleRepository')
-  //     .getFeedArticles({ limit: pagination.limit, offset: pagination.offset })
-  //     .then((result) => {
-  //       if (!isError(result)) {
-  //         feed.feedList = result.articles;
-  //         feed.loading = false;
-  //         pagination.total = result.articlesCount;
-  //       }
-  //     });
-  // } else if (route.name === 'global-feed') {
-  //   Get.get('IArticleRepository')
-  //     .getArticles({ pagination })
-  //     .then((result) => {
-  //       if (!isError(result)) {
-  //         feed.feedList = result.articles;
-  //         feed.loading = false;
-  //         pagination.total = result.articlesCount;
-  //       }
-  //     });
-  // } else if (route.name === 'tag-feed') {
-  //   Get.get('IArticleRepository')
-  //     .getArticles({
-  //       tag: isArray(route.params.tag) ? route.params.tag[0] : route.params.tag,
-  //       pagination,
-  //     })
-  //     .then((result) => {
-  //       if (!isError(result)) {
-  //         feed.feedList = result.articles;
-  //         feed.loading = false;
-  //         pagination.total = result.articlesCount;
-  //       }
-  //     });
-  // }
-});
+const {data:tags} =useTags();
 
 </script>
 
@@ -96,14 +58,14 @@ watchEffect(() => {
                 </RouterLink>
               </li>
               <li
-                v-if="activeTag"
+                v-if="tag"
+                class="nav-item"
               >
                 <RouterLink
-                  disabled
-                  :to="`/tags/${filter}`"
+                  :to="''"
                   class="nav-link active"
                 >
-                  # {{ filter }}
+                  # {{ tag }}
                 </RouterLink>
               </li>
             </ul>
@@ -112,7 +74,7 @@ watchEffect(() => {
           <RouterView></RouterView>
         </div>
 
-        <TheAside></TheAside>
+        <TheAside :tags="tags"></TheAside>
 
         <RealPagination
           :total="pagination.total"

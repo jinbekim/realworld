@@ -1,4 +1,4 @@
-import type { Profile } from "../profile/Profile";
+import type { Profile } from "../profile";
 
 export interface Content {
   id: number;

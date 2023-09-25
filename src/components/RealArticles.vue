@@ -12,7 +12,7 @@
 </template>
 <script setup lang="ts">
 import RealPostTile from "@/components/RealPostTile.vue";
-import type { Article } from "@/entities/article/Article";
+import type { Article } from "@/entities/article";
 import { toRefs } from "vue";
 
 const props = defineProps<{

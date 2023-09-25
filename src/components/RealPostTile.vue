@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Article } from "@/entities/article/Article";
+import type { Article } from "@/entities/article";
 import RealMiniProfile from "./RealMiniProfile.vue";
 import RealFavoriteButton from "./buttons/RealFavoriteButton.vue";
 

@@ -5,7 +5,6 @@ import RealMiniProfile from '@/components/RealMiniProfile.vue';
 import RealFavoriteButton from '@/components/buttons/RealFavoriteButton.vue';
 import RealEditArticleButton from '@/components/buttons/RealEditArticleButton.vue';
 import RealDeleteArticleButton from '@/components/buttons/RealDeleteArticleButton.vue';
-import { useComments } from '@/composable/useComments';
 import RealComment from '@/components/RealComment.vue';
 
 // const props = defineProps({

@@ -1,6 +1,6 @@
-<route>
+<route lang="json">
   {
-    props: true
+    "props": true
   }
 </route>
 <script setup lang="ts">
@@ -10,7 +10,6 @@ import { useRoute, useRouter } from 'vue-router/auto';
 import RealEditProfileButton from '@/components/buttons/RealEditProfileButton.vue';
 import RealPagination from '@/components/RealPagination.vue';
 import { usePagination } from '@/composable/usePagination';
-import { useProfile } from '@/composable/useProfile';
 
 interface Props {
   id: string;

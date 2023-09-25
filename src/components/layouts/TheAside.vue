@@ -16,8 +16,10 @@
 </template>
 
 <script setup lang="ts">
+import type { Tag } from '@/entities/tag/api/tag';
+
 interface Props {
-  tags: string[];
+  tags?: Tag[];
 }
 defineProps<Props>();
 </script>
