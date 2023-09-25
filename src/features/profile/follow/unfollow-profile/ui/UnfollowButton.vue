@@ -1,33 +1,27 @@
 <template>
   <button
     class="btn btn-sm btn-outline-secondary action-btn"
-    @click="toggleFollow"
+    @click="unfollow"
   >
     <i class="ion-plus-round"></i>
-    &nbsp; {{ text }}
+    &nbsp; {{ `Follow ${props.user.username}` }}
   </button>
 </template>
 <script setup lang="ts">
+import type { Profile } from '@/entities/profile';
+import { useQueryClient } from '@tanstack/vue-query';
+import { useUnfollowMutation } from '../api/unfollow';
 
-import type { Profile } from '@/entities/profile/Profile';
-import { computed, toRef } from 'vue';
-import { useRouter } from 'vue-router';
+interface Props  {
+  user: Profile
+}
+const props = defineProps<Props>();
 
-const router = useRouter();
+  const queryClient = useQueryClient();
+const unfollowUser = useUnfollowMutation(queryClient);
 
-const props = defineProps<{
-  user: Profile;
-}>();
-
-const text = computed(() => `Follow ${props.user.username}`);
-
-async function toggleFollow() {
-  const profileRepository = Get.get('IProfileRepository');
-  if (props.user && props.user.following === true) {
-    const ret = await profileRepository.unfollowUser(props.user.username);
-    if (ret) {
-      props.user.following = false;
-    } else router.replace('/login');
-  }
+async function unfollow() {
+  if (props.user && props.user.following === true)
+    unfollowUser.mutate(props.user.username);
 }
 </script>
