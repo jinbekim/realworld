@@ -2,7 +2,6 @@
 import { useSessionStore } from '@/entities/session/model/sessionModel';
 
 const store = useSessionStore();
-
 </script>
 
 <template>
@@ -11,27 +10,41 @@ const store = useSessionStore();
       <RouterLink class="navbar-brand" to="/">conduit</RouterLink>
       <template v-if="store.currentUser">
         <ul class="nav navbar-nav pull-xs-right">
-          <li class="nav-item" >
-            <RouterLink active-class="active" class="nav-link" :to="{ name: 'home' }">
+          <li class="nav-item">
+            <RouterLink
+              active-class="active"
+              class="nav-link"
+              :to="{ name: 'home' }"
+            >
               Home
             </RouterLink>
           </li>
-          <li
-            class="nav-item"
-          >
-            <RouterLink  active-class="active" class="nav-link" :to="{ name: '/ArticleEdit' }">
+          <li class="nav-item">
+            <RouterLink
+              active-class="active"
+              class="nav-link"
+              :to="{ name: '/ArticleEdit' }"
+            >
               <IoCreateOutline size="{16}" />
               &nbsp;New Article
             </RouterLink>
           </li>
-          <li class="nav-item" >
-            <RouterLink active-class="active" class="nav-link" :to="{ name: '/Settings' }">
+          <li class="nav-item">
+            <RouterLink
+              active-class="active"
+              class="nav-link"
+              :to="{ name: '/settings' }"
+            >
               <IoSettingsSharp size="{16}" />
               &nbsp;Settings
             </RouterLink>
           </li>
-          <li class="nav-item" >
-            <RouterLink  active-class="active" class="nav-link" :to="`/@${store.currentUser.username}`" >
+          <li class="nav-item">
+            <RouterLink
+              active-class="active"
+              class="nav-link"
+              :to="`/@${store.currentUser.username}`"
+            >
               <img
                 class="user-pic"
                 :src="store.currentUser.image"
@@ -44,18 +57,30 @@ const store = useSessionStore();
       </template>
       <template v-else>
         <ul class="nav navbar-nav pull-xs-right">
-          <li class="nav-item" >
-            <RouterLink active-class="active" class="nav-link" :to="{ name: 'home' }">
+          <li class="nav-item">
+            <RouterLink
+              active-class="active"
+              class="nav-link"
+              :to="{ name: 'home' }"
+            >
               Home
             </RouterLink>
           </li>
-          <li class="nav-item" >
-            <RouterLink active-class="active" class="nav-link" :to="{ name: '/login' }">
+          <li class="nav-item">
+            <RouterLink
+              active-class="active"
+              class="nav-link"
+              :to="{ name: '/login' }"
+            >
               Sign in
             </RouterLink>
           </li>
-          <li class="nav-item" >
-            <RouterLink active-class="active" class="nav-link" :to="{ name: '/register' }">
+          <li class="nav-item">
+            <RouterLink
+              active-class="active"
+              class="nav-link"
+              :to="{ name: '/register' }"
+            >
               Sign up
             </RouterLink>
           </li>

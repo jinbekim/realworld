@@ -1,14 +1,14 @@
 <route lang="json">
-  {
-    "meta": {
-      "requiresAuth": false
-    }
+{
+  "meta": {
+    "requiresAuth": false
   }
-  </route>
+}
+</route>
 
 <script setup lang="ts">
 import { sessionModel } from '@/entities/session';
-import { useRegisterUser } from '@/features/auth/register';
+import { useRegisterUser } from '@/features/session/register';
 import { getErrorMessage } from '@/shared/api/utils';
 import AuthInput from '@/shared/ui/input/AuthInput.vue';
 import { reactive } from 'vue';
@@ -39,8 +39,6 @@ const onSubmit = async (event: Event) => {
   }
 };
 </script>
-
-
 
 <template>
   <div class="auth-page">

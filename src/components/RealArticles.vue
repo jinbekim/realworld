@@ -11,9 +11,9 @@
   </div>
 </template>
 <script setup lang="ts">
-import RealPostTile from "@/components/RealPostTile.vue";
-import type { Article } from "@/entities/article";
-import { toRefs } from "vue";
+import RealPostTile from '@/shared/ui/RealPostTile.vue';
+import type { Article } from '@/entities/article';
+import { toRefs } from 'vue';
 
 const props = defineProps<{
   isLoading: boolean;

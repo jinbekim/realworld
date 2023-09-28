@@ -21,9 +21,9 @@
 </template>
 
 <script setup lang="ts">
-import type { Article } from "@/entities/article";
-import RealMiniProfile from "./RealMiniProfile.vue";
-import RealFavoriteButton from "./buttons/RealFavoriteButton.vue";
+import type { Article } from '@/entities/article';
+import RealMiniProfile from './RealMiniProfile.vue';
+import RealFavoriteButton from '@/shared/ui/buttons/RealFavoriteButton.vue';
 
 const props = defineProps<{
   item: Article;

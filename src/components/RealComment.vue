@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-
 // const { user } = useUser();
 const props = defineProps<{ slug: string }>();
-const { text, onSubmit, comments, deleteComment } = useComments(props.slug);
+// const { text, onSubmit, comments, deleteComment } = useComments(props.slug);
 
 // const isMine = (username: string) => {
 //   return user.value?.username === username;

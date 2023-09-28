@@ -5,21 +5,18 @@
 }
 </route>
 <script setup lang="ts">
-import RealPagination from '@/components/RealPagination.vue';
-import { usePagination } from '@/composable/usePagination';
 import { useSessionStore } from '@/entities/session/model/sessionModel';
-import TheAside from '@/components/layouts/TheAside.vue'
-import { useTags, type Tag } from '@/entities/tag';
+import { type Tag } from '@/entities/tag';
+import { usePagination } from '@/shared/composables/usePagination';
+import { PopularTags } from '@/widgets/popular-tags';
 
 interface Props {
-  tag: Tag
+  tag: Tag;
 }
 defineProps<Props>();
 
-const { isAuth } = useSessionStore();
+const { useAuth } = useSessionStore();
 const { pagination, onClickPage } = usePagination();
-const {data:tags} =useTags();
-
 </script>
 
 <template>
@@ -36,10 +33,7 @@ const {data:tags} =useTags();
         <div class="col-md-9">
           <div class="feed-toggle">
             <ul class="nav nav-pills outline-active">
-              <li
-                class="nav-item"
-                v-if="isAuth"
-              >
+              <li class="nav-item" v-if="useAuth()">
                 <RouterLink
                   to="/my-feed"
                   class="nav-link"
@@ -49,22 +43,12 @@ const {data:tags} =useTags();
                 </RouterLink>
               </li>
               <li class="nav-item">
-                <RouterLink
-                  to="/"
-                  class="nav-link"
-                  exactActiveClass="active"
-                >
+                <RouterLink to="/" class="nav-link" exactActiveClass="active">
                   Global Feed
                 </RouterLink>
               </li>
-              <li
-                v-if="tag"
-                class="nav-item"
-              >
-                <RouterLink
-                  :to="''"
-                  class="nav-link active"
-                >
+              <li v-if="tag" class="nav-item">
+                <RouterLink :to="''" class="nav-link active">
                   # {{ tag }}
                 </RouterLink>
               </li>
@@ -74,7 +58,7 @@ const {data:tags} =useTags();
           <RouterView></RouterView>
         </div>
 
-        <TheAside :tags="tags"></TheAside>
+        <PopularTags></PopularTags>
 
         <RealPagination
           :total="pagination.total"

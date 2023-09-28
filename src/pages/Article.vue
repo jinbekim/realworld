@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, toRef } from 'vue';
 import { useRouter } from 'vue-router';
-import RealMiniProfile from '@/components/RealMiniProfile.vue';
-import RealFavoriteButton from '@/components/buttons/RealFavoriteButton.vue';
-import RealEditArticleButton from '@/components/buttons/RealEditArticleButton.vue';
-import RealDeleteArticleButton from '@/components/buttons/RealDeleteArticleButton.vue';
-import RealComment from '@/components/RealComment.vue';
+// import RealMiniProfile from '@/shared/ui/RealMiniProfile.vue';
+import RealFavoriteButton from '@/shared/ui/buttons/RealFavoriteButton.vue';
+import RealEditArticleButton from '@/shared/ui/buttons/RealEditArticleButton.vue';
+import RealDeleteArticleButton from '@/shared/ui/buttons/RealDeleteArticleButton.vue';
+// import RealComment from '@/shared/ui/RealComment.vue';
 
 // const props = defineProps({
 //   slug: {

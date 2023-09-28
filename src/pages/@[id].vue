@@ -1,24 +1,18 @@
 <route lang="json">
-  {
-    "props": true
-  }
+{
+  "props": true
+}
 </route>
 <script setup lang="ts">
-
 import { ref, toRef, watch, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router/auto';
-import RealEditProfileButton from '@/components/buttons/RealEditProfileButton.vue';
-import RealPagination from '@/components/RealPagination.vue';
-import { usePagination } from '@/composable/usePagination';
-
 interface Props {
   id: string;
 }
 const props = defineProps<Props>();
 console.log(props.id);
-// import RealNavTab from '@/components/RealNavTab.vue';
+// import RealNavTab from '@/shared/ui/RealNavTab.vue';
 // import FollowButton from '@/features/profile/follow/follow-profile';
-
 
 // const { user } = useUser();
 // const { profile } = useProfile(props.username);

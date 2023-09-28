@@ -1,15 +1,15 @@
 <route lang="json">
-  {
-    "meta": {
-      "requiresAuth": false
-    }
+{
+  "meta": {
+    "requiresAuth": false
   }
-  </route>
+}
+</route>
 
 <script setup lang="ts">
 import { reactive } from 'vue';
 import AuthInput from '@/shared/ui/input/AuthInput.vue';
-import { useLoginUser } from '@/features/auth/login';
+import { useLoginUser } from '@/features/session/login';
 import { sessionModel } from '@/entities/session';
 import { useRouter } from 'vue-router/auto';
 import { getErrorMessage } from '@/shared/api/utils';
@@ -23,26 +23,28 @@ const { mutate, isLoading } = useLoginUser();
 const router = useRouter();
 
 const onSubmit = (event: Event) => {
-    event.preventDefault();
-    const formData = new FormData(event.target as HTMLFormElement);
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
+  event.preventDefault();
+  const formData = new FormData(event.target as HTMLFormElement);
+  const email = formData.get('email') as string;
+  const password = formData.get('password') as string;
 
-    mutate({
+  mutate(
+    {
       email,
       password,
-    },{
+    },
+    {
       onSuccess(user) {
         addUser(user);
         router.push('/');
       },
       onError(e) {
-        error.message = getErrorMessage(e)
+        error.message = getErrorMessage(e);
       },
-    });
+    }
+  );
 };
 </script>
-
 
 <template>
   <div class="auth-page">
@@ -75,7 +77,11 @@ const onSubmit = (event: Event) => {
               @error="error.message = $event"
             />
 
-            <button class="btn btn-lg btn-primary pull-xs-right" type="submit" :disabled="isLoading">
+            <button
+              class="btn btn-lg btn-primary pull-xs-right"
+              type="submit"
+              :disabled="isLoading"
+            >
               {{ 'Sign in' }}
             </button>
           </form>

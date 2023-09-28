@@ -5,23 +5,22 @@ export interface User {
   email: Email;
   token: Token;
   username: Name;
-  bio: Text;
+  bio: string;
   image: Url;
 }
 
 const StoreId = 'Session';
 export const useSessionStore = defineStore(StoreId, () => {
   const user = ref<User | null>(null);
-  const isAuth = computed(() => !!user.value?.token);
 
+  const useAuth = () => user.value?.token;
   const addUser = (loginUser: User) => (user.value = loginUser);
   const deleteUser = () => (user.value = null);
 
   return {
-    isAuth,
+    useAuth,
     currentUser: user,
     addUser,
     deleteUser,
   };
 });
-

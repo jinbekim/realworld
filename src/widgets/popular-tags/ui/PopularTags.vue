@@ -2,7 +2,7 @@
   <div class="col-md-3">
     <aside class="sidebar">
       <p>Popular Tags</p>
-      <div class="tag-list">
+      <div class="tag-list" v-loading="isLoading">
         <RouterLink
           v-for="tag in tags"
           :to="`/${tag}`"
@@ -16,10 +16,15 @@
 </template>
 
 <script setup lang="ts">
-import type { Tag } from '@/entities/tag/api/tag';
+import { useTags } from '@/entities/tag';
+import { vLoading } from '@/shared/directives';
 
-interface Props {
-  tags?: Tag[];
-}
-defineProps<Props>();
+const { data: tags, isLoading } = useTags();
 </script>
+
+<style scoped>
+.tag-list {
+  min-width: 200px;
+  min-height: 100px;
+}
+</style>
