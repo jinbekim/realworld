@@ -1,7 +1,2 @@
 export * from './api/Article';
-
-export const articleKeys = {
-  article: {
-    root: ['article'],
-  },
-};
+export { default as ArticlePreview } from './ui/article-preview/ArticlePreview.vue';

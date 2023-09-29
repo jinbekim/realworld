@@ -1,6 +1,6 @@
-import { fetcher } from "../fetcher";
-import type { ProfileDto } from "../profile";
-import { addQueryParam } from "../utils";
+import { fetcher } from '../fetcher';
+import type { ProfileDto } from '../profile';
+import { addQueryParam } from '../utils';
 
 export interface ArticleDto {
   slug: string;
@@ -33,36 +33,36 @@ export interface UpdateArticleDto {
   body?: string;
 }
 
-
-export const getFeedArticles = async ({
-  limit = 20,
-  offset = 0,
-}: Pagination, options: RequestInit = {}): Promise<ArticlesDto> => {
+export const getFeedArticles = async (
+  { limit = 20, offset = 0 }: Pagination,
+  options: RequestInit = {}
+): Promise<ArticlesDto> => {
   let url = `articles/feed`;
   url = addQueryParam(url, 'limit', limit.toString());
   url = addQueryParam(url, 'offset', offset.toString());
 
   const response = await fetcher(url, {
     method: 'GET',
-    ...options
-
+    ...options,
   });
 
   return response;
-}
+};
 
-export const getArticles = async ({
-  tag,
-  author,
-  favorited,
-  pagination: { limit = 20, offset = 0 },
-}: {
-  tag: string;
-  author: string;
-  favorited: string;
-  pagination: Pagination;
-}, options: RequestInit = {}): Promise<ArticlesDto> => {
-
+export const getArticles = async (
+  {
+    tag,
+    author,
+    favorited,
+    pagination: { limit = 20, offset = 0 },
+  }: {
+    tag: string;
+    author: string;
+    favorited: string;
+    pagination: Pagination;
+  },
+  options: RequestInit = {}
+): Promise<ArticlesDto> => {
   let url = `articles`;
   url = addQueryParam(url, 'tag', tag);
   url = addQueryParam(url, 'author', author);
@@ -72,45 +72,53 @@ export const getArticles = async ({
 
   const response = await fetcher(url, {
     method: 'GET',
-    ...options
+    ...options,
   });
   return response;
-}
+};
 
-
-export const createArticle = async (article: NewArticleDto, options: RequestInit = {}): Promise<ArticleDto> => {
+export const createArticle = async (
+  article: NewArticleDto,
+  options: RequestInit = {}
+): Promise<ArticleDto> => {
   const response = await fetcher('articles', {
     method: 'POST',
     body: JSON.stringify({ article }),
-      ...options
+    ...options,
   });
   return response.article;
-}
+};
 
-
-export const getArticle = async (slug:Name, options: RequestInit = {}): Promise<ArticleDto> => {
+export const getArticle = async (
+  slug: Name,
+  options: RequestInit = {}
+): Promise<ArticleDto> => {
   const response = await fetcher(`articles/${slug}`, {
     method: 'GET',
-    ...options
+    ...options,
   });
   return response.article;
-}
+};
 
-
-export const updateArticle = async (slug: Name, article: UpdateArticleDto, options: RequestInit = {}): Promise<ArticleDto> => {
+export const updateArticle = async (
+  slug: Name,
+  article: UpdateArticleDto,
+  options: RequestInit = {}
+): Promise<ArticleDto> => {
   const response = await fetcher(`articles/${slug}`, {
     method: 'PUT',
     body: JSON.stringify({ article }),
-    ...options
-
+    ...options,
   });
   return response.article;
-}
+};
 
-export const deleteArticle = async (slug: Name, options: RequestInit = {}): Promise<void> => {
+export const deleteArticle = async (
+  slug: Name,
+  options: RequestInit = {}
+): Promise<void> => {
   await fetcher(`articles/${slug}`, {
     method: 'DELETE',
-    ...options
-
+    ...options,
   });
-}
+};

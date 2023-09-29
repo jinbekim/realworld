@@ -35,15 +35,15 @@ const { pagination, onClickPage } = usePagination();
             <ul class="nav nav-pills outline-active">
               <li class="nav-item" v-if="useAuth()">
                 <RouterLink
-                  to="/my-feed"
+                  to="/user-feed"
                   class="nav-link"
-                  exactActiveClass="active"
+                  exact-active-class="active"
                 >
                   Your Feed
                 </RouterLink>
               </li>
               <li class="nav-item">
-                <RouterLink to="/" class="nav-link" exactActiveClass="active">
+                <RouterLink to="/" class="nav-link" exact-active-class="active">
                   Global Feed
                 </RouterLink>
               </li>

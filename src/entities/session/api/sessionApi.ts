@@ -15,7 +15,7 @@ export const sessionKeys = {
   },
 } as const;
 
-const toDomain = (dto: UserDto): User => {
+export const userFromDto = (dto: UserDto): User => {
   return {
     email: dto.email,
     token: dto.token,
@@ -32,7 +32,7 @@ export const useCurrentUser = () =>
       const response = await userApi.currentUser();
       const { addUser } = useSessionStore();
 
-      const user = toDomain(response);
+      const user = userFromDto(response);
       addUser(user);
 
       return user;

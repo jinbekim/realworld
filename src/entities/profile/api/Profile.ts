@@ -1,6 +1,6 @@
-import { profileApi } from "@/shared/api";
-import type { ProfileDto } from "@/shared/api/profile";
-import { useQuery } from "@tanstack/vue-query";
+import { profileApi } from '@/shared/api';
+import type { ProfileDto } from '@/shared/api/profile';
+import { useQuery } from '@tanstack/vue-query';
 
 export interface Profile {
   username: Name;
@@ -16,21 +16,23 @@ export const profileKeys = {
   },
 };
 
-export const toDomain = (dto: ProfileDto): Profile => {
+export const profileFromDto = (dto: ProfileDto): Profile => {
   return {
     username: dto.username,
     bio: dto.bio,
     image: dto.image,
     following: dto.following,
-  }
-}
+  };
+};
 
 export const useProfile = (username: Name) => {
   return useQuery({
     queryKey: profileKeys.profile.username(username),
-    queryFn: async ({signal}) => {
-      const response = await profileApi.getProfileByUserName(username, {signal});
-      return toDomain(response)
-    }
-  })
-}
+    queryFn: async ({ signal }) => {
+      const response = await profileApi.getProfileByUserName(username, {
+        signal,
+      });
+      return profileFromDto(response);
+    },
+  });
+};
