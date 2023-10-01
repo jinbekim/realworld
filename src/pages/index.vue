@@ -11,7 +11,7 @@ import { usePagination } from '@/shared/composables/usePagination';
 import { PopularTags } from '@/widgets/popular-tags';
 
 interface Props {
-  tag: Tag;
+  tag?: Tag;
 }
 defineProps<Props>();
 
@@ -59,13 +59,6 @@ const { pagination, onClickPage } = usePagination();
         </div>
 
         <PopularTags></PopularTags>
-
-        <RealPagination
-          :total="pagination.total"
-          :limit="pagination.limit"
-          :offset="pagination.offset"
-          :onClickPage="onClickPage"
-        ></RealPagination>
       </div>
     </div>
   </div>

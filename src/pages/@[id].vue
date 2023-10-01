@@ -4,18 +4,26 @@
 }
 </route>
 <script setup lang="ts">
-import { ref, toRef, watch, watchEffect } from 'vue';
-import { useRoute, useRouter } from 'vue-router/auto';
+import { useProfile } from '@/entities/profile';
+import { useSessionStore } from '@/entities/session/model/sessionModel';
 interface Props {
   id: string;
 }
 const props = defineProps<Props>();
-console.log(props.id);
-// import RealNavTab from '@/shared/ui/RealNavTab.vue';
-// import FollowButton from '@/features/profile/follow/follow-profile';
+const { data: profile, isLoading } = useProfile(props.id);
+import { FollowButton } from '@/features/profile/follow/follow-profile';
+import { UnfollowButton } from '@/features/profile/follow/unfollow-profile';
+import { computed } from 'vue';
 
-// const { user } = useUser();
-// const { profile } = useProfile(props.username);
+const { useAuth, currentUser } = useSessionStore();
+const isAuth = computed(() => useAuth());
+const isGuest = computed(() => !useAuth());
+const isUser = computed(
+  () => isAuth.value && currentUser?.username !== props.id
+);
+const isCurrentUser = computed(
+  () => isAuth.value && currentUser?.username === props.id
+);
 
 // const items = ref<Article[]>([]);
 // const isMine = (username?: string) => {
@@ -35,40 +43,11 @@ console.log(props.id);
 //   }
 //   isLoading.value = false;
 // });
-
-// async function getArticles(username: string, options: RequestInit = {}): Promise<Article[]> {
-//   const articleRepository = Get.get("IArticleRepository");
-//   const ret = await articleRepository.getArticles({
-//     author: username,
-//     pagination: { limit: pagination.limit, offset: pagination.offset },
-//   });
-
-//   if (!isError(ret)) {
-//     pagination.total = ret.articlesCount;
-//     return ret.articles;
-//   }
-//   router.replace("/login");
-//   return [];
-// }
-
-// async function getFavorites(username: string, options: RequestInit = {}): Promise<Article[]> {
-//   const articleRepository = Get.get("IArticleRepository");
-//   const ret = await articleRepository.getArticles({
-//     favorited: username,
-//     pagination: { limit: pagination.limit, offset: pagination.offset },
-//   });
-//   if (!isError(ret)) {
-//     pagination.total = ret.articlesCount;
-//     return ret.articles;
-//   }
-//   router.replace("/login");
-//   return [];
-// }
 </script>
 
 <template>
   <div class="profile-page">
-    <!-- <div class="user-info">
+    <div class="user-info">
       <div class="container" v-if="profile">
         <div class="row">
           <div class="col-xs-12 col-md-10 offset-md-1">
@@ -77,14 +56,17 @@ console.log(props.id);
             <p>
               {{ profile.bio }}
             </p>
-            <FollowButton
-              v-if="isMine(user?.username)"
-            ></FollowButton>
-            <real-follow-button v-else :user="profile!"></real-follow-button>
+            <template v-if="isCurrentUser">
+              <FollowButton
+                v-if="!profile.following"
+                :user="profile"
+              ></FollowButton>
+              <UnfollowButton v-else :user="profile"> </UnfollowButton>
+            </template>
           </div>
         </div>
       </div>
-    </div> -->
+    </div>
 
     <!-- <div class="container">
       <div class="row">
@@ -106,14 +88,6 @@ console.log(props.id);
             </ul>
           </div>
 
-          <RouterView :isLoading="isLoading" :items="items"></RouterView>
-
-          <RealPagination
-            :total="pagination.total"
-            :limit="pagination.limit"
-            :offset="pagination.offset"
-            :onClickPage="onClickPage"
-          ></RealPagination>
         </div>
       </div>
     </div> -->

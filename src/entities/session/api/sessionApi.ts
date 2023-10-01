@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/vue-query';
 import { useSessionStore, type User } from '../model/sessionModel';
 import { userApi } from '@/shared/api';
 import type { UserDto } from '@/shared/api/user';
+import type { MaybeRef } from 'vue';
 
 export const sessionKeys = {
   session: {
@@ -25,7 +26,7 @@ export const userFromDto = (dto: UserDto): User => {
   };
 };
 
-export const useCurrentUser = () =>
+export const useCurrentUser = (enabled: MaybeRef<boolean | undefined>) =>
   useQuery({
     queryKey: sessionKeys.session.currentUser(),
     queryFn: async () => {
@@ -37,4 +38,5 @@ export const useCurrentUser = () =>
 
       return user;
     },
+    enabled,
   });

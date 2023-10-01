@@ -1,10 +1,7 @@
 <template>
-  <button
-    class="btn btn-sm btn-outline-secondary action-btn"
-    @click="follow"
-  >
+  <button class="btn btn-sm btn-outline-secondary action-btn" @click="follow">
     <i class="ion-plus-round"></i>
-    &nbsp; {{ `Unfollow ${user.username}` }}
+    &nbsp; {{ `Follow ${user.username}` }}
   </button>
 </template>
 
@@ -13,8 +10,8 @@ import type { Profile } from '@/entities/profile';
 import { useFollowMutation } from '../api/follow';
 import { useQueryClient } from '@tanstack/vue-query';
 
-interface Props  {
-  user: Profile
+interface Props {
+  user: Profile;
 }
 const props = defineProps<Props>();
 

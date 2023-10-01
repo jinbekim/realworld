@@ -14,8 +14,14 @@ export const useSessionStore = defineStore(StoreId, () => {
   const user = ref<User | null>(null);
 
   const useAuth = () => user.value?.token;
-  const addUser = (loginUser: User) => (user.value = loginUser);
-  const deleteUser = () => (user.value = null);
+  const addUser = (loginUser: User) => {
+    localStorage.setItem('user', loginUser.token);
+    user.value = loginUser;
+  };
+  const deleteUser = () => {
+    localStorage.removeItem('user');
+    user.value = null;
+  };
 
   return {
     useAuth,
