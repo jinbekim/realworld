@@ -46,20 +46,12 @@ const store = useSessionStore();
       <template v-else>
         <ul class="nav navbar-nav pull-xs-right">
           <li class="nav-item">
-            <RouterLink
-              active-class="active"
-              class="nav-link"
-              :to="{ name: 'home' }"
-            >
+            <RouterLink active-class="active" class="nav-link" to="/">
               Home
             </RouterLink>
           </li>
           <li class="nav-item">
-            <RouterLink
-              active-class="active"
-              class="nav-link"
-              :to="{ name: '/login' }"
-            >
+            <RouterLink active-class="active" class="nav-link" :to="'/login'">
               Sign in
             </RouterLink>
           </li>
@@ -67,7 +59,7 @@ const store = useSessionStore();
             <RouterLink
               active-class="active"
               class="nav-link"
-              :to="{ name: '/register' }"
+              :to="'/register'"
             >
               Sign up
             </RouterLink>
