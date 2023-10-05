@@ -69,7 +69,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, shallowRef } from 'vue';
+import { shallowRef } from 'vue';
 import { LogoutButton } from '@/features/session/logout';
 import { useSessionStore } from '@/entities/session/model/sessionModel';
 import { useUpdateCurrentUser } from '@/features/session/update';

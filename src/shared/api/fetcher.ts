@@ -1,4 +1,5 @@
 import { useLocalStorage } from '@vueuse/core';
+import { getErrorMessage } from './utils';
 
 const BaseUrl = import.meta.env.VITE_PUBLIC_API_URL;
 
@@ -21,6 +22,6 @@ export const fetcher = async (path: string, options: RequestInit = {}) => {
     if (response.status === 401) {
       token.value = '';
     }
-    return Promise.reject(new Error('fetch error'));
+    return Promise.reject(getErrorMessage(data.errors));
   }
 };

@@ -1,7 +1,7 @@
 <route lang="json">
 {
   "meta": {
-    "requiresAuth": false
+    "guestOnly": true
   }
 }
 </route>
@@ -9,9 +9,9 @@
 <script setup lang="ts">
 import { sessionModel } from '@/entities/session';
 import { useRegisterUser } from '@/features/session/register';
-import { getErrorMessage } from '@/shared/api/utils';
 import AuthInput from '@/shared/ui/input/AuthInput.vue';
 import { reactive } from 'vue';
+import { useRouter } from 'vue-router/auto';
 
 const error = reactive({
   message: '',
@@ -19,6 +19,7 @@ const error = reactive({
 
 const { addUser } = sessionModel.useSessionStore();
 const { mutateAsync } = useRegisterUser();
+const router = useRouter();
 
 const onSubmit = async (event: Event) => {
   try {
@@ -34,8 +35,13 @@ const onSubmit = async (event: Event) => {
       password,
     });
     addUser(result);
+    router.push('/user-feed');
+
   } catch (e) {
-    error.message = getErrorMessage(e);
+    if (typeof e === 'string') {
+          error.message = e;
+          return;
+        }
   }
 };
 </script>

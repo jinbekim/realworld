@@ -1,9 +1,10 @@
-<route>
-  {
-    path: '/editor'
-  }
-</route>
 
+<route lang="json">
+  {
+    "meta": {
+      "requiresAuth": true
+  }  }
+</route>
 <script setup lang="ts">
 import { onMounted, reactive } from 'vue';
 import { useRouter } from 'vue-router';

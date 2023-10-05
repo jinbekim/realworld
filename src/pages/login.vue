@@ -1,7 +1,7 @@
 <route lang="json">
 {
   "meta": {
-    "requiresAuth": false
+    "guestOnly": true
   }
 }
 </route>
@@ -12,7 +12,6 @@ import AuthInput from '@/shared/ui/input/AuthInput.vue';
 import { useLoginUser } from '@/features/session/login';
 import { sessionModel } from '@/entities/session';
 import { useRouter } from 'vue-router/auto';
-import { getErrorMessage } from '@/shared/api/utils';
 
 const error = reactive({
   message: '',
@@ -39,7 +38,10 @@ const onSubmit = (event: Event) => {
         router.push('/user-feed');
       },
       onError(e) {
-        error.message = getErrorMessage(e);
+        if (typeof e === 'string') {
+          error.message = e;
+          return;
+        }
       },
     }
   );

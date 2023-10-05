@@ -12,11 +12,23 @@ const app = createApp(App);
 router.beforeEach((to, from, next) => {
   const store = useSessionStore();
 
-  if (to.meta.requiresAuth && !store.useAuth()) return false;
+  if (to.meta.requiresAuth && !store.useAuth()) return next('/');
+  if (to.meta.guestOnly && store.useAuth()) return next('/')
   else next();
 });
 app.use(router);
 app.use(pinia);
-app.use(VueQueryPlugin);
+app.use(VueQueryPlugin,{
+  queryClientConfig: {
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      refetchIntervalInBackground: false,
+      retry: false
+    },
+  },
+},});
 
 app.mount('#app');

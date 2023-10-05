@@ -6,11 +6,13 @@ import { useCurrentUser } from '@/entities/session/api/sessionApi';
 import { computed } from 'vue';
 
 const { currentUser } = useSessionStore();
-useCurrentUser(computed(() => !currentUser));
+const { isLoading } = useCurrentUser(computed(() => !currentUser));
 </script>
 
 <template>
-  <TheHeader></TheHeader>
-  <RouterView />
-  <TheFooter></TheFooter>
+  <template v-if="!isLoading">
+    <TheHeader></TheHeader>
+    <RouterView />
+    <TheFooter></TheFooter>
+  </template>
 </template>
