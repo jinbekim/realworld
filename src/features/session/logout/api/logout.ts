@@ -1,5 +1,4 @@
-import { sessionKeys } from '@/entities/session/api/sessionApi';
-import { useSessionStore } from '@/entities/session/model/sessionModel';
+import { sessionKeys, useSessionStore } from '@/entities/session';
 import { QueryClient } from '@tanstack/vue-query';
 
 export const logout = (queryclient: QueryClient) => {

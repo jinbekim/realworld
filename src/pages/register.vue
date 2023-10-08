@@ -7,7 +7,7 @@
 </route>
 
 <script setup lang="ts">
-import { sessionModel } from '@/entities/session';
+import { useSessionStore } from '@/entities/session';
 import { useRegisterUser } from '@/features/session/register';
 import AuthInput from '@/shared/ui/input/AuthInput.vue';
 import { reactive } from 'vue';
@@ -17,7 +17,7 @@ const error = reactive({
   message: '',
 });
 
-const { addUser } = sessionModel.useSessionStore();
+const { addUser } = useSessionStore();
 const { mutateAsync } = useRegisterUser();
 const router = useRouter();
 

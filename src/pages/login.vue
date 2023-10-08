@@ -10,14 +10,14 @@
 import { reactive } from 'vue';
 import AuthInput from '@/shared/ui/input/AuthInput.vue';
 import { useLoginUser } from '@/features/session/login';
-import { sessionModel } from '@/entities/session';
 import { useRouter } from 'vue-router/auto';
+import { useSessionStore } from '@/entities/session';
 
 const error = reactive({
   message: '',
 });
 
-const { addUser } = sessionModel.useSessionStore();
+const { addUser } = useSessionStore();
 const { mutate, isLoading } = useLoginUser();
 const router = useRouter();
 

@@ -12,7 +12,7 @@
         <div class="col-md-6 offset-md-3 col-xs-12">
           <h1 class="text-xs-center">Your Settings</h1>
 
-          <form>
+          <form @submit="onSubmit">
             <fieldset>
               <fieldset class="form-group">
                 <input
@@ -55,7 +55,7 @@
               </fieldset>
               <button
                 class="btn btn-lg btn-primary pull-xs-right"
-                @click="handleUpdateUser"
+                type="submit"
               >
                 Update Settings
               </button>
@@ -69,22 +69,34 @@
   </div>
 </template>
 <script setup lang="ts">
-import { shallowRef } from 'vue';
 import { LogoutButton } from '@/features/session/logout';
-import { useSessionStore } from '@/entities/session/model/sessionModel';
 import { useUpdateCurrentUser } from '@/features/session/update';
 import { useQueryClient } from '@tanstack/vue-query';
+import type { UpdateUserDto } from '@/shared/api/user';
+import { useDialog } from '@/shared/ui';
 
-const { currentUser } = useSessionStore();
-const user = shallowRef(currentUser);
+const { message } = useDialog();
 
 const queryClient = useQueryClient();
 const { mutate } = useUpdateCurrentUser(queryClient);
-const handleUpdateUser = () => {
-  if (!user.value) return;
-  mutate(user.value, {
-    onSuccess: () => {},
-    onError: () => {},
+const onSubmit = (event: Event) => {
+  event.preventDefault();
+  const formData = new FormData(event.target as HTMLFormElement);
+  const user: UpdateUserDto = {
+    email: formData.get('email') as string,
+    password: formData.get('password') as string,
+    image: formData.get('image') as string,
+    username: formData.get('username') as string,
+    bio: formData.get('bio') as string,
+  };
+
+  mutate(user, {
+    onSuccess: () => {
+      if (message) message.value = 'succees to update';
+    },
+    onError: () => {
+      if (message) message.value = 'failed to update';
+    },
   });
 };
 </script>

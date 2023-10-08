@@ -5,7 +5,7 @@
 }
 </route>
 <script setup lang="ts">
-import { useSessionStore } from '@/entities/session/model/sessionModel';
+import { useSessionStore } from '@/entities/session';
 import { type Tag } from '@/entities/tag';
 import { usePagination } from '@/shared/composables/usePagination';
 import { PopularTags } from '@/widgets/popular-tags';

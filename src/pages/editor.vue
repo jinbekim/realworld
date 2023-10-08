@@ -1,9 +1,9 @@
-
 <route lang="json">
-  {
-    "meta": {
-      "requiresAuth": true
-  }  }
+{
+  "meta": {
+    "requiresAuth": true
+  }
+}
 </route>
 <script setup lang="ts">
 import { onMounted, reactive } from 'vue';
@@ -11,7 +11,7 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 const props = defineProps<{
-  slug: string;
+  slug?: string;
 }>();
 
 const formModel = reactive({

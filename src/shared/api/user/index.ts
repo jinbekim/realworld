@@ -8,7 +8,7 @@ export interface UserDto {
   image: Url;
 }
 
-export type UpdateUser = RequiredAtLeastOne<{
+export type UpdateUserDto = RequiredAtLeastOne<{
   email: string;
   password: string;
   username: string;
@@ -62,11 +62,12 @@ export const currentUser = async (
 };
 
 export const updateUser = async (
-  user: UpdateUser,
+  user: UpdateUserDto,
   options: RequestInit = {}
 ): Promise<UserDto> => {
   const response = await fetcher('user', {
     method: 'PUT',
+    body: JSON.stringify({ user }),
     ...options,
   });
   return response.user;

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useSessionStore } from '@/entities/session/model/sessionModel';
+import { useSessionStore } from '@/entities/session';
 
 const store = useSessionStore();
 </script>

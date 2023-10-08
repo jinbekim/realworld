@@ -5,7 +5,7 @@
 </route>
 <script setup lang="ts">
 import { useProfile } from '@/entities/profile';
-import { useSessionStore } from '@/entities/session/model/sessionModel';
+import { useSessionStore } from '@/entities/session';
 interface Props {
   id: string;
 }

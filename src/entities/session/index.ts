@@ -1,2 +1,2 @@
-export * as sessionApi from './api/sessionApi';
-export * as sessionModel from './model/sessionModel';
+export * from './api/sessionApi';
+export * from './model/sessionModel';
