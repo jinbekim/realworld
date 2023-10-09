@@ -11,6 +11,6 @@ type RequiredAtLeastOne<T, Keys extends keyof T = keyof T> = {
 }[Keys];
 
 interface Pagination {
-  offset: number;
-  limit: number;
+  offset?: number;
+  limit?: number;
 }

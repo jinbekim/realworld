@@ -6,7 +6,7 @@
 
 <template>
   <div class="profile-page">
-    <div class="user-info">
+    <div class="user-info" v-loading="isLoading">
       <div class="container" v-if="profile">
         <div class="row">
           <div class="col-xs-12 col-md-10 offset-md-1">
@@ -68,12 +68,13 @@ import { useSessionStore } from '@/entities/session';
 import { FollowButton } from '@/features/profile/follow/follow-profile';
 import { UnfollowButton } from '@/features/profile/follow/unfollow-profile';
 import { computed } from 'vue';
+import { vLoading } from '@/shared/directives';
 
 interface Props {
   id: string;
 }
 const props = defineProps<Props>();
-const { data: profile } = useProfile(props.id);
+const { data: profile, isLoading } = useProfile(props.id);
 
 const { useAuth, currentUser } = useSessionStore();
 const isAuth = computed(() => useAuth());

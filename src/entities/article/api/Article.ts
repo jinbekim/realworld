@@ -70,9 +70,6 @@ export const articleFromDto = (dto: ArticleDto): Article => {
   };
 };
 
-// use inifinityArticles
-// use infinity
-
 export const useUserInfinityArticles = (query: Ref<UserfeedQuery>) => {
   const { offset, limit } = query.value;
   return useInfiniteQuery({
@@ -80,6 +77,29 @@ export const useUserInfinityArticles = (query: Ref<UserfeedQuery>) => {
     queryFn: async ({ pageParam = offset, signal }) => {
       const result = await articleApi.getFeedArticles(
         { ...query.value, offset: pageParam },
+        { signal }
+      );
+      return result.articles.map(articleFromDto);
+    },
+    getNextPageParam: (lastPage, pages) => {
+      if (lastPage.length < limit) return null;
+
+      return lastPage.length ? pages.length * limit : null;
+    },
+  });
+};
+
+export const useGlobalInfinityArticles = (query: Ref<GlobalfeedQuery>) => {
+  const { offset, limit } = query.value;
+
+  return useInfiniteQuery({
+    queryKey: articleKeys.articles.globalfeed.query(query.value),
+    queryFn: async ({ pageParam = offset, signal }) => {
+      const result = await articleApi.getArticles(
+        {
+          ...query.value,
+          offset: pageParam,
+        },
         { signal }
       );
       return result.articles.map(articleFromDto);

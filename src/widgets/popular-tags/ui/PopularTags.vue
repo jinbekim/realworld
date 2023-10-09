@@ -3,6 +3,7 @@
     <aside class="sidebar">
       <p>Popular Tags</p>
       <div class="tag-list" v-loading="isLoading">
+        <p v-if="isLoading">{{ 'Loading tags...' }}</p>
         <RouterLink
           v-for="tag in tags"
           :to="`/${tag}`"
@@ -22,9 +23,4 @@ import { vLoading } from '@/shared/directives';
 const { data: tags, isLoading } = useTags();
 </script>
 
-<style scoped>
-.tag-list {
-  min-width: 200px;
-  min-height: 100px;
-}
-</style>
+<style scoped></style>

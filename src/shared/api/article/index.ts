@@ -1,6 +1,5 @@
 import { fetcher } from '../fetcher';
 import type { ProfileDto } from '../profile';
-import { addQueryParam } from '../utils';
 
 export interface ArticleDto {
   slug: string;
@@ -37,9 +36,11 @@ export const getFeedArticles = async (
   { limit = 20, offset = 0 }: Pagination,
   options: RequestInit = {}
 ): Promise<ArticlesDto> => {
-  let url = `articles/feed`;
-  url = addQueryParam(url, 'limit', limit.toString());
-  url = addQueryParam(url, 'offset', offset.toString());
+  const params = new URLSearchParams();
+  params.set('limit', limit.toString());
+  params.set('offset', offset.toString());
+
+  let url = `articles/feed` + '?' + params.toString();
 
   const response = await fetcher(url, {
     method: 'GET',
@@ -54,21 +55,23 @@ export const getArticles = async (
     tag,
     author,
     favorited,
-    pagination: { limit = 20, offset = 0 },
+    limit = 20,
+    offset = 0,
   }: {
-    tag: string;
-    author: string;
-    favorited: string;
-    pagination: Pagination;
-  },
+    tag?: string;
+    author?: string;
+    favorited?: string;
+  } & Pagination,
   options: RequestInit = {}
 ): Promise<ArticlesDto> => {
-  let url = `articles`;
-  url = addQueryParam(url, 'tag', tag);
-  url = addQueryParam(url, 'author', author);
-  url = addQueryParam(url, 'favorited', favorited);
-  url = addQueryParam(url, 'limit', limit.toString());
-  url = addQueryParam(url, 'offset', offset.toString());
+  const params = new URLSearchParams();
+  if (tag) params.set('tag', tag);
+  if (author) params.set('author', author);
+  if (favorited) params.set('favorited', favorited);
+  params.set('limit', limit.toString());
+  params.set('offset', offset.toString());
+
+  let url = `articles` + '?' + params.toString();
 
   const response = await fetcher(url, {
     method: 'GET',

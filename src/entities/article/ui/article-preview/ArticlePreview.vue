@@ -1,19 +1,6 @@
 <template>
   <div class="article-preview">
-    <div class="article-meta">
-      <RouterLink :to="`/@${article.author.username}`"
-        ><img :src="article.author.image"
-      /></RouterLink>
-      <div class="info">
-        <RouterLink :to="`/@${article.author.username}`" class="author">{{
-          article.author.username
-        }}</RouterLink>
-        <span class="date">{{ article.createdAt }}</span>
-      </div>
-      <button class="btn btn-outline-primary btn-sm pull-xs-right">
-        <i class="ion-heart"></i> {{ article.favoritesCount }}
-      </button>
-    </div>
+    <slot name="meta" :article="article"></slot>
     <RouterLink :to="`/article/${article.slug}`" class="preview-link">
       <h1>{{ article.title }}</h1>
       <p>{{ article.description }}</p>
@@ -31,13 +18,19 @@
 </template>
 
 <script setup lang="ts">
-import type { Article } from '../../api/Article';
+import type { Article } from '../../api/article';
 
 interface Props {
   article: Article;
 }
 
 defineProps<Props>();
+
+interface Slots {
+  meta(props: { article: Article }): any;
+}
+
+defineSlots<Slots>();
 </script>
 
 <style scoped></style>

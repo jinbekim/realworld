@@ -1,20 +1,25 @@
 <route lang="json">
-  {
-    "props": true
-  }
-</route>
-<script setup lang="ts">
-import type { Tag } from '@/entities/tag/api/tag';
-
-
-
-interface Props {
-  tag: Tag
+{
+  "props": true
 }
-const props = defineProps<Props>();
-
-</script>
-
+</route>
 <template>
-  {{ tag }}
+  <ArticlePreview
+    v-for="article of data?.pages[0]"
+    :article="article"
+  ></ArticlePreview>
 </template>
+
+<script setup lang="ts">
+import {
+  useGlobalInfinityArticles,
+  type GlobalfeedQuery,
+  ArticlePreview,
+} from '@/entities/article';
+import { computed } from 'vue';
+
+const props = defineProps<GlobalfeedQuery>();
+const qeury = computed(() => props);
+
+const { data, isLoading } = useGlobalInfinityArticles(qeury);
+</script>
