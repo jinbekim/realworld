@@ -92,10 +92,10 @@ const onSubmit = (event: Event) => {
 
   mutate(user, {
     onSuccess: () => {
-      if (message) message.value = 'succees to update';
+      if (message) message.value = 'Succees to update';
     },
     onError: () => {
-      if (message) message.value = 'failed to update';
+      if (message) message.value = 'Failed to update';
     },
   });
 };

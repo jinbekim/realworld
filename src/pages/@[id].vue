@@ -3,47 +3,6 @@
   "props": true
 }
 </route>
-<script setup lang="ts">
-import { useProfile } from '@/entities/profile';
-import { useSessionStore } from '@/entities/session';
-interface Props {
-  id: string;
-}
-const props = defineProps<Props>();
-const { data: profile, isLoading } = useProfile(props.id);
-import { FollowButton } from '@/features/profile/follow/follow-profile';
-import { UnfollowButton } from '@/features/profile/follow/unfollow-profile';
-import { computed } from 'vue';
-
-const { useAuth, currentUser } = useSessionStore();
-const isAuth = computed(() => useAuth());
-const isGuest = computed(() => !useAuth());
-const isUser = computed(
-  () => isAuth.value && currentUser?.username !== props.id
-);
-const isCurrentUser = computed(
-  () => isAuth.value && currentUser?.username === props.id
-);
-
-// const items = ref<Article[]>([]);
-// const isMine = (username?: string) => {
-//   return profile.value?.username === username;
-// };
-// const isLoading = ref(false);
-// const { pagination, onClickPage } = usePagination();
-
-// watchEffect(async () => {
-//   console.log("watched ");
-//   isLoading.value = true;
-//   if (route.name === "profile-articles") {
-//     items.value = await getArticles(props.username);
-//     console.log(items.value);
-//   } else if (route.name === "profile-favorites") {
-//     items.value = await getFavorites(props.username);
-//   }
-//   isLoading.value = false;
-// });
-</script>
 
 <template>
   <div class="profile-page">
@@ -57,6 +16,15 @@ const isCurrentUser = computed(
               {{ profile.bio }}
             </p>
             <template v-if="isCurrentUser">
+              <RouterLink
+                to="/settings"
+                class="btn btn-sm btn-outline-secondary action-btn"
+              >
+                <i class="ion-gear-a"></i>
+                &nbsp; Edit Profile Settings
+              </RouterLink>
+            </template>
+            <template v-if="isUser">
               <FollowButton
                 v-if="!profile.following"
                 :user="profile"
@@ -93,3 +61,46 @@ const isCurrentUser = computed(
     </div> -->
   </div>
 </template>
+
+<script setup lang="ts">
+import { useProfile } from '@/entities/profile';
+import { useSessionStore } from '@/entities/session';
+import { FollowButton } from '@/features/profile/follow/follow-profile';
+import { UnfollowButton } from '@/features/profile/follow/unfollow-profile';
+import { computed } from 'vue';
+
+interface Props {
+  id: string;
+}
+const props = defineProps<Props>();
+const { data: profile } = useProfile(props.id);
+
+const { useAuth, currentUser } = useSessionStore();
+const isAuth = computed(() => useAuth());
+const isGuest = computed(() => !useAuth());
+const isUser = computed(
+  () => isAuth.value && currentUser?.username !== props.id
+);
+const isCurrentUser = computed(
+  () => isAuth.value && currentUser?.username === props.id
+);
+
+// const items = ref<Article[]>([]);
+// const isMine = (username?: string) => {
+//   return profile.value?.username === username;
+// };
+// const isLoading = ref(false);
+// const { pagination, onClickPage } = usePagination();
+
+// watchEffect(async () => {
+//   console.log("watched ");
+//   isLoading.value = true;
+//   if (route.name === "profile-articles") {
+//     items.value = await getArticles(props.username);
+//     console.log(items.value);
+//   } else if (route.name === "profile-favorites") {
+//     items.value = await getFavorites(props.username);
+//   }
+//   isLoading.value = false;
+// });
+</script>
