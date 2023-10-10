@@ -44,7 +44,7 @@ declare module 'vue-router/auto/routes' {
     '//[tag]': RouteRecordInfo<'//[tag]', '/:tag', { tag: ParamValue<true> }, { tag: ParamValue<false> }>,
     '//user-feed': RouteRecordInfo<'//user-feed', '/user-feed', Record<never, never>, Record<never, never>>,
     '/@[id]': RouteRecordInfo<'/@[id]', '/@:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
-    '/Article': RouteRecordInfo<'/Article', '/Article', Record<never, never>, Record<never, never>>,
+    '/article/[id]': RouteRecordInfo<'/article/[id]', '/article/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/editor': RouteRecordInfo<'/editor', '/editor', Record<never, never>, Record<never, never>>,
     '/error/NotFound': RouteRecordInfo<'/error/NotFound', '/error/NotFound', Record<never, never>, Record<never, never>>,
     '/Loading': RouteRecordInfo<'/Loading', '/Loading', Record<never, never>, Record<never, never>>,

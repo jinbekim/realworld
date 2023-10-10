@@ -8,7 +8,7 @@
     <i class="ion-heart"></i>
     <slot>
       <span> &nbsp; Favorite Post</span>
-      {{ count }}
+      {{ `(${count})` }}
     </slot>
   </button>
 </template>

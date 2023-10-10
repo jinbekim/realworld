@@ -1,0 +1,33 @@
+<template>
+              <UnfollowButton
+              v-if="article.author.following"
+              :user="article.author"></UnfollowButton>
+              <FollowButton  v-else :user="article.author"></FollowButton>
+              &nbsp;
+              <FavoriteButton
+              v-if="!article.favorited"
+                :slug="article.slug"
+                :count="article.favoritesCount"
+              >
+              </FavoriteButton>
+              <UnfavoriteButton v-else :slug="article.slug" :count="article.favoritesCount">
+              </UnfavoriteButton>
+</template>
+
+<script setup lang="ts">
+import { UnfollowButton } from '@/features/profile/follow/unfollow-profile';
+import { FollowButton } from '@/features/profile/follow/follow-profile';
+import { FavoriteButton, UnfavoriteButton } from '@/features/article/favorite';
+import type { Article } from '@/entities/article';
+
+interface Props {
+  article: Article;
+}
+
+  defineProps<Props>();
+
+</script>
+
+<style scoped>
+
+</style>

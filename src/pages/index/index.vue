@@ -29,8 +29,7 @@ import {
   ArticlePreview,
   ArticleMeta,
 } from '@/entities/article';
-import { FavoriteButton } from '@/features/article/favorite';
-import UnfavoriteButton from '@/features/article/favorite/ui/UnfavoriteButton.vue';
+import { FavoriteButton, UnfavoriteButton} from '@/features/article/favorite';
 import { computed } from 'vue';
 import { vLoading } from '@/shared/directives';
 
