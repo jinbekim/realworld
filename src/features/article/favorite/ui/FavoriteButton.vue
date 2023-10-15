@@ -2,7 +2,6 @@
   <button
     :disabled="isLoading"
     class="btn btn-outline-primary btn-sm"
-    :class="class"
     @click="onClick"
   >
     <i class="ion-heart"></i>
