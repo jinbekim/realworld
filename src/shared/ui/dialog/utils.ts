@@ -1,10 +1,16 @@
-import { inject, type InjectionKey, type Ref } from 'vue';
-export const key = Symbol() as InjectionKey<Ref<string>>;
+import { inject, ref, type InjectionKey, type Ref, toRef } from 'vue';
+export const DialogKey = Symbol() as InjectionKey<Ref<string>>;
 
 export const useDialog = () => {
-  const message = inject(key);
+  const message = inject(DialogKey, ref(''));
 
+  const showDialog = (msg: string) => {
+    message.value = msg;
+  };
+  const closeDialog = () => (message.value = '');
   return {
-    message,
+    message: toRef(() => message.value),
+    showDialog,
+    closeDialog,
   };
 };

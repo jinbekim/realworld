@@ -75,7 +75,7 @@ import { useQueryClient } from '@tanstack/vue-query';
 import type { UpdateUserDto } from '@/shared/api/user';
 import { useDialog } from '@/shared/ui';
 
-const { message } = useDialog();
+const { showDialog } = useDialog();
 
 const queryClient = useQueryClient();
 const { mutate } = useUpdateCurrentUser(queryClient);
@@ -92,10 +92,10 @@ const onSubmit = (event: Event) => {
 
   mutate(user, {
     onSuccess: () => {
-      if (message) message.value = 'Succees to update';
+      showDialog('Succees to update');
     },
     onError: () => {
-      if (message) message.value = 'Failed to update';
+      showDialog('Failed to update');
     },
   });
 };

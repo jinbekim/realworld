@@ -5,7 +5,7 @@ import { VueQueryPlugin } from '@tanstack/vue-query';
 import { useSessionStore } from './entities/session';
 import router from '@/app/router';
 import './main.css';
-import { key } from './shared/ui/dialog';
+import { DialogKey } from './shared/ui/dialog';
 
 const pinia = createPinia();
 const app = createApp(App);
@@ -33,6 +33,6 @@ app.use(VueQueryPlugin, {
   },
 });
 
-app.provide(key, ref(''));
+app.provide(DialogKey, ref(''));
 
 app.mount('#app');
