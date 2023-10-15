@@ -14,7 +14,7 @@ export interface Comment {
 export const commentKeys = {
   comment: {
     root: ['comment'],
-    article: (slug: Name) => [...commentKeys.comment.root, slug],
+    slug: (slug: Name) => [...commentKeys.comment.root, slug],
   },
 };
 
@@ -30,7 +30,7 @@ export const commentFromDto = (comment: CommentDto): Comment => {
 
 export const useComment = (slug: Name) => {
   return useQuery({
-    queryKey: commentKeys.comment.article(slug),
+    queryKey: commentKeys.comment.slug(slug),
     queryFn: async ({ signal }) => {
       const response = await commentApi.getComments(slug, {
         signal,

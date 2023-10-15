@@ -13,8 +13,6 @@
 
 ## TODO
 
-- [x] 권한에 따라 라우트 처리하기
-- [ ] entities 레이어 완성하기
-- [ ] feature
-- [ ] widget
-- [ ] page,
+- [ ] article
+- [ ] my -feed
+- [ ] profile page

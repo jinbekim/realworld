@@ -11,5 +11,11 @@
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "conventionalCommits.scopes": ["shared", "entities", "app"]
+  "conventionalCommits.scopes": [
+    "shared",
+    "entities",
+    "app",
+    "widgets",
+    "feature"
+  ]
 }

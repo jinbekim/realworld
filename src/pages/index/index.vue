@@ -29,7 +29,7 @@ import {
   ArticlePreview,
   ArticleMeta,
 } from '@/entities/article';
-import { FavoriteButton, UnfavoriteButton} from '@/features/article/favorite';
+import { FavoriteButton, UnfavoriteButton } from '@/features/article/favorite';
 import { computed } from 'vue';
 import { vLoading } from '@/shared/directives';
 
