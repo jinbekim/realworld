@@ -13,6 +13,7 @@
 
 ## TODO
 
-- [ ] article
-- [ ] my -feed
+- [x] article
+- [ ] edit article
+- [ ] my-feed
 - [ ] profile page

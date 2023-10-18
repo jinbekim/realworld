@@ -1,6 +1,7 @@
 import { profileFromDto, type Profile } from '@/entities/profile';
 import { commentApi } from '@/shared/api';
 import type { CommentDto } from '@/shared/api/comment';
+import { timeFormator } from '@/shared/utils/timeFormator';
 import { useQuery } from '@tanstack/vue-query';
 
 export interface Comment {
@@ -21,7 +22,7 @@ export const commentKeys = {
 export const commentFromDto = (comment: CommentDto): Comment => {
   return {
     id: comment.id,
-    createdAt: comment.createdAt,
+    createdAt: timeFormator(comment.createdAt),
     updatedAt: comment.updatedAt,
     body: comment.body,
     author: profileFromDto(comment.author),

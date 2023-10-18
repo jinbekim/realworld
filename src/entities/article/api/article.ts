@@ -2,6 +2,7 @@ import { profileFromDto, type Profile } from '@/entities/profile';
 import type { Tag } from '@/entities/tag/api/tag';
 import { articleApi } from '@/shared/api';
 import type { ArticleDto } from '@/shared/api/article';
+import { timeFormator } from '@/shared/utils/timeFormator';
 import { useInfiniteQuery, useQuery } from '@tanstack/vue-query';
 import type { Ref } from 'vue';
 
@@ -67,6 +68,7 @@ export const articleFromDto = (dto: ArticleDto): Article => {
   return {
     ...article,
     author: profileFromDto(author),
+    createdAt: timeFormator(article.createdAt),
   };
 };
 
