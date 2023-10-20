@@ -15,6 +15,7 @@ export const fetcher = async (path: string, options: RequestInit = {}) => {
       authorization: `Token ${token.value}`,
     },
   });
+  if (response.status === 204) return;
   const data = await response.json();
   if (response.ok) {
     return data;

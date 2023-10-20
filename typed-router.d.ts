@@ -45,7 +45,7 @@ declare module 'vue-router/auto/routes' {
     '//user-feed': RouteRecordInfo<'//user-feed', '/user-feed', Record<never, never>, Record<never, never>>,
     '/@[username]': RouteRecordInfo<'/@[username]', '/@:username', { username: ParamValue<true> }, { username: ParamValue<false> }>,
     '/article/[id]': RouteRecordInfo<'/article/[id]', '/article/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
-    '/editor': RouteRecordInfo<'/editor', '/editor', Record<never, never>, Record<never, never>>,
+    '/editor/[[slug]]': RouteRecordInfo<'/editor/[[slug]]', '/editor/:slug?', { slug?: ParamValueZeroOrOne<true> }, { slug?: ParamValueZeroOrOne<false> }>,
     '/error/NotFound': RouteRecordInfo<'/error/NotFound', '/error/NotFound', Record<never, never>, Record<never, never>>,
     '/Loading': RouteRecordInfo<'/Loading', '/Loading', Record<never, never>, Record<never, never>>,
     '/login': RouteRecordInfo<'/login', '/login', Record<never, never>, Record<never, never>>,

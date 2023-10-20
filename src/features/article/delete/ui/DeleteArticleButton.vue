@@ -7,20 +7,22 @@
 
 <script setup lang="ts">
 import { useDeleteArticleMutation } from '../api/delete';
+import { useRouter } from 'vue-router/auto';
 
 interface Props {
   slug: UniqueId;
 }
 
 const props = defineProps<Props>();
-  const { mutate } = useDeleteArticleMutation();
+const { mutate } = useDeleteArticleMutation();
+const router = useRouter();
 const deleteArticle = () => {
   mutate(props.slug, {
-  })
-}
-
+    onSuccess: () => {
+      router.replace('/');
+    },
+  });
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

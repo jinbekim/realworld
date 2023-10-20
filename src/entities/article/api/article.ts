@@ -3,7 +3,12 @@ import type { Tag } from '@/entities/tag/api/tag';
 import { articleApi } from '@/shared/api';
 import type { ArticleDto } from '@/shared/api/article';
 import { timeFormator } from '@/shared/utils/timeFormator';
-import { useInfiniteQuery, useQuery } from '@tanstack/vue-query';
+import {
+  useInfiniteQuery,
+  useQuery,
+  type QueryOptions,
+  type UseQueryOptions,
+} from '@tanstack/vue-query';
 import type { Ref } from 'vue';
 
 export interface Article {
@@ -114,7 +119,10 @@ export const useGlobalInfinityArticles = (query: Ref<GlobalfeedQuery>) => {
   });
 };
 
-export const useArticle = (slug: UniqueId) =>
+export const useArticle = (
+  slug: UniqueId,
+  options?: UseQueryOptions<Article>
+) =>
   useQuery({
     queryKey: articleKeys.article.slug(slug),
     queryFn: async ({ signal }) => {
@@ -123,4 +131,5 @@ export const useArticle = (slug: UniqueId) =>
       });
       return articleFromDto(response);
     },
+    ...options,
   });
