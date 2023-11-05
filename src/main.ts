@@ -24,7 +24,7 @@ app.use(VueQueryPlugin, {
     defaultOptions: {
       queries: {
         refetchOnWindowFocus: false,
-        refetchOnMount: false,
+        refetchOnMount: true,
         refetchOnReconnect: false,
         refetchIntervalInBackground: false,
         retry: false,

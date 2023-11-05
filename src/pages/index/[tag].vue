@@ -13,12 +13,12 @@
 <script setup lang="ts">
 import {
   useGlobalInfinityArticles,
-  type GlobalfeedQuery,
+  type GlobalFeedQuery,
   ArticlePreview,
 } from '@/entities/article';
 import { computed } from 'vue';
 
-const props = defineProps<GlobalfeedQuery>();
+const props = defineProps<GlobalFeedQuery>();
 const qeury = computed(() => props);
 
 const { data, isLoading } = useGlobalInfinityArticles(qeury);

@@ -2,7 +2,7 @@ import { profileFromDto, type Profile } from '@/entities/profile';
 import type { Tag } from '@/entities/tag/api/tag';
 import { articleApi } from '@/shared/api';
 import type { ArticleDto } from '@/shared/api/article';
-import { timeFormator } from '@/shared/utils/timeFormator';
+import { timeFormatter } from '@/shared/utils/timeFormatter';
 import {
   useInfiniteQuery,
   useQuery,
@@ -24,7 +24,7 @@ export interface Article {
   author: Profile;
 }
 
-export type GlobalfeedQuery = {
+export type GlobalFeedQuery = {
   tag?: string;
   author?: string;
   favorited?: string;
@@ -32,7 +32,7 @@ export type GlobalfeedQuery = {
   limit: number;
 };
 
-export type UserfeedQuery = {
+export type UserFeedQuery = {
   offset: number;
   limit: number;
 };
@@ -40,17 +40,17 @@ export type UserfeedQuery = {
 export const articleKeys = {
   articles: {
     root: ['articles'],
-    globalfeed: {
-      root: () => [...articleKeys.articles.root, 'globalfeed'],
-      query: (query: GlobalfeedQuery) => [
-        ...articleKeys.articles.globalfeed.root(),
+    globalFeed: {
+      root: () => [...articleKeys.articles.root, 'globalFeed'],
+      query: (query: GlobalFeedQuery) => [
+        ...articleKeys.articles.globalFeed.root(),
         query,
       ],
     },
-    userfeed: {
-      root: () => [...articleKeys.articles.root, 'userfeed'],
-      query: (query: UserfeedQuery) => [
-        ...articleKeys.articles.userfeed.root(),
+    userFeed: {
+      root: () => [...articleKeys.articles.root, 'userFeed'],
+      query: (query: UserFeedQuery) => [
+        ...articleKeys.articles.userFeed.root(),
         query,
       ],
     },
@@ -73,14 +73,14 @@ export const articleFromDto = (dto: ArticleDto): Article => {
   return {
     ...article,
     author: profileFromDto(author),
-    createdAt: timeFormator(article.createdAt),
+    createdAt: timeFormatter(article.createdAt),
   };
 };
 
-export const useUserInfinityArticles = (query: Ref<UserfeedQuery>) => {
+export const useUserInfinityArticles = (query: Ref<UserFeedQuery>) => {
   const { offset, limit } = query.value;
   return useInfiniteQuery({
-    queryKey: articleKeys.articles.userfeed.query(query.value),
+    queryKey: articleKeys.articles.userFeed.query(query.value),
     queryFn: async ({ pageParam = offset, signal }) => {
       const result = await articleApi.getFeedArticles(
         { ...query.value, offset: pageParam },
@@ -96,11 +96,11 @@ export const useUserInfinityArticles = (query: Ref<UserfeedQuery>) => {
   });
 };
 
-export const useGlobalInfinityArticles = (query: Ref<GlobalfeedQuery>) => {
+export const useGlobalInfinityArticles = (query: Ref<GlobalFeedQuery>) => {
   const { offset, limit } = query.value;
 
   return useInfiniteQuery({
-    queryKey: articleKeys.articles.globalfeed.query(query.value),
+    queryKey: articleKeys.articles.globalFeed.query(query.value),
     queryFn: async ({ pageParam = offset, signal }) => {
       const result = await articleApi.getArticles(
         {

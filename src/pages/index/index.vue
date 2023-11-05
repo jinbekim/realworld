@@ -24,19 +24,21 @@
 
 <script setup lang="ts">
 import {
-  type GlobalfeedQuery,
+  type GlobalFeedQuery,
   useGlobalInfinityArticles,
   ArticlePreview,
   ArticleMeta,
 } from '@/entities/article';
 import { FavoriteButton, UnfavoriteButton } from '@/features/article/favorite';
-import { computed } from 'vue';
+import { ref } from 'vue';
 import { vLoading } from '@/shared/directives';
 
-const props = defineProps<GlobalfeedQuery>();
-const qeury = computed(() => props);
+const query = ref<GlobalFeedQuery>({
+  offset: 0,
+  limit: 20,
+});
 
-const { data, isLoading } = useGlobalInfinityArticles(qeury);
+const { data, isLoading } = useGlobalInfinityArticles(query);
 </script>
 
 <style scoped></style>
