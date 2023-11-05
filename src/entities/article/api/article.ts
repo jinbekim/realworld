@@ -6,7 +6,6 @@ import { timeFormatter } from '@/shared/utils/timeFormatter';
 import {
   useInfiniteQuery,
   useQuery,
-  type QueryOptions,
   type UseQueryOptions,
 } from '@tanstack/vue-query';
 import type { Ref } from 'vue';
@@ -42,14 +41,14 @@ export const articleKeys = {
     root: ['articles'],
     globalFeed: {
       root: () => [...articleKeys.articles.root, 'globalFeed'],
-      query: (query: GlobalFeedQuery) => [
+      query: (query: Ref<GlobalFeedQuery>) => [
         ...articleKeys.articles.globalFeed.root(),
         query,
       ],
     },
     userFeed: {
       root: () => [...articleKeys.articles.root, 'userFeed'],
-      query: (query: UserFeedQuery) => [
+      query: (query: Ref<UserFeedQuery>) => [
         ...articleKeys.articles.userFeed.root(),
         query,
       ],
@@ -80,18 +79,21 @@ export const articleFromDto = (dto: ArticleDto): Article => {
 export const useUserInfinityArticles = (query: Ref<UserFeedQuery>) => {
   const { offset, limit } = query.value;
   return useInfiniteQuery({
-    queryKey: articleKeys.articles.userFeed.query(query.value),
+    queryKey: articleKeys.articles.userFeed.query(query),
     queryFn: async ({ pageParam = offset, signal }) => {
       const result = await articleApi.getFeedArticles(
         { ...query.value, offset: pageParam },
         { signal }
       );
-      return result.articles.map(articleFromDto);
+      return {
+        articles: result.articles.map(articleFromDto),
+        count: result.articlesCount,
+      };
     },
     getNextPageParam: (lastPage, pages) => {
-      if (lastPage.length < limit) return null;
+      if (lastPage.articles.length < limit) return null;
 
-      return lastPage.length ? pages.length * limit : null;
+      return lastPage.articles.length ? pages.length * limit : null;
     },
   });
 };
@@ -100,7 +102,7 @@ export const useGlobalInfinityArticles = (query: Ref<GlobalFeedQuery>) => {
   const { offset, limit } = query.value;
 
   return useInfiniteQuery({
-    queryKey: articleKeys.articles.globalFeed.query(query.value),
+    queryKey: articleKeys.articles.globalFeed.query(query),
     queryFn: async ({ pageParam = offset, signal }) => {
       const result = await articleApi.getArticles(
         {
@@ -109,12 +111,15 @@ export const useGlobalInfinityArticles = (query: Ref<GlobalFeedQuery>) => {
         },
         { signal }
       );
-      return result.articles.map(articleFromDto);
+      return {
+        articles: result.articles.map(articleFromDto),
+        count: result.articlesCount,
+      };
     },
     getNextPageParam: (lastPage, pages) => {
-      if (lastPage.length < limit) return null;
+      if (lastPage.articles.length < limit) return null;
 
-      return lastPage.length ? pages.length * limit : null;
+      return lastPage.articles.length ? pages.length * limit : null;
     },
   });
 };

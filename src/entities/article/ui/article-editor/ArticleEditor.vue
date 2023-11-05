@@ -84,7 +84,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  article: () => ({ title: '', description: '', body: '', tagList: [''] }),
+  article: () => ({ title: '', description: '', body: '', tagList: [] }),
 });
 
 interface Emits {

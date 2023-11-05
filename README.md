@@ -14,6 +14,11 @@
 ## TODO
 
 - [x] article
-- [ ] edit article
+- [x] edit article
 - [ ] my-feed
 - [ ] profile page
+- [ ] test
+
+## bug
+
+- [ ] delete article 후에 갱신이 안됨.
