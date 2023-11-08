@@ -1,7 +1,7 @@
 <template>
   <button
     :disabled="isLoading"
-    class="btn btn-outline-primary btn-sm flex"
+    class="btn btn-outline-primary btn-sm favorite-button"
     :class="class"
     @click="onClick"
   >
@@ -16,7 +16,6 @@
 <script setup lang="ts">
 import { useQueryClient } from '@tanstack/vue-query';
 import { useUnfavoriteMutation } from '../api/unfavorite';
-import { useCssModule } from 'vue';
 
 interface Props {
   slug: string;

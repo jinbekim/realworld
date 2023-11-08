@@ -1,7 +1,7 @@
 <template>
   <button
     :disabled="isLoading"
-    class="btn btn-outline-primary btn-sm flex"
+    class="btn btn-outline-primary btn-sm favorite-button"
     @click="onClick"
   >
     <i class="ion-heart"></i>
@@ -30,11 +30,3 @@ const onClick = () => {
   mutate(props.slug);
 };
 </script>
-
-<style>
-.flex {
-  display: flex;
-  align-items: center;
-  gap: 1px;
-}
-</style>

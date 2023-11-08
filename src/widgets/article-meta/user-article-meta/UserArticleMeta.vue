@@ -1,24 +1,19 @@
 <template>
   <ArticleMeta :article="article">
     <template #actionSlot>
-      <UnfollowButton
-        v-if="article.author.following"
-        :user="article.author"
-      ></UnfollowButton>
-      <FollowButton v-else :user="article.author"></FollowButton>
+      <UnfollowButton v-if="article.author.following" :user="article.author" />
+      <FollowButton v-else :user="article.author" />
       &nbsp;
       <FavoriteButton
         v-if="!article.favorited"
         :slug="article.slug"
         :count="article.favoritesCount"
-      >
-      </FavoriteButton>
+      />
       <UnfavoriteButton
         v-else
         :slug="article.slug"
         :count="article.favoritesCount"
-      >
-      </UnfavoriteButton>
+      />
     </template>
   </ArticleMeta>
 </template>
