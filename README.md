@@ -13,12 +13,6 @@
 
 ## TODO
 
-- [x] article
-- [x] edit article
-- [ ] my-feed
-- [ ] profile page
+- [ ] pagination
+- [ ] optimistic update
 - [ ] test
-
-## bug
-
-- [ ] delete article 후에 갱신이 안됨.
