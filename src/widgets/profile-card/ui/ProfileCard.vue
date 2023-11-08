@@ -32,7 +32,7 @@ import { vLoading } from '@/shared/directives';
 import { FollowButton } from '@/features/profile/follow/follow-profile';
 import { UnfollowButton } from '@/features/profile/follow/unfollow-profile';
 import { useProfile } from '@/entities/profile';
-import { computed } from 'vue';
+import { computed, toRef } from 'vue';
 import { useSessionStore } from '@/entities/session';
 
 interface Props {
@@ -40,9 +40,12 @@ interface Props {
 }
 const props = defineProps<Props>();
 
-const { data: profile, isLoading } = useProfile(props.username, {
-  enabled: computed(() => !!props.username),
-});
+const { data: profile, isLoading } = useProfile(
+  toRef(() => props.username),
+  {
+    enabled: computed(() => !!props.username),
+  }
+);
 
 const { useAuth, currentUser } = useSessionStore();
 const isAuth = computed(() => useAuth());
