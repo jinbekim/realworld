@@ -1,7 +1,7 @@
 <template>
   <button
     :disabled="isLoading"
-    class="btn btn-outline-primary btn-sm favorite-button"
+    class="btn btn-primary btn-sm favorite-button"
     :class="class"
     @click="onClick"
   >
