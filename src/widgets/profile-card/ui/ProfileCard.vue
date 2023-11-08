@@ -18,11 +18,8 @@
             </RouterLink>
           </template>
           <template v-if="isUser">
-            <FollowButton
-              v-if="!profile.following"
-              :user="profile"
-            ></FollowButton>
-            <UnfollowButton v-else :user="profile"> </UnfollowButton>
+            <FollowButton v-if="!profile.following" :user="profile" />
+            <UnfollowButton v-else :user="profile" />
           </template>
         </div>
       </div>

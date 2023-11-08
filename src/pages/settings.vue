@@ -19,6 +19,7 @@
                   name="image"
                   class="form-control"
                   type="text"
+                  :value="currentUser?.image"
                   placeholder="URL of profile picture"
                 />
               </fieldset>
@@ -27,6 +28,7 @@
                   name="username"
                   class="form-control form-control-lg"
                   type="text"
+                  :value="currentUser?.username"
                   placeholder="Your Name"
                 />
               </fieldset>
@@ -35,6 +37,7 @@
                   name="bio"
                   class="form-control form-control-lg"
                   rows="8"
+                  :value="currentUser?.bio"
                   placeholder="Short bio about you"
                 ></textarea>
               </fieldset>
@@ -43,6 +46,7 @@
                   name="email"
                   class="form-control form-control-lg"
                   type="text"
+                  :value="currentUser?.email"
                   placeholder="Email"
                 />
               </fieldset>
@@ -74,8 +78,11 @@ import { useUpdateCurrentUser } from '@/features/session/update';
 import { useQueryClient } from '@tanstack/vue-query';
 import type { UpdateUserDto } from '@/shared/api/user';
 import { useDialog } from '@/shared/ui';
+import { useSessionStore } from '@/entities/session';
 
 const { showDialog } = useDialog();
+
+const { currentUser } = useSessionStore();
 
 const queryClient = useQueryClient();
 const { mutate } = useUpdateCurrentUser(queryClient);
