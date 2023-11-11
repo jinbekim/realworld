@@ -13,6 +13,6 @@
 
 ## TODO
 
-- [ ] pagination
+- [x] pagination
 - [ ] optimistic update
 - [ ] test

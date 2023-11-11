@@ -1,20 +1,22 @@
 <template>
   <template v-if="isLoading">
-    <div className="article-preview">Loading articles...</div>
+    <div class="article-preview">Loading articles...</div>
   </template>
   <template v-else-if="isError">
     {{ error }}
   </template>
   <template v-else-if="isSuccess">
     <slot
-      v-for="article of infinityArticles?.pages[page].articles"
+      v-for="article of infinityArticles?.pages.flatMap((v) => v.articles)"
       :article="article"
       name="renderArticles"
     >
     </slot>
   </template>
   <template v-if="hasNextPage">
-    <slot name="hasNextPage"></slot>
+    <div style="display: flex; justify-content: center">
+      <slot name="hasNextPage"></slot>
+    </div>
   </template>
 </template>
 

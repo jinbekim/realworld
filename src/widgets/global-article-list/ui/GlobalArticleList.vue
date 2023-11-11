@@ -42,7 +42,18 @@
         </template>
       </ArticlePreview>
     </template>
-    <template #hasNextPage></template>
+    <template #hasNextPage>
+      <button
+        class="btn btn-outline-primary btn-sm"
+        @click="() => fetchNextPage()"
+        :disabled="!hasNextPage || isFetchingNextPage"
+      >
+        <span v-show="isFetchingNextPage">
+          {{ 'Loading more...' }}
+        </span>
+        <span v-show="!isFetchingNextPage">{{ 'Load More' }}</span>
+      </button>
+    </template>
   </ArticleList>
 </template>
 
@@ -71,6 +82,8 @@ const {
   isSuccess,
   error,
   hasNextPage,
+  isFetchingNextPage,
+  fetchNextPage,
 } = useGlobalInfinityArticles(toRef(() => props));
 </script>
 

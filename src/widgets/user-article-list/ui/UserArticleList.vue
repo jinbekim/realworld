@@ -1,4 +1,4 @@
-<template>
+<template xmlns="http://www.w3.org/1999/html">
   <ArticleList
     :infinityArticles="infinityArticles"
     :isLoading="isLoading"
@@ -31,7 +31,18 @@
         </template>
       </ArticlePreview>
     </template>
-    <template #hasNextPage></template>
+    <template #hasNextPage>
+      <button
+        class="btn btn-outline-primary btn-sm"
+        @click="() => fetchNextPage()"
+        :disabled="!hasNextPage || isFetchingNextPage"
+      >
+        <span v-show="isFetchingNextPage">
+          {{ 'Loading more...' }}
+        </span>
+        <span v-show="!isFetchingNextPage">{{ 'Load More' }}</span>
+      </button>
+    </template>
   </ArticleList>
 </template>
 
@@ -54,6 +65,8 @@ const {
   isError,
   isSuccess,
   error,
+  isFetchingNextPage,
+  fetchNextPage,
   hasNextPage,
 } = useUserInfinityArticles(toRef(() => props));
 </script>
