@@ -20,6 +20,6 @@ const followUser = useFollowMutation(queryClient);
 
 async function follow() {
   if (props.user && props.user.following === false)
-    followUser.mutate(props.user.username);
+    followUser.mutate(props.user);
 }
 </script>

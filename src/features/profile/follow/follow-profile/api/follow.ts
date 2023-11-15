@@ -1,27 +1,50 @@
-import { QueryClient, useMutation } from "@tanstack/vue-query";
+import { QueryClient, useMutation } from '@tanstack/vue-query';
 import { profileApi } from '@/shared/api';
-import { profileKeys } from "@/entities/profile";
-import { articleKeys } from "@/entities/article";
+import { profileKeys, type Profile } from '@/entities/profile';
+import { articleKeys } from '@/entities/article';
 
-export const useFollowMutation = (queryClient: QueryClient) => useMutation({
-  mutationFn: profileApi.followUserByUsername,
-  onMutate: async (userName) => {
-    const articleQueryKey = articleKeys.article.root;
-    const profileQueryKey = profileKeys.profile.username(userName)
-    await queryClient.cancelQueries({queryKey: articleQueryKey});
-    await queryClient.cancelQueries({queryKey: profileQueryKey});
+export const useFollowMutation = (queryClient: QueryClient) =>
+  useMutation({
+    mutationFn: async (newUser: Profile) => {
+      return await profileApi.followUserByUsername(newUser.username);
+    },
+    onMutate: async (newUser) => {
+      const articleQueryKey = articleKeys.article.root;
+      const profileQueryKey = profileKeys.profile.username(newUser.username);
+      await queryClient.cancelQueries({ queryKey: articleQueryKey });
+      await queryClient.cancelQueries({ queryKey: profileQueryKey });
 
-    return {
-      articleQueryKey,
-      profileQueryKey,
-    }
-  },
-  onSettled: (_data, _error, _variables, context) => {
-    if (!context) return;
+      const prevProfile: Profile = {
+        ...newUser,
+        following: false,
+      };
 
-    const { articleQueryKey, profileQueryKey } = context;
+      queryClient.setQueryData(profileQueryKey, {
+        ...newUser,
+        following: true,
+      });
 
-    queryClient.invalidateQueries({queryKey: articleQueryKey});
-    queryClient.invalidateQueries({queryKey: profileQueryKey});
-  }
-})
+      return {
+        articleQueryKey,
+        profileQueryKey,
+        prevProfile,
+      };
+    },
+    onError(_error, _newUser, context) {
+      if (!context) return;
+
+      const { articleQueryKey, profileQueryKey, prevProfile } = context;
+
+      queryClient.setQueryData(profileQueryKey, prevProfile);
+      queryClient.invalidateQueries({ queryKey: articleQueryKey });
+      queryClient.invalidateQueries({ queryKey: profileQueryKey });
+    },
+    onSettled: (_data, _error, _variables, context) => {
+      if (!context) return;
+
+      const { articleQueryKey, profileQueryKey } = context;
+
+      queryClient.invalidateQueries({ queryKey: articleQueryKey });
+      queryClient.invalidateQueries({ queryKey: profileQueryKey });
+    },
+  });

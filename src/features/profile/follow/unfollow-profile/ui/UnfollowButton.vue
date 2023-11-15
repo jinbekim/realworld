@@ -1,6 +1,6 @@
 <template>
   <button class="btn btn-sm btn-outline-secondary action-btn" @click="unfollow">
-    <i class="ion-plus-round"></i>
+    <i class="ion-minus-round"></i>
     &nbsp; {{ `Unfollow ${props.user.username}` }}
   </button>
 </template>
@@ -19,6 +19,6 @@ const unfollowUser = useUnfollowMutation(queryClient);
 
 async function unfollow() {
   if (props.user && props.user.following === true)
-    unfollowUser.mutate(props.user.username);
+    unfollowUser.mutate(props.user);
 }
 </script>

@@ -1,7 +1,7 @@
 import { profileApi } from '@/shared/api';
 import type { ProfileDto } from '@/shared/api/profile';
 import { useQuery, type UseQueryOptions } from '@tanstack/vue-query';
-import { toValue, type MaybeRefOrGetter, type Ref } from 'vue';
+import { toValue, type MaybeRefOrGetter, type Ref, computed } from 'vue';
 
 export interface Profile {
   username: Name;
@@ -13,10 +13,7 @@ export interface Profile {
 export const profileKeys = {
   profile: {
     root: ['profile'],
-    username: (username: Ref<string>) => [
-      ...profileKeys.profile.root,
-      username,
-    ],
+    username: (username: string) => [...profileKeys.profile.root, username],
   },
 };
 
@@ -34,7 +31,7 @@ export const useProfile = (
   options?: UseQueryOptions<Profile>
 ) => {
   return useQuery({
-    queryKey: profileKeys.profile.username(username),
+    queryKey: computed(() => profileKeys.profile.username(username.value)),
     queryFn: async ({ signal }) => {
       const response = await profileApi.getProfileByUserName(
         toValue(username),
