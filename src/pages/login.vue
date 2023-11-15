@@ -35,7 +35,7 @@ const onSubmit = (event: Event) => {
     {
       onSuccess(user) {
         addUser(user);
-        router.push('/user-feed');
+        router.push('/');
       },
       onError(e) {
         if (typeof e === 'string') {
