@@ -1,27 +1,11 @@
 import { QueryClient, useMutation } from '@tanstack/vue-query';
 import { favoriteApi } from '@/shared/api';
 import { articleKeys } from '@/entities/article';
+import { useFavoriteMutation } from './core';
 
-export const useFavoriteMutation = (queryClient: QueryClient) =>
-  useMutation({
-    mutationKey: articleKeys.mutation.favorites(),
-    mutationFn: favoriteApi.addArticleFavorite,
-    onMutate: async (slug) => {
-      const articlesQueryKey = articleKeys.articles.root;
-      const articleQueryKey = articleKeys.article.slug(slug);
-
-      await queryClient.cancelQueries({ queryKey: articlesQueryKey });
-      await queryClient.cancelQueries({ queryKey: articleQueryKey });
-
-      return { articlesQueryKey, articleQueryKey };
-    },
-
-    onSettled: (_data, _error, _variables, context) => {
-      if (!context) return;
-
-      const { articlesQueryKey, articleQueryKey } = context;
-
-      queryClient.invalidateQueries({ queryKey: articlesQueryKey });
-      queryClient.invalidateQueries({ queryKey: articleQueryKey });
-    },
-  });
+export const useFavoriteArticleMutation = (queryClient: QueryClient) =>
+  useFavoriteMutation(
+    queryClient,
+    favoriteApi.addArticleFavorite,
+    articleKeys.mutation.favorites()
+  );

@@ -24,7 +24,7 @@ export const useCreateCommentMutation = (queryClient: QueryClient) =>
 
       return { queryKey };
     },
-    onSettled: (_data, _error, _valiables, context) => {
+    onSettled: (_data, _error, _variables, context) => {
       if (!context) return;
       queryClient.invalidateQueries({ queryKey: context.queryKey });
     },

@@ -23,7 +23,6 @@
 <script setup lang="ts">
 import type { InfiniteData } from '@tanstack/vue-query';
 import type { Article } from '../..';
-import { ref } from 'vue';
 
 interface Props {
   isLoading: boolean;
@@ -35,8 +34,6 @@ interface Props {
 }
 
 defineProps<Props>();
-
-const page = ref(0);
 
 defineSlots<{
   renderArticles(props: { article: Article }): any;

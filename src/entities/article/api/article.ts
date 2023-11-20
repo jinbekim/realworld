@@ -8,7 +8,7 @@ import {
   useQuery,
   type UseQueryOptions,
 } from '@tanstack/vue-query';
-import type { Ref } from 'vue';
+import { computed, type Ref } from 'vue';
 
 export interface Article {
   slug: Name;
@@ -41,14 +41,14 @@ export const articleKeys = {
     root: ['articles'],
     globalFeed: {
       root: () => [...articleKeys.articles.root, 'globalFeed'],
-      query: (query: Ref<GlobalFeedQuery>) => [
+      query: (query: GlobalFeedQuery) => [
         ...articleKeys.articles.globalFeed.root(),
         query,
       ],
     },
     userFeed: {
       root: () => [...articleKeys.articles.root, 'userFeed'],
-      query: (query: Ref<UserFeedQuery>) => [
+      query: (query: UserFeedQuery) => [
         ...articleKeys.articles.userFeed.root(),
         query,
       ],
@@ -76,13 +76,13 @@ export const articleFromDto = (dto: ArticleDto): Article => {
   };
 };
 
-export const useUserInfinityArticles = (query: Ref<UserFeedQuery>) => {
-  const { offset, limit } = query.value;
+export const useUserInfinityArticles = (query: UserFeedQuery) => {
+  const { offset, limit } = query;
   return useInfiniteQuery({
-    queryKey: articleKeys.articles.userFeed.query(query),
+    queryKey: computed(() => articleKeys.articles.userFeed.query(query)),
     queryFn: async ({ pageParam = offset, signal }) => {
       const result = await articleApi.getFeedArticles(
-        { ...query.value, offset: pageParam },
+        { ...query, offset: pageParam },
         { signal }
       );
       return {
@@ -98,15 +98,15 @@ export const useUserInfinityArticles = (query: Ref<UserFeedQuery>) => {
   });
 };
 
-export const useGlobalInfinityArticles = (query: Ref<GlobalFeedQuery>) => {
-  const { offset, limit } = query.value;
+export const useGlobalInfinityArticles = (query: GlobalFeedQuery) => {
+  const { offset, limit } = query;
 
   return useInfiniteQuery({
-    queryKey: articleKeys.articles.globalFeed.query(query),
+    queryKey: computed(() => articleKeys.articles.globalFeed.query(query)),
     queryFn: async ({ pageParam = offset, signal }) => {
       const result = await articleApi.getArticles(
         {
-          ...query.value,
+          ...query,
           offset: pageParam,
         },
         { signal }

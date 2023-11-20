@@ -1,7 +1,7 @@
 import { profileApi } from '@/shared/api';
 import type { ProfileDto } from '@/shared/api/profile';
 import { useQuery, type UseQueryOptions } from '@tanstack/vue-query';
-import { toValue, type MaybeRefOrGetter, type Ref, computed } from 'vue';
+import { toValue, type Ref, computed } from 'vue';
 
 export interface Profile {
   username: Name;

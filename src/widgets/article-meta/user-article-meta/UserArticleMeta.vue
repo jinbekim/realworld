@@ -4,16 +4,8 @@
       <UnfollowButton v-if="article.author.following" :user="article.author" />
       <FollowButton v-else :user="article.author" />
       &nbsp;
-      <FavoriteButton
-        v-if="!article.favorited"
-        :slug="article.slug"
-        :count="article.favoritesCount"
-      />
-      <UnfavoriteButton
-        v-else
-        :slug="article.slug"
-        :count="article.favoritesCount"
-      />
+      <FavoriteButton v-if="!article.favorited" :article="article" />
+      <UnfavoriteButton v-else :article="article" />
     </template>
   </ArticleMeta>
 </template>

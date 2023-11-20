@@ -15,14 +15,14 @@
               <template v-if="useAuth()">
                 <FavoriteButton
                   v-if="!article.favorited"
-                  :slug="article.slug"
+                  :article="article"
                   class="pull-xs-right"
                 >
                   {{ article.favoritesCount }}
                 </FavoriteButton>
                 <UnfavoriteButton
                   v-else
-                  :slug="article.slug"
+                  :article="article"
                   class="pull-xs-right"
                 >
                   {{ article.favoritesCount }}
@@ -30,7 +30,7 @@
               </template>
               <template v-else>
                 <FavoriteButton
-                  :slug="article.slug"
+                  :article="article"
                   class="pull-xs-right"
                   @click="() => router.replace('/login')"
                 >
@@ -67,7 +67,6 @@ import {
 } from '@/entities/article';
 import { useSessionStore } from '@/entities/session';
 import { FavoriteButton, UnfavoriteButton } from '@/features/article';
-import { toRef } from 'vue';
 import { useRouter } from 'vue-router/auto';
 
 const props = defineProps<GlobalFeedQuery>();
@@ -84,7 +83,7 @@ const {
   hasNextPage,
   isFetchingNextPage,
   fetchNextPage,
-} = useGlobalInfinityArticles(toRef(() => props));
+} = useGlobalInfinityArticles(props);
 </script>
 
 <style scoped></style>

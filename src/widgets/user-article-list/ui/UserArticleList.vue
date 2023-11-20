@@ -14,16 +14,12 @@
             <template #actionSlot>
               <FavoriteButton
                 v-if="!article.favorited"
-                :slug="article.slug"
+                :article="article"
                 class="pull-xs-right"
               >
                 {{ article.favoritesCount }}
               </FavoriteButton>
-              <UnfavoriteButton
-                v-else
-                :slug="article.slug"
-                class="pull-xs-right"
-              >
+              <UnfavoriteButton v-else :article="article" class="pull-xs-right">
                 {{ article.favoritesCount }}
               </UnfavoriteButton>
             </template>
@@ -54,7 +50,6 @@ import {
   ArticleMeta,
   ArticleList,
 } from '@/entities/article';
-import { toRef } from 'vue';
 import { FavoriteButton, UnfavoriteButton } from '@/features/article';
 
 const props = defineProps<UserFeedQuery>();
@@ -68,7 +63,7 @@ const {
   isFetchingNextPage,
   fetchNextPage,
   hasNextPage,
-} = useUserInfinityArticles(toRef(() => props));
+} = useUserInfinityArticles(props);
 </script>
 
 <style scoped></style>

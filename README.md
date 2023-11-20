@@ -14,5 +14,5 @@
 ## TODO
 
 - [x] pagination
-- [ ] optimistic update
+- [x] optimistic update
 - [ ] test

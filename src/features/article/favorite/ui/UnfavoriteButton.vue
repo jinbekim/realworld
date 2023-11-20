@@ -2,33 +2,35 @@
   <button
     :disabled="isLoading"
     class="btn btn-primary btn-sm favorite-button"
-    :class="class"
     @click="onClick"
   >
     <i class="ion-heart"></i>
     <slot>
       <span> &nbsp; Unfavorite Post</span>
-      {{ `(${count})` }}
+      {{ `(${props.article.favoritesCount})` }}
     </slot>
   </button>
 </template>
 
 <script setup lang="ts">
 import { useQueryClient } from '@tanstack/vue-query';
-import { useUnfavoriteMutation } from '../api/unfavorite';
+import type { Article } from '@/entities/article';
+import { useUnfavoriteArticleMutation } from '../api/unfavorite';
 
 interface Props {
-  slug: string;
-  count?: number;
-  class?: string;
+  article: Article;
 }
 
 const props = defineProps<Props>();
 
 const queryClient = useQueryClient();
-const { mutate, isLoading } = useUnfavoriteMutation(queryClient);
+const { mutate, isLoading } = useUnfavoriteArticleMutation(queryClient);
 
 const onClick = () => {
-  mutate(props.slug);
+  mutate({
+    ...props.article,
+    favoritesCount: props.article.favoritesCount - 1,
+    favorited: false,
+  });
 };
 </script>

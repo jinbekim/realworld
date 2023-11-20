@@ -7,26 +7,30 @@
     <i class="ion-heart"></i>
     <slot>
       <span> &nbsp; Favorite Post</span>
-      {{ `(${count})` }}
+      {{ `(${props.article.favoritesCount})` }}
     </slot>
   </button>
 </template>
 
 <script setup lang="ts">
-import { useFavoriteMutation } from '../api/favorite';
 import { useQueryClient } from '@tanstack/vue-query';
+import { useFavoriteArticleMutation } from '../api/favorite';
+import type { Article } from '@/entities/article';
 
 interface Props {
-  slug: string;
-  count?: number;
+  article: Article;
 }
 
 const props = defineProps<Props>();
 
 const queryClient = useQueryClient();
-const { mutate, isLoading } = useFavoriteMutation(queryClient);
+const { mutate, isLoading } = useFavoriteArticleMutation(queryClient);
 
 const onClick = () => {
-  mutate(props.slug);
+  mutate({
+    ...props.article,
+    favoritesCount: props.article.favoritesCount + 1,
+    favorited: true,
+  });
 };
 </script>
